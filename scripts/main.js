@@ -1,6 +1,10 @@
 import Droppable from './droppable.js';
 import { libWrapper} from './lib/shim.js';
 
+Hooks.once('init', () => {
+  game.dfreds = game.dfreds || {};
+});
+
 Hooks.once('setup', () => {
   const MODULE_ID = 'dfreds-droppables';
 
