@@ -54,9 +54,15 @@ export default class Droppable {
     if (actors.length === 0) return;
 
     const dropStyle = this._settings.dropStyle;
+    log(`Dropping ${actors.length} onto the canvas via ${dropStyle}`);
 
     if (dropStyle === 'dialog') {
-      await this._handleDialogChoice(actors, topLeft[0], topLeft[1], event.altKey);
+      await this._handleDialogChoice(
+        actors,
+        topLeft[0],
+        topLeft[1],
+        event.altKey
+      );
     } else if (dropStyle === 'stack') {
       await this._dropStack(actors, topLeft[0], topLeft[1], event.altKey);
     } else if (dropStyle === 'random') {
@@ -70,48 +76,50 @@ export default class Droppable {
 
   async _handleDialogChoice(actors, xPosition, yPosition, isHidden) {
     const content = await renderTemplate(
-      'modules/dfreds-droppables/templates/drop-dialog.html'
+      'modules/dfreds-droppables/templates/drop-dialog.html',
+      { dropStyle: game.dfreds.droppables.lastDropStyle }
     );
 
-    new Dialog({
-      title: 'Drop Actors Folder',
-      content: content,
-      buttons: {
-        yes: {
-          icon: '<i class="fas fa-level-down-alt"></i>',
-          label: 'Drop',
-          callback: async (html) => {
-            const dropStyle = html
-              .find('select[name="drop-style"]')
-              .val();
-            
-            // game.dfreds.droppables.lastDropStyle = dropStyle;
+    new Dialog(
+      {
+        title: 'Drop Actors Folder',
+        content: content,
+        buttons: {
+          yes: {
+            icon: '<i class="fas fa-level-down-alt"></i>',
+            label: 'Drop',
+            callback: async (html) => {
+              const dropStyle = html.find('select[name="drop-style"]').val();
 
-            if (dropStyle === 'stack') {
-              await this._dropStack(actors, xPosition, yPosition, isHidden);
-            } else if (dropStyle === 'random') {
-              await this._dropRandom(actors, xPosition, yPosition, isHidden);
-            } else if (dropStyle === 'horizontalLine') {
-              await this._dropLine(
-                true,
-                actors,
-                xPosition,
-                yPosition,
-                isHidden
-              );
-            } else if (dropStyle === 'verticalLine') {
-              await this._dropLine(
-                false,
-                actors,
-                xPosition,
-                yPosition,
-                isHidden
-              );
-            }
+              game.dfreds.droppables.lastDropStyle = dropStyle;
+
+              if (dropStyle === 'stack') {
+                await this._dropStack(actors, xPosition, yPosition, isHidden);
+              } else if (dropStyle === 'random') {
+                await this._dropRandom(actors, xPosition, yPosition, isHidden);
+              } else if (dropStyle === 'horizontalLine') {
+                await this._dropLine(
+                  true,
+                  actors,
+                  xPosition,
+                  yPosition,
+                  isHidden
+                );
+              } else if (dropStyle === 'verticalLine') {
+                await this._dropLine(
+                  false,
+                  actors,
+                  xPosition,
+                  yPosition,
+                  isHidden
+                );
+              }
+            },
           },
         },
       },
-    }, {width: 320}).render(true);
+      { width: 320 }
+    ).render(true);
   }
 
   async _dropStack(actors, xPosition, yPosition, isHidden) {

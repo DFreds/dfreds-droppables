@@ -10,7 +10,8 @@ export default class Settings {
   registerSettings() {
     game.settings.register(Settings.PACKAGE_NAME, Settings.DROP_STYLE, {
       name: 'Drop Style',
-      hint: 'This is how the items in the folder will be dropped onto the canvas.',
+      hint:
+        'This is how the items in the folder will be dropped onto the canvas. Choosing "Dialog" will prompt you each time for one of the options.',
       scope: 'world', // local??
       config: true,
       default: 'dialog',
@@ -19,15 +20,15 @@ export default class Settings {
         stack: 'Stack',
         random: 'Random',
         horizontalLine: 'Horizontal Line',
-        verticalLine: 'Vertical Line'
+        verticalLine: 'Vertical Line',
       },
-      type: String
+      type: String,
     });
   }
 
   /**
    * Returns the game setting for drop style
-   * 
+   *
    * @returns {String} a string representing the chosen drop type
    */
   get dropStyle() {

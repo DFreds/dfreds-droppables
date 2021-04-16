@@ -4,10 +4,12 @@
     <label>Drop Style</label>
     <div class="form-fields">
       <select name="drop-style">
-        <option value="stack" selected>Stacked Up</option>
+        {{#select dropStyle}}
+        <option value="stack">Stacked Up</option>
         <option value="random">Randomly</option>
         <option value="horizontalLine">Left to Right Line</option>
         <option value="verticalLine">Top to Bottom Line</option>
+        {{/select}}
       </select>
     </div>
   </div>
