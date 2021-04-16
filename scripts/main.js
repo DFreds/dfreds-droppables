@@ -1,8 +1,14 @@
 import Droppable from './droppable.js';
-import { libWrapper} from './lib/shim.js';
+import { libWrapper } from './lib/shim.js';
+import Settings from './settings.js';
 
 Hooks.once('init', () => {
+  new Settings().registerSettings();
+
   game.dfreds = game.dfreds || {};
+  // game.dfreds.droppables = {
+  //   lastDropStyle: ''
+  // };
 });
 
 Hooks.once('setup', () => {
@@ -12,7 +18,11 @@ Hooks.once('setup', () => {
 
   // https://github.com/ruipin/fvtt-lib-wrapper/#134-shim
   // Note: Don't simply pass in the function onCanvasDrop, or you lose 'this' referring to Droppable
-  libWrapper.register(MODULE_ID, 'Canvas.prototype._onDrop', function (wrapper, ...args) {
-    droppable.onCanvasDrop(wrapper, ...args);
-  });
+  libWrapper.register(
+    MODULE_ID,
+    'Canvas.prototype._onDrop',
+    function (wrapper, ...args) {
+      droppable.onCanvasDrop(wrapper, ...args);
+    }
+  );
 });

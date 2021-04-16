@@ -33,7 +33,7 @@ jobs:
         download: https://github.com/${{github.repository}}/releases/download/${{steps.get_version.outputs.version}}/dfreds-droppables.zip
 
     # Create a zip file with all files required by the module to add to the release
-    - run: zip -r ./dfreds-droppables.zip module.json scripts/
+    - run: zip -r ./dfreds-droppables.zip module.json scripts/ styles/ templates/
 
     # Create a release for this specific version
     - name: Update Release with Files

@@ -14,6 +14,7 @@
   "minimumCoreVersion": "0.7.5",
   "compatibleCoreVersion": "0.7.9",
   "esmodules": ["./scripts/main.js"],
+  "styles": ["./styles/dfreds-droppables.css"],
   "url": "https://github.com/DFreds/dfreds-droppables",
   "bugs": "https://github.com/DFreds/dfreds-droppables/issues",
   "manifest": "https://github.com/DFreds/dfreds-droppables/releases/latest/download/module.json",
