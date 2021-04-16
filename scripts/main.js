@@ -6,9 +6,6 @@ Hooks.once('init', () => {
   new Settings().registerSettings();
 
   game.dfreds = game.dfreds || {};
-  game.dfreds.droppables = {
-    lastDropStyle: 'stack'
-  };
 });
 
 Hooks.once('setup', () => {

@@ -77,7 +77,7 @@ export default class Droppable {
   async _handleDialogChoice(actors, xPosition, yPosition, isHidden) {
     const content = await renderTemplate(
       'modules/dfreds-droppables/templates/drop-dialog.html',
-      { dropStyle: game.dfreds.droppables.lastDropStyle }
+      { dropStyle: this._settings.lastUsedDropStyle }
     );
 
     new Dialog(
@@ -91,7 +91,7 @@ export default class Droppable {
             callback: async (html) => {
               const dropStyle = html.find('select[name="drop-style"]').val();
 
-              game.dfreds.droppables.lastDropStyle = dropStyle;
+              this._settings.lastUsedDropStyle = dropStyle;
 
               if (dropStyle === 'stack') {
                 await this._dropStack(actors, xPosition, yPosition, isHidden);
