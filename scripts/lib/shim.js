@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: LGPL-3.0-or-later
+// SPDX-License-Identifier: MIT
 // Copyright © 2021 fvtt-lib-wrapper Rui Pinheiro
 
 
@@ -19,7 +19,6 @@ Hooks.once('init', () => {
 		static get is_fallback() { return true };
 
 		static register(module, target, fn, type="MIXED", {chain=undefined}={}) {
-      console.log("DEREK");
 			const is_setter = target.endsWith('#set');
 			target = !is_setter ? target : target.slice(0, -4);
 			const split = target.split('.');
