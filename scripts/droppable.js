@@ -57,7 +57,6 @@ export default class Droppable {
     log(`Dropping ${actors.length} onto the canvas via ${dropStyle}`);
 
     // TODO position is now being ignored (topLeft)
-    // TODO Token.create is deprecated
     if (dropStyle === 'dialog') {
       await this._handleDialogChoice(
         actors,
@@ -207,7 +206,7 @@ export default class Droppable {
       tokenData.img = image;
     }
 
-    return Token.create(tokenData);
+    return TokenDocument.create(tokenData, { parent: canvas.scene });
   }
 
   async _handleJournalFolder(data, event) {
@@ -216,16 +215,19 @@ export default class Droppable {
     const topLeft = this._getTopLeft(event);
 
     for (let entry of entries) {
-      await this._dropJournalEntry(entry, { x: topLeft[0], y: topLeft[1] });
+      await this._dropJournalEntry(entry, topLeft[0], topLeft[1]);
     }
   }
 
-  async _dropJournalEntry(entry, entryData) {
-    return Note.create({
-      entryId: entry.id,
-      x: entryData.x,
-      y: entryData.y,
-    });
+  async _dropJournalEntry(entry, xPosition, yPosition) {
+    return NoteDocument.create(
+      {
+        entryId: entry.id,
+        x: xPosition,
+        y: yPosition,
+      },
+      { parent: canvas.scene }
+    );
   }
 
   _getTopLeft(event) {
