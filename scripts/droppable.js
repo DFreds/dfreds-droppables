@@ -28,9 +28,9 @@ export default class Droppable {
         return;
       }
 
-      if (data.entity === 'Actor') {
+      if (data.documentName === 'Actor') {
         this._handleActorFolder(data, event);
-      } else if (data.entity === 'JournalEntry') {
+      } else if (data.documentName === 'JournalEntry') {
         this._handleJournalFolder(data, event);
       } else {
         wrapper(...args);
@@ -56,6 +56,8 @@ export default class Droppable {
     const dropStyle = this._settings.dropStyle;
     log(`Dropping ${actors.length} onto the canvas via ${dropStyle}`);
 
+    // TODO position is now being ignored (topLeft)
+    // TODO Token.create is deprecated
     if (dropStyle === 'dialog') {
       await this._handleDialogChoice(
         actors,
