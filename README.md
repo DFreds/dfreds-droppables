@@ -22,14 +22,6 @@ On the drag and drop of an actor folder or journal entries folder onto the canva
 
 This feature was actually implemented in [The Furnace](https://github.com/League-of-Foundry-Developers/fvtt-module-furnace). However, the Furnance has been confirmed abandoned by the good folks over at the League of Extraordinary Foundry Developers. You might consider this the first step to replacing the features previously contained in that module.
 
-## Installation
-
-1. Copy this link and paste it in Foundry's Module Manager
-
-    > https://raw.githubusercontent.com/dfreds/dfreds-droppables/main/module.json
-
-2. Enable the module in your world's module settings
-
 ### libWrapper
 
 This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. While this is not a hard dependency, it is recommended to install it for the best experience and compatibility with other modules.
