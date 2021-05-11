@@ -11,8 +11,8 @@
       "discord": "DFreds#1238"
     }
   ],
-  "minimumCoreVersion": "0.8.2",
-  "compatibleCoreVersion": "0.8.2",
+  "minimumCoreVersion": "0.8.3",
+  "compatibleCoreVersion": "0.8.3",
   "esmodules": ["./scripts/main.js"],
   "styles": ["./styles/dfreds-droppables.css"],
   "url": "https://github.com/DFreds/dfreds-droppables",
