@@ -1,6 +1,6 @@
 # DFreds Droppables
 
-![Foundry Version](https://img.shields.io/badge/Foundry-v0.7.9-informational)
+![Foundry Version](https://img.shields.io/badge/Foundry-v0.8.3-informational)
 ![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https://forge-vtt.com/api/bazaar/package/dfreds-droppables&colorB=4aa94a)
 ![Latest Release Download Count](https://img.shields.io/github/downloads/dfreds/dfreds-droppables/latest/dfreds-droppables.zip)
 ![All Downloads](https://img.shields.io/github/downloads/dfreds/dfreds-droppables/total)
@@ -21,14 +21,6 @@ On the drag and drop of an actor folder or journal entries folder onto the canva
 ## The Elephant in the Room
 
 This feature was actually implemented in [The Furnace](https://github.com/League-of-Foundry-Developers/fvtt-module-furnace). However, the Furnance has been confirmed abandoned by the good folks over at the League of Extraordinary Foundry Developers. You might consider this the first step to replacing the features previously contained in that module.
-
-## Installation
-
-1. Copy this link and paste it in Foundry's Module Manager
-
-    > https://raw.githubusercontent.com/dfreds/dfreds-droppables/main/module.json
-
-2. Enable the module in your world's module settings
 
 ### libWrapper
 
