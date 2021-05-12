@@ -194,7 +194,7 @@ export default class Droppable {
   }
 
   async _dropActor(actor, xPosition, yPosition, isHidden) {
-    const tokenData = actor.data.token.toObject();
+    const tokenData = actor.data.token.toJSON();
 
     tokenData.x = xPosition;
     tokenData.y = yPosition;
