@@ -49,7 +49,7 @@ export default class Droppable {
   async _handleActorFolder(data, event) {
     const folder = game.folders.get(data.id);
     const actors = folder.content;
-    const topLeft = this._getTopLeft(event);
+    const topLeft = this._translateToTopLeftGrid(event);
 
     if (actors.length === 0) return;
 
@@ -212,7 +212,7 @@ export default class Droppable {
   async _handleJournalFolder(data, event) {
     const folder = game.folders.get(data.id);
     const entries = folder.content;
-    const topLeft = this._getTopLeft(event);
+    const topLeft = this._translateToTopLeftGrid(event);
 
     for (let entry of entries) {
       await this._dropJournalEntry(entry, topLeft[0], topLeft[1]);
@@ -230,10 +230,10 @@ export default class Droppable {
     );
   }
 
-  _getTopLeft(event) {
-    const t = canvas.tokens.worldTransform,
-      tx = (event.clientX - t.tx) / canvas.stage.scale.x,
-      ty = (event.clientY - t.ty) / canvas.stage.scale.y;
+  _translateToTopLeftGrid(event) {
+    const transform = canvas.tokens.worldTransform;
+    const tx = (event.clientX - transform.tx) / canvas.stage.scale.x;
+    const ty = (event.clientY - transform.ty) / canvas.stage.scale.y;
 
     return canvas.grid.getTopLeft(tx, ty);
   }
