@@ -28,9 +28,9 @@ export default class Droppable {
         return;
       }
 
-      if (data.entity === 'Actor') {
+      if (data.documentName === 'Actor') {
         this._handleActorFolder(data, event);
-      } else if (data.entity === 'JournalEntry') {
+      } else if (data.documentName === 'JournalEntry') {
         this._handleJournalFolder(data, event);
       } else {
         wrapper(...args);
@@ -49,13 +49,14 @@ export default class Droppable {
   async _handleActorFolder(data, event) {
     const folder = game.folders.get(data.id);
     const actors = folder.content;
-    const topLeft = this._getTopLeft(event);
+    const topLeft = this._translateToTopLeftGrid(event);
 
     if (actors.length === 0) return;
 
     const dropStyle = this._settings.dropStyle;
     log(`Dropping ${actors.length} onto the canvas via ${dropStyle}`);
 
+    // TODO position is now being ignored (topLeft)
     if (dropStyle === 'dialog') {
       await this._handleDialogChoice(
         actors,
@@ -193,7 +194,7 @@ export default class Droppable {
   }
 
   async _dropActor(actor, xPosition, yPosition, isHidden) {
-    const tokenData = actor.data.token;
+    const tokenData = actor.data.token.toJSON();
 
     tokenData.x = xPosition;
     tokenData.y = yPosition;
@@ -205,31 +206,34 @@ export default class Droppable {
       tokenData.img = image;
     }
 
-    return Token.create(tokenData);
+    return TokenDocument.create(tokenData, { parent: canvas.scene });
   }
 
   async _handleJournalFolder(data, event) {
     const folder = game.folders.get(data.id);
     const entries = folder.content;
-    const topLeft = this._getTopLeft(event);
+    const topLeft = this._translateToTopLeftGrid(event);
 
     for (let entry of entries) {
-      await this._dropJournalEntry(entry, { x: topLeft[0], y: topLeft[1] });
+      await this._dropJournalEntry(entry, topLeft[0], topLeft[1]);
     }
   }
 
-  async _dropJournalEntry(entry, entryData) {
-    return Note.create({
-      entryId: entry.id,
-      x: entryData.x,
-      y: entryData.y,
-    });
+  async _dropJournalEntry(entry, xPosition, yPosition) {
+    return NoteDocument.create(
+      {
+        entryId: entry.id,
+        x: xPosition,
+        y: yPosition,
+      },
+      { parent: canvas.scene }
+    );
   }
 
-  _getTopLeft(event) {
-    const t = canvas.tokens.worldTransform,
-      tx = (event.clientX - t.tx) / canvas.stage.scale.x,
-      ty = (event.clientY - t.ty) / canvas.stage.scale.y;
+  _translateToTopLeftGrid(event) {
+    const transform = canvas.tokens.worldTransform;
+    const tx = (event.clientX - transform.tx) / canvas.stage.scale.x;
+    const ty = (event.clientY - transform.ty) / canvas.stage.scale.y;
 
     return canvas.grid.getTopLeft(tx, ty);
   }
