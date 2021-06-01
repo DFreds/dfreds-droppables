@@ -1,6 +1,6 @@
 # DFreds Droppables
 
-![Foundry Version](https://img.shields.io/badge/Foundry-v0.8.4-informational)
+![Foundry Version](https://img.shields.io/badge/Foundry-v0.8.6-informational)
 ![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https://forge-vtt.com/api/bazaar/package/dfreds-droppables&colorB=4aa94a)
 ![Latest Release Download Count](https://img.shields.io/github/downloads/dfreds/dfreds-droppables/latest/dfreds-droppables.zip)
 ![All Downloads](https://img.shields.io/github/downloads/dfreds/dfreds-droppables/total)
