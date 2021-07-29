@@ -11,8 +11,7 @@ export default class Settings {
   registerSettings() {
     game.settings.register(Settings.PACKAGE_NAME, Settings.DROP_STYLE, {
       name: 'Drop Style',
-      hint:
-        'This is how the items in the folder will be dropped onto the canvas. Choosing "Dialog" will prompt you each time for one of the options.',
+      hint: 'This is how the items in the folder will be dropped onto the canvas. Choosing "Dialog" will prompt you each time for one of the options.',
       scope: 'client',
       config: true,
       default: 'dialog',
@@ -26,18 +25,22 @@ export default class Settings {
       type: String,
     });
 
-    game.settings.register(Settings.PACKAGE_NAME, Settings.LAST_USED_DROP_STYLE, {
-      name: 'Last Used Drop Style',
-      scope: 'client',
-      config: false,
-      type: String,
-    });
+    game.settings.register(
+      Settings.PACKAGE_NAME,
+      Settings.LAST_USED_DROP_STYLE,
+      {
+        name: 'Last Used Drop Style',
+        scope: 'client',
+        config: false,
+        type: String,
+      }
+    );
   }
 
   /**
    * Returns the game setting for drop style
    *
-   * @returns {String} a string representing the chosen drop style
+   * @returns {string} a string representing the chosen drop style
    */
   get dropStyle() {
     return game.settings.get(Settings.PACKAGE_NAME, Settings.DROP_STYLE);
@@ -45,19 +48,26 @@ export default class Settings {
 
   /**
    * Returns the game setting for the last used drop style
-   * 
-   * @returns {String} a string representing the last drop style
+   *
+   * @returns {string} a string representing the last drop style
    */
   get lastUsedDropStyle() {
-    return game.settings.get(Settings.PACKAGE_NAME, Settings.LAST_USED_DROP_STYLE);
+    return game.settings.get(
+      Settings.PACKAGE_NAME,
+      Settings.LAST_USED_DROP_STYLE
+    );
   }
 
   /**
    * Sets the game setting for the last used drop style
-   * 
-   * @param {String} value - a value representing the last used drop style
+   *
+   * @param {string} value - a value representing the last used drop style
    */
   set lastUsedDropStyle(value) {
-    game.settings.set(Settings.PACKAGE_NAME, Settings.LAST_USED_DROP_STYLE, value);
+    game.settings.set(
+      Settings.PACKAGE_NAME,
+      Settings.LAST_USED_DROP_STYLE,
+      value
+    );
   }
 }
