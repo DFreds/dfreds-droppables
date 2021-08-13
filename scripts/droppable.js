@@ -214,9 +214,15 @@ export default class Droppable {
     const entries = folder.content;
     const topLeft = this._translateToTopLeftGrid(event);
 
-    for (let entry of entries) {
-      await this._dropJournalEntry(entry, topLeft[0], topLeft[1]);
-    }
+    Dialog.confirm({
+      title: 'Drop Journal Folder',
+      content: `<p>Drop all journal entries in ${folder.name} as pins?</p>`,
+      yes: async () => {
+        for (let entry of entries) {
+          await this._dropJournalEntry(entry, topLeft[0], topLeft[1]);
+        }
+      },
+    });
   }
 
   async _dropJournalEntry(entry, xPosition, yPosition) {
