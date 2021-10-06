@@ -1,0 +1,23 @@
+{
+  "Droppables.DropActorsFolder": "Colocar Carpeta de Actores",
+  "Droppables.DropButton": "Colocar",
+  "Droppables.DropStyle": "Colocar Estilo",
+  "Droppables.DropExplanation": "¿Cómo le gustaría distribuir los actores de la carpeta en el lienzo?",
+  "Droppables.StackedUp": "Apilados",
+  "Droppables.Randomly": "Al Azar",
+  "Droppables.HorizontalLine": "En Fila de Izquierda a Derecha",
+  "Droppables.VerticalLine": "En Fila de Arriba hacia Abajo",
+  "Droppables.Elevation": "Elevación",
+  "Droppables.ElevationOptional": "Elevación (opcional)",
+
+  "Droppables.DropJournalFolder": "Colocar carpeta de Diario",
+  "Droppables.DropJournalFolderExplanation": "¿Colocar todos los registros del diario {folderName} como marcadores?",
+
+  "Droppables.SettingDropStyle": "Colocar Estilo",
+  "Droppables.SettingDropStyleHint": "Así es como los ítemes de la carpeta se colocarían en el lienzo. Elegir \"Ventana de Diálogo\" pedirá seleccionar una opción para cada uno.",
+  "Droppables.SettingDropStyleDialog": "Ventana de Diálogo",
+  "Droppables.SettingDropStyleStack": "Apilar",
+  "Droppables.SettingDropStyleRandom": "Al azar",
+  "Droppables.SettingDropStyleHorizontalLine": "Línea Horizontal",
+  "Droppables.SettingDropStyleVerticalLine": "Línea Vertical"
+}
