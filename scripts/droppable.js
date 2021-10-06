@@ -56,26 +56,47 @@ export default class Droppable {
     const dropStyle = this._settings.dropStyle;
     log(`Dropping ${actors.length} onto the canvas via ${dropStyle}`);
 
-    // TODO position is now being ignored (topLeft)
     if (dropStyle === 'dialog') {
-      await this._handleDialogChoice(
+      await this._handleDialogChoice({
         actors,
-        topLeft[0],
-        topLeft[1],
-        event.altKey
-      );
+        xPosition: topLeft[0],
+        yPosition: topLeft[1],
+        isHidden: event.altKey,
+      });
     } else if (dropStyle === 'stack') {
-      await this._dropStack(actors, topLeft[0], topLeft[1], event.altKey);
+      await this._dropStack({
+        actors,
+        xPosition: topLeft[0],
+        yPosition: topLeft[1],
+        isHidden: event.altKey,
+      });
     } else if (dropStyle === 'random') {
-      await this._dropRandom(actors, topLeft[0], topLeft[1], event.altKey);
+      await this._dropRandom({
+        actors,
+        xPosition: topLeft[0],
+        yPosition: topLeft[1],
+        isHidden: event.altKey,
+      });
     } else if (dropStyle === 'horizontalLine') {
-      await this._dropLine(true, actors, topLeft[0], topLeft[1], event.altKey);
+      await this._dropLine({
+        isHorizontal: true,
+        actors,
+        xPosition: topLeft[0],
+        yPosition: topLeft[1],
+        isHidden: event.altKey,
+      });
     } else if (dropStyle === 'verticalLine') {
-      await this._dropLine(false, actors, topLeft[0], topLeft[1], event.altKey);
+      await this._dropLine({
+        isHorizontal: false,
+        actors,
+        xPosition: topLeft[0],
+        yPosition: topLeft[1],
+        isHidden: event.altKey,
+      });
     }
   }
 
-  async _handleDialogChoice(actors, xPosition, yPosition, isHidden) {
+  async _handleDialogChoice({ actors, xPosition, yPosition, isHidden }) {
     const content = await renderTemplate(
       'modules/dfreds-droppables/templates/drop-dialog.html',
       { dropStyle: this._settings.lastUsedDropStyle }
@@ -91,29 +112,46 @@ export default class Droppable {
             label: 'Drop',
             callback: async (html) => {
               const dropStyle = html.find('select[name="drop-style"]').val();
+              const elevation = parseFloat(
+                html.find('input[name="elevation"]').val()
+              );
 
               this._settings.lastUsedDropStyle = dropStyle;
 
               if (dropStyle === 'stack') {
-                await this._dropStack(actors, xPosition, yPosition, isHidden);
+                await this._dropStack({
+                  actors,
+                  xPosition,
+                  yPosition,
+                  isHidden,
+                  elevation,
+                });
               } else if (dropStyle === 'random') {
-                await this._dropRandom(actors, xPosition, yPosition, isHidden);
+                await this._dropRandom({
+                  actors,
+                  xPosition,
+                  yPosition,
+                  isHidden,
+                  elevation,
+                });
               } else if (dropStyle === 'horizontalLine') {
-                await this._dropLine(
-                  true,
+                await this._dropLine({
+                  isHorizontal: true,
                   actors,
                   xPosition,
                   yPosition,
-                  isHidden
-                );
+                  isHidden,
+                  elevation,
+                });
               } else if (dropStyle === 'verticalLine') {
-                await this._dropLine(
-                  false,
+                await this._dropLine({
+                  isHorizontal: false,
                   actors,
                   xPosition,
                   yPosition,
-                  isHidden
-                );
+                  isHidden,
+                  elevation,
+                });
               }
             },
           },
@@ -123,13 +161,31 @@ export default class Droppable {
     ).render(true);
   }
 
-  async _dropStack(actors, xPosition, yPosition, isHidden) {
+  async _dropStack({
+    actors,
+    xPosition,
+    yPosition,
+    isHidden,
+    elevation = null,
+  }) {
     for (let actor of actors) {
-      await this._dropActor(actor, xPosition, yPosition, isHidden);
+      await this._dropActor({
+        actor,
+        xPosition,
+        yPosition,
+        isHidden,
+        elevation,
+      });
     }
   }
 
-  async _dropRandom(actors, xPosition, yPosition, isHidden) {
+  async _dropRandom({
+    actors,
+    xPosition,
+    yPosition,
+    isHidden,
+    elevation = null,
+  }) {
     let distance = 0;
     let dropped = 0;
     let offsetX = 0;
@@ -141,12 +197,13 @@ export default class Droppable {
 
       let tries = Math.pow(1 + distance * 2, 2) - dropped;
 
-      await this._dropActor(
+      await this._dropActor({
         actor,
-        xPosition + offsetX,
-        yPosition + offsetY,
-        isHidden
-      );
+        xPosition: xPosition + offsetX,
+        yPosition: yPosition + offsetY,
+        isHidden,
+        elevation,
+      });
 
       if (totalTries - tries < totalTries / 4) {
         offsetX += canvas.grid.w;
@@ -168,7 +225,14 @@ export default class Droppable {
     }
   }
 
-  async _dropLine(isHorizontal, actors, xPosition, yPosition, isHidden) {
+  async _dropLine({
+    isHorizontal,
+    actors,
+    xPosition,
+    yPosition,
+    isHidden,
+    elevation = null,
+  }) {
     const step = isHorizontal ? canvas.grid.w : canvas.grid.h;
 
     let offsetX = 0;
@@ -178,12 +242,13 @@ export default class Droppable {
       const width = getProperty(actor, 'data.token.width') || 1;
       const height = getProperty(actor, 'data.token.height') || 1;
 
-      await this._dropActor(
+      await this._dropActor({
         actor,
-        xPosition + offsetX,
-        yPosition + offsetY,
-        isHidden
-      );
+        xPosition: xPosition + offsetX,
+        yPosition: yPosition + offsetY,
+        isHidden,
+        elevation,
+      });
 
       if (isHorizontal) {
         offsetX += width * step;
@@ -193,12 +258,17 @@ export default class Droppable {
     }
   }
 
-  async _dropActor(actor, xPosition, yPosition, isHidden) {
+  async _dropActor({ actor, xPosition, yPosition, isHidden, elevation }) {
     const tokenData = actor.data.token.toJSON();
 
     tokenData.x = xPosition;
     tokenData.y = yPosition;
+
     tokenData.hidden = isHidden;
+
+    if (elevation) {
+      tokenData.elevation = elevation;
+    }
 
     if (tokenData.randomImg) {
       const images = await actor.getTokenImages();
@@ -219,13 +289,17 @@ export default class Droppable {
       content: `<p>Drop all journal entries in ${folder.name} as pins?</p>`,
       yes: async () => {
         for (let entry of entries) {
-          await this._dropJournalEntry(entry, topLeft[0], topLeft[1]);
+          await this._dropJournalEntry({
+            entry,
+            xPosition: topLeft[0],
+            yPosition: topLeft[1],
+          });
         }
       },
     });
   }
 
-  async _dropJournalEntry(entry, xPosition, yPosition) {
+  async _dropJournalEntry({ entry, xPosition, yPosition }) {
     return NoteDocument.create(
       {
         entryId: entry.id,
