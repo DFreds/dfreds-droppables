@@ -104,12 +104,12 @@ export default class Droppable {
 
     new Dialog(
       {
-        title: 'Drop Actors Folder',
+        title: game.i18n.localize('Droppables.DropActorsFolder'),
         content: content,
         buttons: {
           yes: {
             icon: '<i class="fas fa-level-down-alt"></i>',
-            label: 'Drop',
+            label: game.i18n.localize('Droppables.DropButton'),
             callback: async (html) => {
               const dropStyle = html.find('select[name="drop-style"]').val();
               const elevation = parseFloat(
@@ -285,8 +285,11 @@ export default class Droppable {
     const topLeft = this._translateToTopLeftGrid(event);
 
     Dialog.confirm({
-      title: 'Drop Journal Folder',
-      content: `<p>Drop all journal entries in ${folder.name} as pins?</p>`,
+      title: game.i18n.localize('Droppables.DropJournalFolder'),
+      content: `<p>${game.i18n.format(
+        'Droppables.DropJournalFolderExplanation',
+        { folderName: folder.name }
+      )}</p>`,
       yes: async () => {
         for (let entry of entries) {
           await this._dropJournalEntry({
