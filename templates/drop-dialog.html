@@ -1,22 +1,22 @@
 <form id="drop-folder" onsubmit="event.preventDefault();">
-  <p>How would you like to arrange the items in the folder on the canvas?</p>
+  <p>{{localize 'Droppables.DropExplanation'}}</p>
   <div class="form-group">
-    <label>Drop Style</label>
+    <label>{{localize 'Droppables.DropStyle'}}</label>
     <div class="form-fields">
       <select name="drop-style">
         {{#select dropStyle}}
-        <option value="stack">Stacked Up</option>
-        <option value="random">Randomly</option>
-        <option value="horizontalLine">Left to Right Line</option>
-        <option value="verticalLine">Top to Bottom Line</option>
+        <option value="stack">{{localize 'Droppables.StackedUp'}}</option>
+        <option value="random">{{localize 'Droppables.Randomly'}}</option>
+        <option value="horizontalLine">{{localize 'Droppables.HorizontalLine'}}</option>
+        <option value="verticalLine">{{localize 'Droppables.VerticalLine'}}</option>
         {{/select}}
       </select>
     </div>
   </div>
   <div class="form-group">
-    <label>Elevation</label>
+    <label>{{localize 'Droppables.Elevation'}}</label>
     <div class="form-fields">
-      <input type="number" name="elevation" placeholder="Elevation (optional)">
+      <input type="number" name="elevation" placeholder="{{localize 'Droppables.ElevationOptional'}}">
     </div>
   </div>
 </form>
