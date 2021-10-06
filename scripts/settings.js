@@ -10,17 +10,21 @@ export default class Settings {
    */
   registerSettings() {
     game.settings.register(Settings.PACKAGE_NAME, Settings.DROP_STYLE, {
-      name: 'Drop Style',
-      hint: 'This is how the items in the folder will be dropped onto the canvas. Choosing "Dialog" will prompt you each time for one of the options.',
+      name: game.i18n.localize('Droppables.SettingDropStyle'),
+      hint: game.i18n.localize('Droppables.SettingDropStyleHint'),
       scope: 'client',
       config: true,
       default: 'dialog',
       choices: {
-        dialog: 'Dialog',
-        stack: 'Stack',
-        random: 'Random',
-        horizontalLine: 'Horizontal Line',
-        verticalLine: 'Vertical Line',
+        dialog: game.i18n.localize('Droppables.SettingDropStyleDialog'),
+        stack: game.i18n.localize('Droppables.SettingDropStyleStack'),
+        random: game.i18n.localize('Droppables.SettingDropStyleRandom'),
+        horizontalLine: game.i18n.localize(
+          'Droppables.SettingDropStyleHorizontalLine'
+        ),
+        verticalLine: game.i18n.localize(
+          'Droppables.SettingDropStyleVerticalLine'
+        ),
       },
       type: String,
     });
