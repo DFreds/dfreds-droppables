@@ -1,0 +1,23 @@
+{
+  "Droppables.DropActorsFolder": "Drop Actors Folder",
+  "Droppables.DropButton": "Drop",
+  "Droppables.DropStyle": "Drop Style",
+  "Droppables.DropExplanation": "How would you like to arrange the actors in the folder on the canvas?",
+  "Droppables.StackedUp": "Stacked Up",
+  "Droppables.Randomly": "Randomly",
+  "Droppables.HorizontalLine": "Left to Right Line",
+  "Droppables.VerticalLine": "Top to Bottom Line",
+  "Droppables.Elevation": "Elevation",
+  "Droppables.ElevationOptional": "Elevation (optional)",
+
+  "Droppables.DropJournalFolder": "Drop Journal Folder",
+  "Droppables.DropJournalFolderExplanation": "Drop all journal entries in {folderName} as pins?",
+
+  "Droppables.SettingDropStyle": "Drop Style",
+  "Droppables.SettingDropStyleHint": "This is how the items in the folder will be dropped onto the canvas. Choosing \"Dialog\" will prompt you each time for one of the options.",
+  "Droppables.SettingDropStyleDialog": "Dialog",
+  "Droppables.SettingDropStyleStack": "Stack",
+  "Droppables.SettingDropStyleRandom": "Random",
+  "Droppables.SettingDropStyleHorizontalLine": "Horizontal Line",
+  "Droppables.SettingDropStyleVerticalLine": "Vertical Line"
+}
