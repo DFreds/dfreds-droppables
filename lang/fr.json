@@ -1,0 +1,23 @@
+{
+  "Droppables.DropActorsFolder": "Déposer le dossier des Acteurs",
+  "Droppables.DropButton": "Déposer",
+  "Droppables.DropStyle": "Style de dépose",
+  "Droppables.DropExplanation": "Comment voudriez-vous arranger les acteurs dans le dossier sur la toile ?",
+  "Droppables.StackedUp": "Empilés",
+  "Droppables.Randomly": "Aléatoirement",
+  "Droppables.HorizontalLine": "Ligne de gauche à droite",
+  "Droppables.VerticalLine": "Ligne de haut en bas",
+  "Droppables.Elevation": "Élévation",
+  "Droppables.ElevationOptional": "Élévation (facultatif)",
+
+  "Droppables.DropJournalFolder": "Déposer le dossier du journal",
+  "Droppables.DropJournalFolderExplanation": "Supprimer toutes les entrées de journal dans {folderName} en tant qu'épingles ?",
+
+  "Droppables.SettingDropStyle": "Style de dépose",
+  "Droppables.SettingDropStyleHint": "C'est ainsi que les éléments du dossier seront déposés sur le canevas. Choisir \"Dialog\" vous demandera à chaque fois l'une des options.",
+  "Droppables.SettingDropStyleDialog": "Dialogue",
+  "Droppables.SettingDropStyleStack": "Empiler",
+  "Droppables.SettingDropStyleRandom": "Aléatoire",
+  "Droppables.SettingDropStyleHorizontalLine": "Ligne horizontale",
+  "Droppables.SettingDropStyleVerticalLine": "Ligne verticale"
+}
