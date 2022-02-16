@@ -1,0 +1,23 @@
+{
+  "Droppables.DropActorsFolder": "キャラクターフォルダの中身をここに置く",
+  "Droppables.DropButton": "置く",
+  "Droppables.DropStyle": "置き方",
+  "Droppables.DropExplanation": "マップ上に、どのように置く？",
+  "Droppables.StackedUp": "重ねておく",
+  "Droppables.Randomly": "ランダムに置く",
+  "Droppables.HorizontalLine": "左から右へ並べて置く",
+  "Droppables.VerticalLine": "上から下に並べて置く",
+  "Droppables.Elevation": "高さ",
+  "Droppables.ElevationOptional": "高さをここに記入",
+
+  "Droppables.DropJournalFolder": "資料フォルダの中身をここに置く",
+  "Droppables.DropJournalFolderExplanation": "{folderName}フォルダの中身を全てここに置きますか？",
+
+  "Droppables.SettingDropStyle": "置き方",
+  "Droppables.SettingDropStyleHint": "ここで、普段どのようにフォルダの中身を置くかを決めることができる。 \"ダイアログ\" を選択すれば、毎回置き方を選択できる。",
+  "Droppables.SettingDropStyleDialog": "ダイアログ",
+  "Droppables.SettingDropStyleStack": "重ねて置く",
+  "Droppables.SettingDropStyleRandom": "ランダムに置く",
+  "Droppables.SettingDropStyleHorizontalLine": "左から右へ並べて置く",
+  "Droppables.SettingDropStyleVerticalLine": "上から下に並べて置く"
+}
