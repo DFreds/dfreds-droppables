@@ -1,5 +1,5 @@
 {
-  "name": "dfreds-droppables",
+  "id": "dfreds-droppables",
   "title": "DFreds Droppables",
   "description": "A FoundryVTT module that adds support for dropping folders onto the canvas.",
   "author": "DFreds",
@@ -17,8 +17,11 @@
   "changelog": "https://github.com/DFreds/dfreds-droppables/releases",
   "flags": {},
   "version": "1.2.5",
-  "minimumCoreVersion": "0.8.6",
-  "compatibleCoreVersion": "9",
+  "compatibility": {
+    "minimum": 10,
+    "verified": "10.284",
+    "maximum": 10
+  },
   "scripts": [],
   "esmodules": ["./scripts/main.js"],
   "styles": ["./styles/dfreds-droppables.css"],
