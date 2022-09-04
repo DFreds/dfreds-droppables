@@ -47,8 +47,8 @@ export default class Droppable {
   }
 
   async _handleActorFolder(data, event) {
-    const folder = game.folders.get(data.id);
-    const actors = folder.content;
+    const folder = fromUuidSync(data.uuid);
+    const actors = folder.contents;
     const topLeft = this._translateToTopLeftGrid(event);
 
     if (actors.length === 0) return;
@@ -239,8 +239,8 @@ export default class Droppable {
     let offsetY = 0;
 
     for (let actor of actors) {
-      const width = getProperty(actor, 'data.token.width') || 1;
-      const height = getProperty(actor, 'data.token.height') || 1;
+      const width = getProperty(actor, 'prototypeToken.width') || 1;
+      const height = getProperty(actor, 'prototypeToken.height') || 1;
 
       await this._dropActor({
         actor,
@@ -259,7 +259,7 @@ export default class Droppable {
   }
 
   async _dropActor({ actor, xPosition, yPosition, isHidden, elevation }) {
-    const tokenData = actor.data.token.toJSON();
+    const tokenData = actor.prototypeToken.toJSON();
 
     tokenData.x = xPosition;
     tokenData.y = yPosition;
@@ -280,8 +280,8 @@ export default class Droppable {
   }
 
   async _handleJournalFolder(data, event) {
-    const folder = game.folders.get(data.id);
-    const entries = folder.content;
+    const folder = fromUuidSync(data.uuid);
+    const entries = folder.contents;
     const topLeft = this._translateToTopLeftGrid(event);
 
     Dialog.confirm({
