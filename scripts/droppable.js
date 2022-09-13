@@ -259,24 +259,16 @@ export default class Droppable {
   }
 
   async _dropActor({ actor, xPosition, yPosition, isHidden, elevation }) {
-    const tokenData = actor.prototypeToken.toJSON();
+    const tokenDocument = await actor.getTokenDocument({
+      x: xPosition,
+      y: yPosition,
+      hidden: isHidden,
+      elevation: isNaN(elevation) ? 0 : elevation,
+    });
 
-    tokenData.x = xPosition;
-    tokenData.y = yPosition;
-
-    tokenData.hidden = isHidden;
-
-    if (elevation) {
-      tokenData.elevation = elevation;
-    }
-
-    if (tokenData.randomImg) {
-      const images = await actor.getTokenImages();
-      const image = images[Math.floor(Math.random() * images.length)];
-      tokenData.img = image;
-    }
-
-    return TokenDocument.create(tokenData, { parent: canvas.scene });
+    return tokenDocument.constructor.create(tokenDocument, {
+      parent: canvas.scene,
+    });
   }
 
   async _handleJournalFolder(data, event) {
