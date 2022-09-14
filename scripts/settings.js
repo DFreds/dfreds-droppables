@@ -36,6 +36,7 @@ export default class Settings {
         name: 'Last Used Drop Style',
         scope: 'client',
         config: false,
+        default: 'random',
         type: String,
       }
     );
