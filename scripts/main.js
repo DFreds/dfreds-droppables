@@ -23,3 +23,12 @@ Hooks.once('setup', () => {
     }
   );
 });
+
+Hooks.on('3DCanvasConfig', (config) => {
+  config.INTERACTIONS.dropFunctions.Folder = async function (event, data) {
+    canvas.tokens.activate();
+
+    const droppable = new Droppable();
+    droppable.handleDrop({ event, data, errorCallback: () => {} });
+  };
+});

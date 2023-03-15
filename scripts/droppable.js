@@ -18,13 +18,31 @@ export default class Droppable {
    * @param  {...any} args - Any arguments provided with the original onDrop function
    */
   onCanvasDrop(wrapper, ...args) {
-    try {
-      const [event] = args;
-      const data = this._getDataFromEvent(event);
+    const [event] = args;
+    const data = this._getDataFromEvent(event);
 
+    this.handleDrop({
+      event,
+      data,
+      errorCallback: () => {
+        wrapper(...args);
+      },
+    });
+  }
+
+  /**
+   * Handles the drop using the event and data
+   *
+   * @param {object} params - the params for dropping data
+   * @param {DragEvent} params.event - the drag event
+   * @param {object} params.data - the data for the event
+   * @param {function} params.errorCallback - the callback when an error occurs
+   */
+  handleDrop({ event, data, errorCallback }) {
+    try {
       // Only handle folder types
       if (data.type !== 'Folder') {
-        wrapper(...args);
+        errorCallback();
         return;
       }
 
@@ -33,11 +51,11 @@ export default class Droppable {
       } else if (data.documentName === 'JournalEntry') {
         this._handleJournalFolder(data, event);
       } else {
-        wrapper(...args);
+        errorCallback();
         return;
       }
     } catch (error) {
-      wrapper(...args);
+      errorCallback();
       return;
     }
   }
@@ -51,6 +69,10 @@ export default class Droppable {
     const actors = folder.contents;
     const topLeft = this._translateToTopLeftGrid(event);
 
+    let xPosition = data.x ?? topLeft[0];
+    let yPosition = data.y ?? topLeft[1];
+    let elevation = data.elevation;
+
     if (actors.length === 0) return;
 
     const dropStyle = this._settings.dropStyle;
@@ -59,47 +81,61 @@ export default class Droppable {
     if (dropStyle === 'dialog') {
       await this._handleDialogChoice({
         actors,
-        xPosition: topLeft[0],
-        yPosition: topLeft[1],
+        xPosition,
+        yPosition,
+        elevation,
         isHidden: event.altKey,
       });
     } else if (dropStyle === 'stack') {
       await this._dropStack({
         actors,
-        xPosition: topLeft[0],
-        yPosition: topLeft[1],
+        xPosition,
+        yPosition,
+        elevation,
         isHidden: event.altKey,
       });
     } else if (dropStyle === 'random') {
       await this._dropRandom({
         actors,
-        xPosition: topLeft[0],
-        yPosition: topLeft[1],
+        xPosition,
+        yPosition,
+        elevation,
         isHidden: event.altKey,
       });
     } else if (dropStyle === 'horizontalLine') {
       await this._dropLine({
         isHorizontal: true,
         actors,
-        xPosition: topLeft[0],
-        yPosition: topLeft[1],
+        xPosition,
+        yPosition,
+        elevation,
         isHidden: event.altKey,
       });
     } else if (dropStyle === 'verticalLine') {
       await this._dropLine({
         isHorizontal: false,
         actors,
-        xPosition: topLeft[0],
-        yPosition: topLeft[1],
+        xPosition,
+        yPosition,
+        elevation,
         isHidden: event.altKey,
       });
     }
   }
 
-  async _handleDialogChoice({ actors, xPosition, yPosition, isHidden }) {
+  async _handleDialogChoice({
+    actors,
+    xPosition,
+    yPosition,
+    elevation,
+    isHidden,
+  }) {
     const content = await renderTemplate(
       'modules/dfreds-droppables/templates/drop-dialog.html',
-      { dropStyle: this._settings.lastUsedDropStyle }
+      {
+        dropStyle: this._settings.lastUsedDropStyle,
+        startingElevation: Math.round(elevation),
+      }
     );
 
     new Dialog(
@@ -112,7 +148,7 @@ export default class Droppable {
             label: game.i18n.localize('Droppables.DropButton'),
             callback: async (html) => {
               const dropStyle = html.find('select[name="drop-style"]').val();
-              const elevation = parseFloat(
+              const dropElevation = parseFloat(
                 html.find('input[name="elevation"]').val()
               );
 
@@ -124,7 +160,7 @@ export default class Droppable {
                   xPosition,
                   yPosition,
                   isHidden,
-                  elevation,
+                  elevation: dropElevation,
                 });
               } else if (dropStyle === 'random') {
                 await this._dropRandom({
@@ -132,7 +168,7 @@ export default class Droppable {
                   xPosition,
                   yPosition,
                   isHidden,
-                  elevation,
+                  elevation: dropElevation,
                 });
               } else if (dropStyle === 'horizontalLine') {
                 await this._dropLine({
@@ -141,7 +177,7 @@ export default class Droppable {
                   xPosition,
                   yPosition,
                   isHidden,
-                  elevation,
+                  elevation: dropElevation,
                 });
               } else if (dropStyle === 'verticalLine') {
                 await this._dropLine({
@@ -150,7 +186,7 @@ export default class Droppable {
                   xPosition,
                   yPosition,
                   isHidden,
-                  elevation,
+                  elevation: dropElevation,
                 });
               }
             },
