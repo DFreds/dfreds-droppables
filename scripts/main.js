@@ -24,6 +24,7 @@ Hooks.once('setup', () => {
   );
 });
 
+// TODO need to double check this works in v11 when it's updated
 Hooks.on('3DCanvasConfig', (config) => {
   config.INTERACTIONS.dropFunctions.Folder = async function (event, data) {
     canvas.tokens.activate();

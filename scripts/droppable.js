@@ -46,9 +46,11 @@ export default class Droppable {
         return;
       }
 
-      if (data.documentName === 'Actor') {
+      const folder = fromUuidSync(data.uuid);
+
+      if (folder.type === 'Actor') {
         this._handleActorFolder(data, event);
-      } else if (data.documentName === 'JournalEntry') {
+      } else if (folder.type === 'JournalEntry') {
         this._handleJournalFolder(data, event);
       } else {
         errorCallback();
