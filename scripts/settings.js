@@ -10,21 +10,17 @@ export default class Settings {
    */
   registerSettings() {
     game.settings.register(Settings.PACKAGE_NAME, Settings.DROP_STYLE, {
-      name: game.i18n.localize('Droppables.SettingDropStyle'),
-      hint: game.i18n.localize('Droppables.SettingDropStyleHint'),
+      name: 'Droppables.SettingDropStyle',
+      hint: 'Droppables.SettingDropStyleHint',
       scope: 'client',
       config: true,
       default: 'dialog',
       choices: {
-        dialog: game.i18n.localize('Droppables.SettingDropStyleDialog'),
-        stack: game.i18n.localize('Droppables.SettingDropStyleStack'),
-        random: game.i18n.localize('Droppables.SettingDropStyleRandom'),
-        horizontalLine: game.i18n.localize(
-          'Droppables.SettingDropStyleHorizontalLine'
-        ),
-        verticalLine: game.i18n.localize(
-          'Droppables.SettingDropStyleVerticalLine'
-        ),
+        dialog: 'Droppables.SettingDropStyleDialog',
+        stack: 'Droppables.SettingDropStyleStack',
+        random: 'Droppables.SettingDropStyleRandom',
+        horizontalLine: 'Droppables.SettingDropStyleHorizontalLine',
+        verticalLine: 'Droppables.SettingDropStyleVerticalLine',
       },
       type: String,
     });
