@@ -1,5 +1,5 @@
 import "../styles/style.scss"; // Keep or else vite will not include this
-import { Droppable } from "./droppable.ts";
+import { DroppableFolders, FolderDropData } from "./droppable-folders.ts";
 import { Settings } from "./settings.ts";
 import { id as MODULE_ID } from "@static/module.json";
 import { libWrapper } from "@static/lib/shim.ts";
@@ -9,7 +9,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("setup", () => {
-    const droppable = new Droppable();
+    const droppableFolders = new DroppableFolders();
 
     // https://github.com/ruipin/fvtt-lib-wrapper/#134-shim
     // Note: Don't simply pass in the function onCanvasDrop, or you lose 'this' referring to Droppable
@@ -21,7 +21,19 @@ Hooks.once("setup", () => {
             wrapped: (event: DragEvent) => any,
             event: DragEvent,
         ) {
-            droppable.onCanvasDrop(wrapped, event);
+            const data = TextEditor.getDragEventData(event) as FolderDropData;
+            if (data.type !== "Folder") {
+                wrapped(event);
+                return;
+            }
+
+            droppableFolders.handleDrop({
+                event,
+                data,
+                errorCallback: () => {
+                    wrapped(event);
+                },
+            });
         },
     );
 });
@@ -33,7 +45,12 @@ Hooks.on("3DCanvasConfig", (config: any) => {
         data: any,
     ) {
         canvas.tokens.activate();
-        const droppable = new Droppable();
-        droppable.handleDrop({ event, data, errorCallback: () => {} });
+        const droppableFolders = new DroppableFolders();
+
+        if (data.type !== "Folder") {
+            return;
+        }
+
+        droppableFolders.handleDrop({ event, data, errorCallback: () => {} });
     };
 });

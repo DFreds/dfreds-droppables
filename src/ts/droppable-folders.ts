@@ -10,46 +10,34 @@ interface DropActorFolderInput {
     isHorizontal?: boolean;
 }
 
-class Droppable {
+interface FolderDropData {
+    type: string;
+    uuid: FolderUUID;
+    x: number;
+    y: number;
+    elevation?: number;
+}
+
+class DroppableFolders {
     #settings = new Settings();
-
-    /**
-     * This function is called when something is dropped onto the canvas. If the
-     * item dropped onto the canvas is a folder, it is handled here. Otherwise,
-     * the original wrapper function is used.
-     *
-     * @param {fn} wrapper - The original onDrop function
-     * @param  {...any} args - Any arguments provided with the original onDrop function
-     */
-    onCanvasDrop(wrapped: (event: DragEvent) => any, event: DragEvent): void {
-        const data = this.#getDataFromEvent(event);
-
-        this.handleDrop({
-            event,
-            data,
-            errorCallback: () => {
-                wrapped(event);
-            },
-        });
-    }
 
     /**
      * Handles the drop using the event and data
      *
-     * @param {object} params - the params for dropping data
+     * @param {Object} params - the params for dropping data
      * @param {DragEvent} params.event - the drag event
      * @param {object} params.data - the data for the event
      * @param {function} params.errorCallback - the callback when an error occurs
      */
-    handleDrop({
+    async handleDrop({
         event,
         data,
         errorCallback,
     }: {
         event: DragEvent;
-        data: any;
+        data: FolderDropData;
         errorCallback: () => void;
-    }): void {
+    }): Promise<void> {
         try {
             // Only handle folder types
             if (data.type !== "Folder") {
@@ -57,12 +45,12 @@ class Droppable {
                 return;
             }
 
-            const folder = fromUuidSync(data.uuid);
+            const folder = (await fromUuid(data.uuid)) as Folder | null;
 
             if (folder?.type === "Actor") {
-                this.#handleActorFolder(data, event);
+                this.#handleActorFolder(data, folder, event);
             } else if (folder?.type === "JournalEntry") {
-                this.#handleJournalFolder(data, event);
+                this.#handleJournalFolder(folder, event);
             } else {
                 errorCallback();
                 return;
@@ -73,13 +61,11 @@ class Droppable {
         }
     }
 
-    #getDataFromEvent(event: DragEvent): any {
-        return JSON.parse(event.dataTransfer?.getData("text/plain") ?? "");
-    }
-
-    async #handleActorFolder(data: any, event: DragEvent) {
-        const uuid = data.uuid as FolderUUID;
-        const folder = (await fromUuid(uuid)) as Folder | null;
+    async #handleActorFolder(
+        data: FolderDropData,
+        folder: Folder,
+        event: DragEvent,
+    ) {
         const actors = folder?.contents as Actor[];
         const topLeft = this.#translateToTopLeftGrid(event);
 
@@ -350,9 +336,10 @@ class Droppable {
         // });
     }
 
-    async #handleJournalFolder(data: any, event: DragEvent): Promise<void> {
-        const uuid = data.uuid as FolderUUID;
-        const folder = (await fromUuid(uuid)) as Folder | null;
+    async #handleJournalFolder(
+        folder: Folder,
+        event: DragEvent,
+    ): Promise<void> {
         const entries = folder?.contents as JournalEntry[];
         const topLeft = this.#translateToTopLeftGrid(event);
 
@@ -403,4 +390,5 @@ class Droppable {
     }
 }
 
-export { Droppable };
+export { DroppableFolders };
+export type { FolderDropData };
