@@ -1,0 +1,60 @@
+{
+    "id": "dfreds-droppables",
+    "title": "DFreds Droppables",
+    "description": "A FoundryVTT module that adds support for dropping folders onto the canvas.",
+    "version": "1.2.5",
+    "compatibility": {
+        "minimum": 11,
+        "verified": "11.315",
+        "maximum": 11
+    },
+    "esmodules": ["vendor.mjs", "dfreds-droppables.mjs"],
+    "scripts": [],
+    "styles": ["styles/dfreds-droppables.css"],
+    "packs": [],
+    "packFolders": [],
+    "relationships": {
+        "systems": [],
+        "requires": []
+    },
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        },
+        {
+            "lang": "ja",
+            "name": "日本語",
+            "path": "lang/ja.json"
+        },
+        {
+            "lang": "es",
+            "name": "Spanish",
+            "path": "lang/es.json"
+        },
+        {
+            "lang": "fr",
+            "name": "Français",
+            "path": "lang/fr.json"
+        }
+    ],
+    "system": [],
+    "authors": [
+        {
+            "name": "DFreds",
+            "url": "https://github.com/DFreds",
+            "discord": "DFreds#1238"
+        }
+    ],
+    "socket": false,
+    "url": "https://github.com/DFreds/dfreds-droppables",
+    "manifest": "https://github.com/DFreds/dfreds-droppables/releases/latest/download/module.json",
+    "download": "https://github.com/DFreds/dfreds-droppables/releases/download/v1.2.5/dfreds-droppables.zip",
+    "license": "https://github.com/DFreds/dfreds-droppables/blob/main/LICENSE",
+    "readme": "https://github.com/DFreds/dfreds-droppables/blob/main/README.md",
+    "bugs": "https://github.com/DFreds/dfreds-droppables/issues",
+    "changelog": "https://github.com/DFreds/dfreds-droppables/releases",
+    "library": false,
+    "media": []
+}
