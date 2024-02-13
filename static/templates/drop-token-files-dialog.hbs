@@ -1,0 +1,19 @@
+<form id="drop-token-files-dialog" class="droppables-dialog-form">
+    {{! TODO localize }}
+    <p>Select the actor type for each file.</p>
+
+    {{#each uploadedData as |data|}}
+        <div class="form-group">
+            <label class="droppables-dialog-label">{{data.fileName}}</label>
+            <div class="form-fields">
+                <select
+                    name="type"
+                    data-file-name="{{data.fileName}}"
+                    data-file-path="{{data.response.path}}"
+                >
+                    {{selectOptions data.types selected=data.selectedType}}
+                </select>
+            </div>
+        </div>
+    {{/each}}
+</form>

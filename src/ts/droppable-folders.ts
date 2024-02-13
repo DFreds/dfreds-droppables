@@ -1,5 +1,7 @@
+import { Droppable } from "./droppable.ts";
 import { log } from "./logger.ts";
 import { Settings } from "./settings.ts";
+import { translateToTopLeftGrid } from "./util.ts";
 
 interface DropActorFolderInput {
     actors: Actor[];
@@ -10,6 +12,12 @@ interface DropActorFolderInput {
     isHorizontal?: boolean;
 }
 
+interface DropJournalFolderInput {
+    entry: JournalEntry;
+    xPosition: number;
+    yPosition: number;
+}
+
 interface FolderDropData {
     type: string;
     uuid: FolderUUID;
@@ -18,47 +26,40 @@ interface FolderDropData {
     elevation?: number;
 }
 
-class DroppableFolders {
+class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
     #settings = new Settings();
 
-    /**
-     * Handles the drop using the event and data
-     *
-     * @param {Object} params - the params for dropping data
-     * @param {DragEvent} params.event - the drag event
-     * @param {object} params.data - the data for the event
-     * @param {function} params.errorCallback - the callback when an error occurs
-     */
-    async handleDrop({
-        event,
-        data,
-        errorCallback,
-    }: {
-        event: DragEvent;
-        data: FolderDropData;
-        errorCallback: () => void;
-    }): Promise<void> {
-        try {
-            // Only handle folder types
-            if (data.type !== "Folder") {
-                errorCallback();
-                return;
-            }
+    constructor(event: DragEvent) {
+        super(event);
+    }
 
-            const folder = (await fromUuid(data.uuid)) as Folder | null;
+    override canHandleDrop(): boolean {
+        return this.data.type === "Folder";
+    }
 
-            if (folder?.type === "Actor") {
-                this.#handleActorFolder(data, folder, event);
-            } else if (folder?.type === "JournalEntry") {
-                this.#handleJournalFolder(folder, event);
-            } else {
-                errorCallback();
-                return;
-            }
-        } catch (error) {
-            errorCallback();
-            return;
+    override retrieveData(): FolderDropData {
+        return TextEditor.getDragEventData(this.event) as FolderDropData;
+    }
+
+    override async handleDrop(): Promise<boolean> {
+        if (!this.canHandleDrop()) return false;
+        this.event.preventDefault();
+
+        const folder = await this.#getFolder();
+
+        if (folder?.type === "Actor") {
+            await this.#handleActorFolder(this.data, folder, this.event);
+            return true;
+        } else if (folder?.type === "JournalEntry") {
+            await this.#handleJournalFolder(folder, this.event);
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    async #getFolder(): Promise<Folder | null> {
+        return fromUuid(this.data.uuid);
     }
 
     async #handleActorFolder(
@@ -67,7 +68,7 @@ class DroppableFolders {
         event: DragEvent,
     ) {
         const actors = folder?.contents as Actor[];
-        const topLeft = this.#translateToTopLeftGrid(event);
+        const topLeft = translateToTopLeftGrid(event);
 
         const xPosition: number = data.x ?? topLeft[0];
         const yPosition: number = data.y ?? topLeft[1];
@@ -131,7 +132,7 @@ class DroppableFolders {
         isHidden,
     }: DropActorFolderInput): Promise<void> {
         const content = await renderTemplate(
-            "modules/dfreds-droppables/templates/drop-dialog.html",
+            "modules/dfreds-droppables/templates/drop-dialog.hbs",
             {
                 dropStyle: this.#settings.lastUsedDropStyle,
                 startingElevation: elevation ? Math.round(elevation) : null,
@@ -341,7 +342,7 @@ class DroppableFolders {
         event: DragEvent,
     ): Promise<void> {
         const entries = folder?.contents as JournalEntry[];
-        const topLeft = this.#translateToTopLeftGrid(event);
+        const topLeft = translateToTopLeftGrid(event);
 
         Dialog.confirm({
             title: game.i18n.localize("Droppables.DropJournalFolder"),
@@ -365,11 +366,9 @@ class DroppableFolders {
         entry,
         xPosition,
         yPosition,
-    }: {
-        entry: JournalEntry;
-        xPosition: number;
-        yPosition: number;
-    }): Promise<NoteDocument<Scene | null> | undefined> {
+    }: DropJournalFolderInput): Promise<
+        NoteDocument<Scene | null> | undefined
+    > {
         return NoteDocument.create(
             {
                 entryId: entry.id,
@@ -378,15 +377,6 @@ class DroppableFolders {
             },
             { parent: canvas.scene },
         );
-    }
-
-    #translateToTopLeftGrid(event: DragEvent): PointArray {
-        // @ts-expect-error World transfer isn't defined on token layer for some reason
-        const transform = canvas.tokens.worldTransform;
-        const tx = (event.clientX - transform.tx) / canvas.stage.scale.x;
-        const ty = (event.clientY - transform.ty) / canvas.stage.scale.y;
-
-        return canvas.grid.getTopLeft(tx, ty);
     }
 }
 

@@ -2,14 +2,15 @@ import { id as MODULE_ID } from "@static/module.json";
 
 class Settings {
     // Settings keys
-    #DROP_STYLE = "dropStyle";
-    #LAST_USED_DROP_STYLE = "lastUsedDropStyle";
+    #FOLDER_DROP_STYLE = "dropStyle";
+    #LAST_USED_FOLDER_DROP_STYLE = "lastUsedDropStyle";
 
     /**
      * Register all settings for the module
      */
     registerSettings(): void {
-        game.settings.register(MODULE_ID, this.#DROP_STYLE, {
+        // TODO other languages localize
+        game.settings.register(MODULE_ID, this.#FOLDER_DROP_STYLE, {
             name: "Droppables.SettingDropStyle",
             hint: "Droppables.SettingDropStyleHint",
             scope: "client",
@@ -25,8 +26,8 @@ class Settings {
             type: String,
         });
 
-        game.settings.register(MODULE_ID, this.#LAST_USED_DROP_STYLE, {
-            name: "Last Used Drop Style",
+        game.settings.register(MODULE_ID, this.#LAST_USED_FOLDER_DROP_STYLE, {
+            name: "Last Used Folder Drop Style",
             scope: "client",
             config: false,
             default: "random",
@@ -37,21 +38,21 @@ class Settings {
     /**
      * Returns the game setting for drop style
      *
-     * @return a string representing the chosen drop style
+     * @returns a string representing the chosen drop style
      */
     get dropStyle(): string {
-        return game.settings.get(MODULE_ID, this.#DROP_STYLE) as string;
+        return game.settings.get(MODULE_ID, this.#FOLDER_DROP_STYLE) as string;
     }
 
     /**
      * Returns the game setting for the last used drop style
      *
-     * @return a string representing the last drop style
+     * @returns a string representing the last drop style
      */
     get lastUsedDropStyle(): string {
         return game.settings.get(
             MODULE_ID,
-            this.#LAST_USED_DROP_STYLE,
+            this.#LAST_USED_FOLDER_DROP_STYLE,
         ) as string;
     }
 
@@ -61,7 +62,7 @@ class Settings {
      * @param value - a value representing the last used drop style
      */
     set lastUsedDropStyle(value: string) {
-        game.settings.set(MODULE_ID, this.#LAST_USED_DROP_STYLE, value);
+        game.settings.set(MODULE_ID, this.#LAST_USED_FOLDER_DROP_STYLE, value);
     }
 }
 

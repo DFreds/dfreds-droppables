@@ -1,7 +1,7 @@
-#drop-folder {
+.droppables-dialog-form {
     margin-bottom: 1em;
-}
 
-#drop-folder label {
-    flex: 0 0 80px;
+    form-group .droppables-dialog-label {
+        flex: 0 0 80px;
+    }
 }

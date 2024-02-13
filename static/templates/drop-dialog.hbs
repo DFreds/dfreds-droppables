@@ -1,7 +1,7 @@
-<form id="drop-folder" onsubmit="event.preventDefault();">
+<form id="drop-folder" class="droppables-dialog-form" onsubmit="event.preventDefault();">
   <p>{{localize 'Droppables.DropExplanation'}}</p>
   <div class="form-group">
-    <label>{{localize 'Droppables.DropStyle'}}</label>
+    <label class="droppables-dialog-label">{{localize 'Droppables.DropStyle'}}</label>
     <div class="form-fields">
       <select name="drop-style">
         {{#select dropStyle}}
