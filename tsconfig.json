@@ -14,7 +14,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "outDir": "dist",
     "paths": {
@@ -32,7 +32,8 @@
     "typeRoots": [
       "node_modules/@types",
       "types/foundry",
-      "types/libWrapper"
+      "types/libWrapper",
+      "types/myFoundry"
     ],
     "types": [
         "jquery",
