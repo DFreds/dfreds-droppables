@@ -144,9 +144,9 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
             },
         );
         return Dialog.prompt({
-            title: "Token Actor Types",
+            title: game.i18n.localize("Droppables.TokenActorTypes"),
             content: content,
-            label: "Confirm",
+            label: game.i18n.localize("Droppables.Confirm"),
             rejectClose: false,
             callback: async (html) => {
                 const tokenDropDatas = html

@@ -13,6 +13,10 @@
     "Droppables.DropJournalFolder": "Drop Journal Folder",
     "Droppables.DropJournalFolderExplanation": "Drop all journal entries in {folderName} as pins?",
 
+    "Droppables.ActorUploadExplanation": "Select the actor type for each file.",
+    "Droppables.TokenActorTypes": "Token Actor Types",
+    "Droppables.Confirm": "Confirm",
+
     "Droppables.SettingDropStyle": "Drop Style",
     "Droppables.SettingDropStyleHint": "This is how the items in the folder will be dropped onto the canvas. Choosing \"Dialog\" will prompt you each time for one of the options.",
     "Droppables.SettingDropStyleDialog": "Dialog",
