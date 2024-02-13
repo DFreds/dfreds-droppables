@@ -44,6 +44,11 @@ const dirsToInclude = [
     path.resolve(dirToSearch, "vite.config.ts"),
 ];
 const filesToInclude = [path.resolve(dirToSearch, ".gitignore")];
+const lockFilePath = path.resolve(
+    dirToSearch,
+    "static",
+    "dfreds-module-template-ts.lock",
+);
 
 const files = fs
     .readdirSync(dirToSearch, {
@@ -77,6 +82,12 @@ try {
 
         fs.writeFileSync(file, replaced);
     }
+
+    // Rename the lock file
+    fs.renameSync(
+        lockFilePath,
+        path.resolve(dirToSearch, "static", `${newModuleIdentifier}.lock`),
+    );
 } catch (error) {
     console.error(error);
     process.exit(1);

@@ -1,10 +1,11 @@
 import * as Vite from "vite";
-import fs from "fs";
 import checker from "vite-plugin-checker";
 import esbuild from "esbuild";
+import fs from "fs";
+import packageJSON from "./package.json" assert { type: "json" };
+import path from "path";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import packageJSON from "./package.json" assert { type: "json" };
 
 const PACKAGE_ID = "modules/dfreds-droppables";
 
@@ -18,6 +19,7 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
     if (buildMode === "production") {
         plugins.push(
             minifyPlugin(),
+            deleteLockFilePlugin(),
             ...viteStaticCopy({
                 targets: [{ src: "README.md", dest: "." }],
             }),
@@ -122,6 +124,23 @@ function minifyPlugin(): Vite.Plugin {
                       })
                     : code;
             },
+        },
+    };
+}
+
+function deleteLockFilePlugin(): Vite.Plugin {
+    return {
+        name: "delete-lock-file-plugin",
+        resolveId(source) {
+            return source === "virtual-module" ? source : null;
+        },
+        writeBundle(outputOptions) {
+            const outDir = outputOptions.dir ?? "";
+            const lockFile = path.resolve(
+                outDir,
+                "dfreds-module-template-ts.lock",
+            );
+            fs.rmSync(lockFile);
         },
     };
 }
