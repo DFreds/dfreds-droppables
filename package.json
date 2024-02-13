@@ -6,6 +6,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc && vite build",
+        "dev": "tsc && tsx ./build/clean.ts && vite build --mode development",
         "clean": "tsx ./build/clean.ts",
         "hot": "vite serve",
         "rename-module": "tsx ./build/rename-module.ts",
