@@ -53,11 +53,13 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
         const ambientSoundSources: DeepPartial<AmbientSoundSource>[] = [];
 
         for (const file of this.data.files) {
-            const response = await FilePicker.uploadPersistent(
+            // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
+
+            const response = (await FilePicker.uploadPersistent(
                 MODULE_ID,
                 "sounds",
                 file,
-            );
+            )) as any;
             const topLeft = translateToTopLeftGrid(this.event);
             const ambientSoundSource: DeepPartial<AmbientSoundSource> = {
                 path: response.path,

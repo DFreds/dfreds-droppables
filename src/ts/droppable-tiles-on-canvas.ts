@@ -59,11 +59,12 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             false;
         const tileSources: DeepPartial<TileSource>[] = [];
         for (const file of this.data.files) {
-            const response = await FilePicker.uploadPersistent(
+            // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
+            const response = (await FilePicker.uploadPersistent(
                 MODULE_ID,
                 "tiles",
                 file,
-            );
+            )) as any;
             const topLeft = translateToTopLeftGrid(this.event);
             const texture = await loadTexture(response.path);
             const tileSource: DeepPartial<TileSource> = {

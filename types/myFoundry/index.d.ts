@@ -1,24 +1,6 @@
 export {};
 
 declare global {
-    namespace FilePicker {
-        export function uploadPersistent(
-            packageId: string,
-            path: string,
-            file: File,
-            body?: object,
-            options?: { notify?: boolean },
-        ): Promise<any>;
-    }
-
-    interface Localization {
-        has(stringId: string, fallback?: boolean): boolean;
-    }
-
-    interface Game {
-        documentTypes: Record<string, string[]>;
-    }
-
     interface ApplicationOptions {}
 
     interface PromptDialogData {
