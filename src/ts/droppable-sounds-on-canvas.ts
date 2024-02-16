@@ -54,7 +54,6 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
 
         for (const file of this.data.files) {
             // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
-
             const response = (await FilePicker.uploadPersistent(
                 MODULE_ID,
                 "sounds",

@@ -75,9 +75,7 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
 
         return {
             files: Array.from(files).filter((file) => {
-                return (
-                    file.type.includes("image") || file.type.includes("video")
-                );
+                return file.type.includes("image");
             }),
         };
     }
