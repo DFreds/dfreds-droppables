@@ -37,6 +37,8 @@ A new actor is created of a chosen type with the actor image and token image set
 
 Supported Files: Images
 
+![Dropping Tokens](docs/droppable-tokens.mp4)
+
 #### Tiles Layer
 
 A new tile is created using the dropped image or video.
