@@ -136,10 +136,7 @@ function deleteLockFilePlugin(): Vite.Plugin {
         },
         writeBundle(outputOptions) {
             const outDir = outputOptions.dir ?? "";
-            const lockFile = path.resolve(
-                outDir,
-                "dfreds-module-template-ts.lock",
-            );
+            const lockFile = path.resolve(outDir, "dfreds-droppables.lock");
             fs.rmSync(lockFile);
         },
     };
