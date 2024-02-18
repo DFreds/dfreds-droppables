@@ -1,47 +1,43 @@
 {
-  "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "allowUnusedLabels": false,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "noEmit": true,
-    "noErrorTruncation": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": true,
-    "outDir": "dist",
-    "paths": {
-        "@static/*": [
-            "static/*"
-        ]
+    "exclude": ["build/**/*"],
+    "compilerOptions": {
+        "allowImportingTsExtensions": true,
+        "allowUnusedLabels": false,
+        "baseUrl": ".",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "noEmit": true,
+        "noErrorTruncation": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": true,
+        "outDir": "dist",
+        "paths": {
+            "@static/*": ["static/*"],
+        },
+        "removeComments": false,
+        "resolveJsonModule": true,
+        "rootDir": ".",
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "ES2022",
+        "typeRoots": [
+            "node_modules/@types",
+            "types/foundry",
+            "types/libWrapper",
+            "types/myFoundry",
+        ],
+        "types": ["jquery", "node"],
+        "useDefineForClassFields": true,
     },
-    "removeComments": false,
-    "resolveJsonModule": true,
-    "rootDir": ".",
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types",
-      "types/foundry",
-      "types/libWrapper",
-      "types/myFoundry"
-    ],
-    "types": [
-        "jquery",
-        "node"
-    ],
-    "useDefineForClassFields": true
-  },
-  "watchOptions": {
-    "excludeDirectories": ["packs/", "static/packs/"]
-  }
+    "watchOptions": {
+        "excludeDirectories": ["packs/", "static/packs/"],
+    },
 }
