@@ -45,17 +45,23 @@ A new tile is created using the dropped image or video.
 
 Supported Files: Images and videos
 
+![Dropping Tiles](docs/droppable-tiles.mp4)
+
 #### Sounds Layer
 
 A new ambient audio is created using the dropped audio.
 
 Supported Files: Audio (duh)
 
+![Dropping Sounds](docs/droppable-sounds.mp4)
+
 #### Notes Layer
 
-A new journal is created with journal entries corresponding to the type of file dropped. In the case of a text file, it will copy all the text to the new journal entry.
+A single journal is created with journal entries corresponding to each of the files dropped. In the case of a text file, it will copy all the text to the new journal entry.
 
 Supported Files: Images, videos, PDFs, and text files
+
+![Dropping Notes](docs/droppable-notes.mp4)
 
 ### libWrapper
 
