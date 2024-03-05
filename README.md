@@ -10,7 +10,7 @@
 ![Latest Release Download Count](https://img.shields.io/github/downloads/DFreds/dfreds-droppables/latest/dfreds-droppables.zip?color=2b82fc&label=LATEST%20DOWNLOADS&style=for-the-badge)
 ![Total Download Count](https://img.shields.io/github/downloads/DFreds/dfreds-droppables/total?color=2b82fc&label=TOTAL%20DOWNLOADS&style=for-the-badge)
 
-__DFreds Droppables__ is a FoundryVTT module which allows you to drag and drop an entire folder of tokens or journal entries onto the canvas.
+__DFreds Droppables__ is a FoundryVTT module which allows you to drag and drop an entire folder of tokens or journal entries onto the canvas as well as uploading files for tokens, tiles, sounds, or notes.
 
 ## Let Me Sell You This
 
