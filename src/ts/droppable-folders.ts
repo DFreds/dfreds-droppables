@@ -38,7 +38,14 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
     }
 
     override retrieveData(): FolderDropData {
-        return TextEditor.getDragEventData(this.event) as FolderDropData;
+        const json = TextEditor.getDragEventData(this.event);
+        return {
+            type: json["type"] as string,
+            uuid: json["uuid"] as FolderUUID,
+            x: json["x"] as number,
+            y: json["y"] as number,
+            elevation: json["elevation"] as number | undefined,
+        };
     }
 
     override async handleDrop(): Promise<boolean> {
