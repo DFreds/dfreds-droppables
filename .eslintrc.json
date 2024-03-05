@@ -13,7 +13,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["dist/"],
+  "ignorePatterns": ["dist/", "build/"],
   "rules": {
     "eqeqeq": "error",
     "prettier/prettier": "error",
