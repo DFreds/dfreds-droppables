@@ -2,15 +2,22 @@ import { id as MODULE_ID } from "@static/module.json";
 import { TileSource } from "types/foundry/common/documents/tile.js";
 import { Droppable } from "./droppable.ts";
 import { FilesDropData } from "./types.ts";
+import { Settings } from "./settings.ts";
 import { translateToTopLeftGrid } from "./util.ts";
 
 class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
+    #settings = new Settings();
+
     constructor(event: DragEvent) {
         super(event);
     }
 
     override canHandleDrop(): boolean {
         const isGM = game.user.isGM;
+
+        if (!this.#settings.canvasDragUpload) {
+            return false;
+        }
 
         const isTileLayer =
             canvas.activeLayer?.name?.includes("TilesLayer") ?? false;

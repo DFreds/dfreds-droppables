@@ -2,6 +2,7 @@ import { id as MODULE_ID } from "@static/module.json";
 import { TokenSource } from "types/foundry/common/documents/token.js";
 import { Droppable } from "./droppable.ts";
 import { FilesDropData } from "./types.ts";
+import { Settings } from "./settings.ts";
 import { translateToTopLeftGrid } from "./util.ts";
 
 interface TokenDropData {
@@ -18,12 +19,18 @@ interface TokenUploadData {
 }
 
 class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
+    #settings = new Settings();
+
     constructor(event: DragEvent) {
         super(event);
     }
 
     override canHandleDrop(): boolean {
         const isGM = game.user.isGM;
+
+        if (!this.#settings.canvasDragUpload) {
+            return false;
+        }
 
         const isTokenLayer =
             canvas.activeLayer?.name?.includes("TokenLayer") ?? false;

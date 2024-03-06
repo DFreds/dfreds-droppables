@@ -23,5 +23,8 @@
     "Droppables.SettingDropStyleStack": "Stack",
     "Droppables.SettingDropStyleRandom": "Random",
     "Droppables.SettingDropStyleHorizontalLine": "Horizontal Line",
-    "Droppables.SettingDropStyleVerticalLine": "Vertical Line"
+    "Droppables.SettingDropStyleVerticalLine": "Vertical Line",
+
+    "Droppables.SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload",
+    "Droppables.SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer."
 }

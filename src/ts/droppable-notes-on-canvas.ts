@@ -7,6 +7,7 @@ import { JournalEntrySource } from "types/foundry/common/documents/journal-entry
 import { NoteSource } from "types/foundry/common/documents/note.js";
 import { Droppable } from "./droppable.ts";
 import { FilesDropData } from "./types.ts";
+import { Settings } from "./settings.ts";
 import { translateToTopLeftGrid } from "./util.ts";
 
 interface NoteUploadData {
@@ -17,12 +18,18 @@ interface NoteUploadData {
 }
 
 class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
+    #settings = new Settings();
+
     constructor(event: DragEvent) {
         super(event);
     }
 
     override canHandleDrop(): boolean {
         const isGM = game.user.isGM;
+
+        if (!this.#settings.canvasDragUpload) {
+            return false;
+        }
 
         const isNoteLayer =
             canvas.activeLayer?.name?.includes("NotesLayer") ?? false;
