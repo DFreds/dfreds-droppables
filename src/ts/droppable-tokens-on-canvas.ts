@@ -73,17 +73,24 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
+        const hasUrl = !!this.data.url;
+        if (hasUrl) {
+            // If a URL exists, just let Foundry handle it for now
+            // TODO probably want to eventually handle this
+            return false;
+        }
+
         return true;
     }
 
     override retrieveData(): FilesDropData {
         const files = this.event.dataTransfer?.files || new FileList();
-        // const url = this.event.dataTransfer?.getData("Text");
 
         return {
             files: Array.from(files).filter((file) => {
                 return file.type.includes("image");
             }),
+            url: this.event.dataTransfer?.getData("text"),
         };
     }
 

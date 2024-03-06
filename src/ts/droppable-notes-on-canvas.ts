@@ -72,6 +72,13 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
+        const hasUrl = !!this.data.url;
+        if (hasUrl) {
+            // If a URL exists, just let Foundry handle it for now
+            // TODO probably want to eventually handle this
+            return false;
+        }
+
         return true;
     }
 
@@ -87,6 +94,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
                     file.type.includes("text")
                 );
             }),
+            url: this.event.dataTransfer?.getData("text"),
         };
     }
 

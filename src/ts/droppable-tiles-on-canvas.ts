@@ -40,6 +40,13 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
+        const hasUrl = !!this.data.url;
+        if (hasUrl) {
+            // If a URL exists, just let Foundry handle it for now
+            // TODO probably want to eventually handle this
+            return false;
+        }
+
         return true;
     }
 
@@ -52,6 +59,7 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
                     file.type.includes("image") || file.type.includes("video")
                 );
             }),
+            url: this.event.dataTransfer?.getData("text"),
         };
     }
 
