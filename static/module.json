@@ -4,9 +4,9 @@
     "description": "A FoundryVTT module that adds support for dropping folders onto the canvas.",
     "version": "1.2.5",
     "compatibility": {
-        "minimum": 11,
-        "verified": "11.315",
-        "maximum": 11
+        "minimum": 12,
+        "verified": "12.327",
+        "maximum": 12
     },
     "esmodules": ["vendor.mjs", "dfreds-droppables.mjs"],
     "scripts": [],
