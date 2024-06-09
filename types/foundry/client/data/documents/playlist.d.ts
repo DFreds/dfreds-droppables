@@ -97,18 +97,18 @@ declare global {
 
         protected override _preUpdate(
             data: Record<string, unknown>,
-            options: DocumentModificationContext<null>,
+            options: DatabaseUpdateOperation<null>,
             user: User,
         ): Promise<void>;
 
         protected override _onUpdate(
             changed: DeepPartial<this["_source"]>,
-            options: DocumentModificationContext<null>,
+            options: DatabaseUpdateOperation<null>,
             userId: string,
         ): void;
 
         protected override _onDelete(
-            options: DocumentModificationContext<null>,
+            options: DatabaseDeleteOperation<null>,
             userId: string,
         ): void;
 
@@ -117,7 +117,7 @@ declare global {
             collection: "sounds",
             documents: PlaylistSound<this>[],
             data: PlaylistSound<this>["_source"][],
-            options: DocumentModificationContext<this>,
+            options: DatabaseCreateOperation<this>,
             userId: string,
         ): void;
 
@@ -126,7 +126,7 @@ declare global {
             collection: "sounds",
             documents: PlaylistSound<this>[],
             changes: DeepPartial<PlaylistSound<this>["_source"]>[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseUpdateOperation<this>,
             userId: string,
         ): void;
 
@@ -135,7 +135,7 @@ declare global {
             collection: "sounds",
             documents: PlaylistSound<this>[],
             ids: string[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseDeleteOperation<this>,
             userId: string,
         ): void;
 

@@ -21,7 +21,7 @@ declare global {
         new (...args: any[]): T;
         updateDocuments(
             updates?: object[],
-            context?: DocumentModificationContext<T["parent"]>,
+            operation?: Partial<DatabaseUpdateOperation<T["parent"]>>,
         ): Promise<T[]>;
     };
 

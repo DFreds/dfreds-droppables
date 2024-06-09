@@ -32,7 +32,7 @@ declare global {
             }?: {
                 roll?: Roll | null;
                 messageData?: Partial<foundry.documents.ChatMessageSource>;
-                messageOptions?: ChatMessageModificationContext;
+                messageOptions?: ChatMessageCreateOperation;
             },
         ): Promise<ChatMessage | undefined>;
 
@@ -136,7 +136,7 @@ declare global {
             collection: "results",
             documents: TableResult<this>[],
             data: TableResult<this>["_source"][],
-            options: DocumentModificationContext<this>,
+            operation: DatabaseCreateOperation<this>,
             userId: string,
         ): void;
 
@@ -145,7 +145,7 @@ declare global {
             collection: "results",
             documents: TableResult<this>[],
             ids: string[],
-            options: DocumentModificationContext<this>,
+            operation: DatabaseDeleteOperation<this>,
             userId: string,
         ): void;
 
@@ -160,11 +160,11 @@ declare global {
         /**
          * Create a new RollTable entity using all of the Entities from a specific Folder as new results.
          * @param folder  The Folder entity from which to create a roll table
-         * @param options Additional options passed to the RollTable.create method
+         * @param operation Additional options passed to the RollTable.create method
          */
         static fromFolder(
             folder: Folder,
-            options?: DocumentModificationContext<null>,
+            operation?: DatabaseCreateOperation<null>,
         ): Promise<RollTable | undefined>;
     }
 

@@ -1,6 +1,6 @@
 import type { Document, DocumentMetadata } from "../abstract/module.d.ts";
-import type * as documents from "./module.d.ts";
 import type * as fields from "../data/fields.d.ts";
+import type * as documents from "./module.d.ts";
 
 /**
  * The Document definition for FogExploration.
@@ -20,7 +20,7 @@ export default class BaseFogExploration extends Document<
 
     protected override _preUpdate(
         changed: Record<string, unknown>,
-        options: DocumentModificationContext<null>,
+        options: DatabaseUpdateOperation<null>,
         user: documents.BaseUser,
     ): Promise<boolean | void>;
 }

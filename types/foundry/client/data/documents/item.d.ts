@@ -38,25 +38,25 @@ declare global {
 
         protected override _preCreate(
             data: this["_source"],
-            options: DocumentModificationContext<TParent>,
+            options: DatabaseCreateOperation<TParent>,
             user: User,
         ): Promise<boolean | void>;
 
-        protected static override _onCreateDocuments<
+        protected static override _onCreateOperation<
             TDocument extends foundry.abstract.Document,
         >(
             this: ConstructorOf<TDocument>,
             items: TDocument[],
-            context: DocumentModificationContext<TDocument["parent"]>,
-        ): void;
+            context: DatabaseCreateOperation<TDocument["parent"]>,
+        ): Promise<void>;
 
-        protected static override _onDeleteDocuments<
+        protected static override _onDeleteOperation<
             TDocument extends foundry.abstract.Document,
         >(
             this: ConstructorOf<TDocument>,
             items: TDocument[],
-            context: DocumentModificationContext<TDocument["parent"]>,
-        ): void;
+            context: DatabaseDeleteOperation<TDocument["parent"]>,
+        ): Promise<void>;
     }
 
     interface Item<TParent extends Actor | null = Actor | null>

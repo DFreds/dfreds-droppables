@@ -1,3 +1,5 @@
+import ApplicationV2 from "../../client-esm/applications/api/application.js";
+
 export {};
 declare global {
     type HookCallback<P extends unknown[]> = (
@@ -48,7 +50,7 @@ declare global {
         "preCreateItem",
         [
             PreCreate<foundry.documents.ItemSource>,
-            DocumentModificationContext<Actor | null>,
+            DatabaseCreateOperation<Actor | null>,
             string,
         ]
     >;
@@ -72,11 +74,13 @@ declare global {
         ]
     >;
     type HookParamsRender<
-        T extends Application,
+        T extends Application | ApplicationV2,
         N extends string,
     > = HookParameters<
         `render${N}`,
-        [T, JQuery, Awaited<ReturnType<T["getData"]>>]
+        T extends Application
+            ? [T, JQuery, Awaited<ReturnType<T["getData"]>>]
+            : [T, HTMLElement]
     >;
     type HookParamsRenderChatMessage = HookParameters<
         "renderChatMessage",
@@ -91,11 +95,18 @@ declare global {
         N extends string,
     > = HookParameters<
         `update${N}`,
-        [T, Record<string, unknown>, DocumentModificationContext<T["parent"]>]
+        [T, Record<string, unknown>, DatabaseCreateOperation<T["parent"]>]
     >;
     type HookParamsUpdateWorldTime = HookParameters<
         "updateWorldTime",
         [number, number]
+    >;
+    type HookParamsGetProseMirrorMenuDropDowns = HookParameters<
+        "getProseMirrorMenuDropDowns",
+        [
+            foundry.prosemirror.ProseMirrorMenu,
+            Record<string, ProseMirrorDropDownConfig>,
+        ]
     >;
 
     class Hooks {
@@ -154,6 +165,9 @@ declare global {
             ...args: HookParamsRender<SceneControls, "SceneControls">
         ): number;
         static on(...args: HookParamsRender<Settings, "Settings">): number;
+        static on(
+            ...args: HookParamsRender<SettingsConfig, "SettingsConfig">
+        ): number;
         static on(...args: HookParamsRender<TokenHUD, "TokenHUD">): number;
         static on(
             ...args: HookParamsRender<
@@ -167,10 +181,14 @@ declare global {
                 "JournalTextPageSheet"
             >
         ): number;
+        static on(
+            ...args: HookParamsRender<ApplicationV2, "RegionLegend">
+        ): number;
         static on(...args: HookParamsTargetToken): number;
         static on(...args: HookParamsUpdate<Combat, "Combat">): number;
         static on(...args: HookParamsUpdate<Scene, "Scene">): number;
         static on(...args: HookParamsUpdateWorldTime): number;
+        static on(...args: HookParamsGetProseMirrorMenuDropDowns): number;
         static on(...args: HookParameters<string, unknown[]>): number;
 
         /**

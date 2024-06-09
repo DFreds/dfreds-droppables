@@ -1,4 +1,4 @@
-export {};
+import type DocumentSocketResponse from "../../common/abstract/socket.d.ts";
 
 declare global {
     class SocketInterface {
@@ -11,7 +11,7 @@ declare global {
         static dispatch(
             eventName: string,
             request: SocketRequest,
-        ): Promise<SocketResponse>;
+        ): Promise<DocumentSocketResponse>;
 
         /**
          * Handle an error returned from the database, displaying it on screen and in the console

@@ -6,6 +6,7 @@ import type * as fields from "../data/fields.d.ts";
  */
 export default class AdditionalTypesField extends fields.ObjectField<
     object,
+    object,
     false,
     false,
     true

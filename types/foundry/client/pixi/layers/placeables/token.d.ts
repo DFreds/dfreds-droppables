@@ -19,8 +19,6 @@ declare global {
 
         static override documentName: "Token";
 
-        override get gridPrecision(): 1;
-
         /* -------------------------------------------- */
         /*  Properties                                  */
         /* -------------------------------------------- */

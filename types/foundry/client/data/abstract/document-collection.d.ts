@@ -49,7 +49,7 @@ declare abstract class DocumentCollection<
             | Record<string, unknown>
             | ((document: TDocument) => Record<string, unknown>),
         condition?: ((document: TDocument) => boolean) | null,
-        options?: DocumentModificationContext<null>,
+        options?: DatabaseCreateOperation<null>,
     ): Promise<TDocument[]>;
 
     /**
@@ -60,7 +60,7 @@ declare abstract class DocumentCollection<
      */
     protected _preCreateDocuments(
         result: TDocument["_source"][],
-        options: DocumentModificationContext<null>,
+        options: DatabaseCreateOperation<null>,
         userId: string,
     ): void;
 
@@ -74,7 +74,7 @@ declare abstract class DocumentCollection<
     protected _onCreateDocuments(
         documents: TDocument[],
         result: TDocument["_source"][],
-        options: DocumentModificationContext<null>,
+        options: DatabaseCreateOperation<null>,
         userId: string,
     ): void;
 
@@ -86,7 +86,7 @@ declare abstract class DocumentCollection<
      */
     protected _preUpdateDocuments(
         result: TDocument["_source"][],
-        options: DocumentModificationContext<null>,
+        options: DatabaseUpdateOperation<null>,
         userId: string,
     ): void;
 
@@ -100,7 +100,7 @@ declare abstract class DocumentCollection<
     protected _onUpdateDocuments(
         documents: TDocument[],
         result: TDocument["_source"][],
-        options: DocumentModificationContext<null>,
+        options: DatabaseUpdateOperation<null>,
         userId: string,
     ): void;
 
@@ -112,7 +112,7 @@ declare abstract class DocumentCollection<
      */
     protected _preDeleteDocuments(
         result: TDocument["_source"][],
-        options: DocumentModificationContext<null>,
+        options: DatabaseCreateOperation<null>,
         userId: string,
     ): void;
 
@@ -126,7 +126,7 @@ declare abstract class DocumentCollection<
     protected _onDeleteDocuments(
         documents: TDocument[],
         result: string[],
-        options: DocumentModificationContext<null>,
+        options: DatabaseCreateOperation<null>,
         userId: string,
     ): void;
 }

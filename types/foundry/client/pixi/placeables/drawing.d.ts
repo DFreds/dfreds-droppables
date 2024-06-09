@@ -109,7 +109,7 @@ declare class Drawing<
     protected override _onRelease(options?: object): void;
 
     override _onDelete(
-        options: DocumentModificationContext<TDocument["parent"]>,
+        options: DatabaseDeleteOperation<TDocument["parent"]>,
         userId: string,
     ): void;
 

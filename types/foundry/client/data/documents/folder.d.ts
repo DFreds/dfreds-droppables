@@ -57,7 +57,7 @@ declare global {
 
         override _preCreate(
             data: this["_source"],
-            options: DocumentModificationContext<null>,
+            options: DatabaseCreateOperation<null>,
             user: User,
         ): Promise<boolean | void>;
 
@@ -100,7 +100,7 @@ declare global {
         ): Promise<void>;
 
         protected override _onDelete(
-            options: DocumentModificationContext<null>,
+            options: DatabaseDeleteOperation<null>,
             userId: string,
         ): void;
 

@@ -90,12 +90,12 @@ declare global {
 
         protected override _onUpdate(
             changed: DeepPartial<foundry.documents.UserSource>,
-            options: DocumentModificationContext<null>,
+            options: DatabaseUpdateOperation<null>,
             userId: string,
         ): void;
 
         protected override _onDelete(
-            options: DocumentModificationContext<null>,
+            options: DatabaseDeleteOperation<null>,
             userId: string,
         ): void;
     }

@@ -7,7 +7,7 @@ declare global {
      * @see {@link RollTable} The RollTable document type which contains TableResult documents
      */
     class TableResult<
-        TParent extends RollTable,
+        TParent extends RollTable | null,
     > extends ClientBaseTableResult<TParent> {
         /** A path reference to the icon image used to represent this result */
         get icon(): string;

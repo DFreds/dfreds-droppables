@@ -1,4 +1,4 @@
-export {};
+import DocumentSheetV2 from "../../../client-esm/applications/api/document-sheet.js";
 
 declare global {
     interface DocumentSheetConfigData<
@@ -71,7 +71,7 @@ declare global {
          */
         static registerSheet<
             T extends foundry.abstract.Document & {
-                get sheet(): FormApplication<T>;
+                get sheet(): FormApplication<T> | DocumentSheetV2<T>;
             },
         >(
             documentClass: ConstructorOf<T>,
@@ -92,7 +92,7 @@ declare global {
          */
         static unregisterSheet<
             T extends foundry.abstract.Document & {
-                get sheet(): FormApplication<T>;
+                get sheet(): FormApplication<T> | DocumentSheetV2<T>;
             },
         >(
             documentClass: ConstructorOf<T>,

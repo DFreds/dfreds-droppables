@@ -143,7 +143,7 @@ declare class ChatLog<
         command: string,
         matches: RegExpMatchArray[],
         chatData: DeepPartial<foundry.documents.ChatMessageSource>,
-        createOptions: ChatMessageModificationContext,
+        createOptions: ChatMessageCreateOperation,
     ): Promise<void>;
 
     protected _contextMenu(html: JQuery): void;

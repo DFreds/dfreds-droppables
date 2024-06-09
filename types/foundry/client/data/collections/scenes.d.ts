@@ -55,6 +55,12 @@ declare global {
         /* -------------------------------------------- */
 
         /** @override */
-        fromCompendium(document: TScene): foundry.documents.SceneSource;
+        fromCompendium(
+            document: TScene,
+            {
+                clearState,
+                clearSort,
+            }?: { clearState?: boolean } & FromCompendiumOptions,
+        ): foundry.documents.SceneSource;
     }
 }

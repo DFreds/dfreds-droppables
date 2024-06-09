@@ -11,6 +11,9 @@ declare global {
         /** A singleton collection which holds a reference to the synthetic token actor by its base actor's ID. */
         actors: Collection<Actor>;
 
+        /** The Regions this Token is currently in. */
+        regions: Set<RegionDocument> | null;
+
         /**
          * A lazily evaluated reference to the Actor this Token modifies.
          * If actorLink is true, then the document is the primary Actor document.
@@ -107,7 +110,7 @@ declare global {
          */
         modifyActorDocument(
             update: Record<string, unknown>,
-            options: DocumentModificationContext<this>,
+            options: DatabaseOperation<this>,
         ): Promise<Actor<this>[]>;
 
         /* -------------------------------------------- */
@@ -116,13 +119,13 @@ declare global {
 
         protected override _preUpdate(
             data: Record<string, unknown>,
-            options: TokenUpdateContext<TParent>,
+            options: TokenUpdateOperation<TParent>,
             user: User,
         ): Promise<boolean | void>;
 
         protected override _onUpdate(
             changed: DeepPartial<this["_source"]>,
-            options: DocumentModificationContext<TParent>,
+            options: TokenUpdateOperation<TParent>,
             userId: string,
         ): void;
 
@@ -135,7 +138,7 @@ declare global {
             parent: this,
             collection: string,
             data: object[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseCreateOperation<this>,
             userId: string,
         ): void;
 
@@ -143,7 +146,7 @@ declare global {
             parent: this,
             collection: string,
             changes: Record<string, unknown>[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseUpdateOperation<this>,
             userId: string,
         ): void;
 
@@ -151,7 +154,7 @@ declare global {
             parent: this,
             collection: string,
             ids: string[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseDeleteOperation<this>,
             userId: string,
         ): void;
 
@@ -160,7 +163,7 @@ declare global {
             collection: string,
             documents: ClientDocument[],
             data: object[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseCreateOperation<this>,
             userId: string,
         ): void;
 
@@ -169,7 +172,7 @@ declare global {
             collection: string,
             documents: ClientDocument[],
             changes: Record<string, unknown>[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseUpdateOperation<this>,
             userId: string,
         ): void;
 
@@ -178,7 +181,7 @@ declare global {
             collection: string,
             documents: ClientDocument[],
             ids: string[],
-            options: DocumentModificationContext<this>,
+            options: DatabaseDeleteOperation<this>,
             userId: string,
         ): void;
 
@@ -188,7 +191,7 @@ declare global {
          */
         protected _onUpdateBaseActor(
             update?: Record<string, unknown>,
-            options?: DocumentModificationContext<ClientDocument | null>,
+            options?: DatabaseUpdateOperation<ClientDocument | null>,
         ): void;
 
         /**
@@ -198,7 +201,7 @@ declare global {
          */
         protected _onRelatedUpdate(
             update?: Record<string, unknown>,
-            options?: DocumentModificationContext<null>,
+            options?: DatabaseUpdateOperation<null>,
         ): void;
 
         /** Get an Array of attribute choices which could be tracked for Actors in the Combat Tracker */
@@ -229,9 +232,8 @@ declare global {
         actor?: TActor;
     }
 
-    interface TokenUpdateContext<TParent extends Scene | null>
-        extends DocumentModificationContext<TParent> {
-        action?: "create" | "update" | "delete";
+    interface TokenUpdateOperation<TParent extends Scene | null>
+        extends DatabaseUpdateOperation<TParent> {
         embedded?: { embeddedName: string; hookData: { _id?: string }[] };
     }
 

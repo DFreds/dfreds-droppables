@@ -81,18 +81,18 @@ declare global {
         /* -------------------------------------------- */
 
         protected override _preDelete(
-            options: DocumentModificationContext<TParent>,
+            options: DatabaseDeleteOperation<TParent>,
             user: User,
         ): Promise<boolean | void>;
 
         protected override _onUpdate(
             data: DeepPartial<this["_source"]>,
-            options: DocumentModificationContext<TParent>,
+            options: DatabaseUpdateOperation<TParent>,
             userId: string,
         ): void;
 
         protected override _onDelete(
-            options: DocumentModificationContext<TParent>,
+            options: DatabaseDeleteOperation<TParent>,
             userId: string,
         ): void;
 

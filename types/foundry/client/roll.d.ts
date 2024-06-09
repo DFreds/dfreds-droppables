@@ -1,3 +1,11 @@
+import type {
+    DiceTerm,
+    FunctionTerm,
+    OperatorTerm,
+    PoolTerm,
+    RollTerm,
+} from "../client-esm/dice/terms/module.d.ts";
+
 export {};
 
 declare global {
@@ -115,8 +123,6 @@ declare global {
          * @param [options={}] Options which inform how the Roll is evaluated
          * @param [options.minimize=false] Minimize the result, obtaining the smallest possible value.
          * @param [options.maximize=false] Maximize the result, obtaining the largest possible value.
-         * @param [options.async=true]     Evaluate the roll asynchronously, receiving a Promise as the returned value.
-         *                                 This will become the default behavior in version 10.x
          * @returns The evaluated Roll instance
          *
          * @example
@@ -128,18 +134,7 @@ declare global {
         evaluate({
             minimize,
             maximize,
-            async,
-        }: EvaluateRollParams & { async?: false }): Rolled<this>;
-        evaluate({
-            minimize,
-            maximize,
-            async,
-        }: EvaluateRollParams & { async: true }): Promise<Rolled<this>>;
-        evaluate({
-            minimize,
-            maximize,
-            async,
-        }: EvaluateRollParams): Rolled<this> | Promise<Rolled<this>>;
+        }?: EvaluateRollParams): Rolled<this> | Promise<Rolled<this>>;
 
         /**
          * Evaluate the roll asynchronously.
@@ -172,18 +167,7 @@ declare global {
         roll({
             minimize,
             maximize,
-            async,
-        }: EvaluateRollParams & { async?: false }): Rolled<this>;
-        roll({
-            minimize,
-            maximize,
-            async,
-        }: EvaluateRollParams & { async: true }): Promise<Rolled<this>>;
-        roll({
-            minimize,
-            maximize,
-            async,
-        }: EvaluateRollParams): Rolled<this> | Promise<Rolled<this>>;
+        }?: EvaluateRollParams): Promise<Rolled<this>>;
 
         /**
          * Create a new Roll object using the original provided formula and data.
@@ -194,18 +178,7 @@ declare global {
         reroll({
             minimize,
             maximize,
-            async,
-        }: EvaluateRollParams & { async?: false }): Rolled<this>;
-        reroll({
-            minimize,
-            maximize,
-            async,
-        }: EvaluateRollParams & { async: true }): Promise<Rolled<this>>;
-        reroll({
-            minimize,
-            maximize,
-            async,
-        }: EvaluateRollParams): Rolled<this> | Promise<Rolled<this>>;
+        }?: EvaluateRollParams): Promise<Rolled<this>>;
 
         /* -------------------------------------------- */
         /*  Static Class Methods                        */
@@ -305,8 +278,8 @@ declare global {
          */
         protected static _splitParentheses(_formula: string): string[];
 
-        /** Handle closing of a parenthetical term to create a MathTerm expression with a function and arguments */
-        protected static _splitMathArgs(expression: string): MathTerm[];
+        /** Handle closing of a parenthetical term to create a FunctionTerm expression with a function and arguments */
+        protected static _splitMathArgs(expression: string): FunctionTerm[];
 
         /**
          * Split a formula by identifying its outer-most dice pool terms
@@ -548,7 +521,6 @@ declare global {
     interface EvaluateRollParams {
         minimize?: boolean;
         maximize?: boolean;
-        async?: boolean;
     }
 
     // Empty extended interface that can be expanded by the system without polluting Math itself

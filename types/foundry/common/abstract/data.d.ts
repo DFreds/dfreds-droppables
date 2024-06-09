@@ -88,7 +88,8 @@ export default abstract class DataModel<
 
     /** A generator that orders the DataFields in the DataSchema into an expected initialization order. */
     protected static _initializationOrder(): Generator<
-        Record<string, fields.DataField>
+        [string, fields.DataField],
+        void
     >;
 
     /**
@@ -172,7 +173,7 @@ export default abstract class DataModel<
      */
     updateSource(
         changes?: Record<string, unknown> | undefined,
-        options?: DocumentSourceUpdateContext,
+        options?: Partial<DocumentSourceUpdateContext>,
     ): DeepPartial<this["_source"]>;
 
     /* ---------------------------------------- */

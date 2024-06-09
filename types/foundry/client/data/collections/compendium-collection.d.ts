@@ -153,28 +153,28 @@ declare global {
         protected override _onCreateDocuments(
             documents: TDocument[],
             result: TDocument["_source"][],
-            options: DocumentModificationContext<null>,
+            options: DatabaseCreateOperation<null>,
             userId: string,
         ): void;
 
         protected override _onUpdateDocuments(
             documents: TDocument[],
             result: TDocument["_source"][],
-            options: DocumentUpdateContext<null>,
+            options: DatabaseUpdateOperation<null>,
             userId: string,
         ): void;
 
         protected override _onDeleteDocuments(
             documents: TDocument[],
             result: string[],
-            options: DocumentModificationContext<null>,
+            options: DatabaseCreateOperation<null>,
             userId: string,
         ): void;
 
         /** Follow-up actions taken when Documents within this Compendium pack are modified */
         protected _onModifyContents(
             documents: TDocument[],
-            options: DocumentModificationContext<null>,
+            options: DatabaseOperation<null>,
             userId: string,
         ): void;
     }
@@ -182,8 +182,7 @@ declare global {
     type CompendiumDocumentType =
         (typeof CONST.COMPENDIUM_DOCUMENT_TYPES)[number];
     type CompendiumUUID =
-        | `Compendium.${string}.${string}`
-        | `Compendium.${string}.${CompendiumDocumentType}.${string}`;
+        `Compendium.${string}.${CompendiumDocumentType}.${string}`;
     type DocumentUUID = WorldDocumentUUID | CompendiumUUID | TokenDocumentUUID;
 
     function fromUuid(
