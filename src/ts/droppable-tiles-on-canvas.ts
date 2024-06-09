@@ -88,8 +88,8 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
                 height: texture.baseTexture.height,
                 overhead,
                 hidden: this.event.altKey,
-                x: topLeft[0],
-                y: topLeft[1],
+                x: topLeft.x,
+                y: topLeft.y,
             };
 
             tileSources.push(tileSource);
@@ -97,7 +97,10 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
 
         canvas.perception.update({ refreshLighting: true, refreshTiles: true });
 
-        await canvas.scene?.createEmbeddedDocuments("Tile", tileSources, {});
+        await canvas.scene?.createEmbeddedDocuments("Tile", tileSources, {
+            broadcast: true,
+            data: [],
+        });
 
         return true;
     }

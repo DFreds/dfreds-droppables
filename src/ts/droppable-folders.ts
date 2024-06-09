@@ -77,8 +77,8 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         const actors = folder?.contents as Actor[];
         const topLeft = translateToTopLeftGrid(event);
 
-        const xPosition: number = data.x ?? topLeft[0];
-        const yPosition: number = data.y ?? topLeft[1];
+        const xPosition: number = data.x ?? topLeft.x;
+        const yPosition: number = data.y ?? topLeft.y;
         const elevation: number = data.elevation ?? 0;
 
         if (!actors?.length) return;
@@ -255,21 +255,21 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
             });
 
             if (totalTries - tries < totalTries / 4) {
-                offsetX += canvas.grid.w;
+                offsetX += canvas.grid.sizeX;
             } else if (totalTries - tries < (2 * totalTries) / 4) {
-                offsetY += canvas.grid.h;
+                offsetY += canvas.grid.sizeY;
             } else if (totalTries - tries < (3 * totalTries) / 4) {
-                offsetX -= canvas.grid.w;
+                offsetX -= canvas.grid.sizeX;
             } else {
-                offsetY -= canvas.grid.h;
+                offsetY -= canvas.grid.sizeY;
             }
 
             dropped += 1;
 
             if (dropped === Math.pow(1 + distance * 2, 2)) {
                 distance += 1;
-                offsetX = -1 * distance * canvas.grid.w;
-                offsetY = -1 * distance * canvas.grid.h;
+                offsetX = -1 * distance * canvas.grid.sizeX;
+                offsetY = -1 * distance * canvas.grid.sizeY;
             }
         }
     }
@@ -282,7 +282,7 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         isHidden,
         elevation = undefined,
     }: DropActorFolderInput) {
-        const step = isHorizontal ? canvas.grid.w : canvas.grid.h;
+        const step = isHorizontal ? canvas.grid.sizeX : canvas.grid.sizeY;
 
         let offsetX = 0;
         let offsetY = 0;
@@ -361,8 +361,8 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
                 for (const entry of entries) {
                     await this.#dropJournalEntry({
                         entry,
-                        xPosition: topLeft[0],
-                        yPosition: topLeft[1],
+                        xPosition: topLeft.x,
+                        yPosition: topLeft.y,
                     });
                 }
             },

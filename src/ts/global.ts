@@ -15,6 +15,8 @@ declare global {
             Item<null>,
             Macro,
             MeasuredTemplateDocument<null>,
+            RegionDocument<null>,
+            RegionBehavior<null>,
             TileDocument<null>,
             TokenDocument<Scene | null>,
             WallDocument<null>,

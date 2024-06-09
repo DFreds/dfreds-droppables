@@ -77,8 +77,8 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
             const topLeft = translateToTopLeftGrid(this.event);
             const ambientSoundSource: DeepPartial<AmbientSoundSource> = {
                 path: response.path,
-                x: topLeft[0],
-                y: topLeft[1],
+                x: topLeft.x,
+                y: topLeft.y,
                 radius: 10,
                 easing: true,
                 repeat: true,

@@ -200,8 +200,8 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
             const tokenSource: DeepPartial<TokenSource> = {
                 texture: { src: actor.img },
                 hidden: this.event.altKey,
-                x: topLeft[0],
-                y: topLeft[1],
+                x: topLeft.x,
+                y: topLeft.y,
                 actorId: actor.id,
                 actorLink: false,
             };
@@ -213,7 +213,10 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
         }
 
         // TODO actorless option where you delete the associated actor after?
-        return canvas.scene?.createEmbeddedDocuments("Token", tokenSources, {});
+        return canvas.scene?.createEmbeddedDocuments("Token", tokenSources, {
+            broadcast: true,
+            data: [],
+        });
     }
 }
 

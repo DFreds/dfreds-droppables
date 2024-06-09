@@ -182,8 +182,8 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         const topLeft = translateToTopLeftGrid(this.event);
         const noteSource: DeepPartial<NoteSource> = {
             entryId: journal?.id,
-            x: topLeft[0],
-            y: topLeft[1],
+            x: topLeft.x,
+            y: topLeft.y,
         };
 
         await canvas.scene?.createEmbeddedDocuments("Note", [noteSource]);
