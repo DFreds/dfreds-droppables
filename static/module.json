@@ -8,7 +8,7 @@
         "verified": "12.327",
         "maximum": 12
     },
-    "esmodules": ["vendor.mjs", "dfreds-droppables.mjs"],
+    "esmodules": ["dfreds-droppables.mjs"],
     "scripts": [],
     "styles": ["styles/dfreds-droppables.css"],
     "packs": [],

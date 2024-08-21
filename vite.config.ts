@@ -2,7 +2,6 @@ import * as Vite from "vite";
 import checker from "vite-plugin-checker";
 import esbuild from "esbuild";
 import fs from "fs";
-import packageJSON from "./package.json" assert { type: "json" };
 import path from "path";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -45,7 +44,7 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
             "./dfreds-droppables.mjs",
             `/** ${message} */\n\nwindow.global = window;\nimport "./src/ts/module.ts";\n`,
         );
-        fs.writeFileSync("./vendor.mjs", `/** ${message} */\n`);
+        // fs.writeFileSync("./vendor.mjs", `/** ${message} */\n`);
     }
 
     return {
@@ -72,9 +71,12 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
                             : name ?? "",
                     chunkFileNames: "[name].mjs",
                     entryFileNames: "dfreds-droppables.mjs",
-                    manualChunks: {
-                        vendor: Object.keys(packageJSON.dependencies),
-                    },
+                    // manualChunks: {
+                    //     vendor:
+                    //         buildMode === "production"
+                    //             ? Object.keys(packageJSON.dependencies)
+                    //             : [],
+                    // },
                 },
             },
             target: "es2022",
