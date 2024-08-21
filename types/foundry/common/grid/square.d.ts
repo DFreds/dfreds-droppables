@@ -25,13 +25,10 @@ export class SquareGrid extends BaseGrid {
 
     override getShiftedOffset(
         coords: SquareGridCoordinates,
-        direction: (typeof CONST.MOVEMENT_DIRECTIONS)[keyof typeof CONST.MOVEMENT_DIRECTIONS],
+        direction: MovementDirection,
     ): GridOffset;
 
-    override getShiftedPoint(
-        point: Point,
-        direction: (typeof CONST.MOVEMENT_DIRECTIONS)[keyof typeof CONST.MOVEMENT_DIRECTIONS],
-    ): Point;
+    override getShiftedPoint(point: Point, direction: MovementDirection): Point;
 
     override getTopLeftPoint(coords: SquareGridCoordinates): Point;
 
@@ -80,6 +77,12 @@ export class SquareGrid extends BaseGrid {
         rows: number;
         columns: number;
     };
+}
+
+export interface SquareGrid extends BaseGrid {
+    get isGridless(): false;
+    get isHexagonal(): false;
+    get isSquare(): true;
 }
 
 declare global {

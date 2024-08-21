@@ -9,12 +9,7 @@ declare class MeasuredTemplate<
         MeasuredTemplateDocument<Scene | null> = MeasuredTemplateDocument<Scene | null>,
 > extends PlaceableObject<TDocument> {
     /** The template shape used for testing point intersection */
-    shape:
-        | PIXI.Circle
-        | PIXI.Ellipse
-        | PIXI.Polygon
-        | PIXI.Rectangle
-        | PIXI.RoundedRectangle;
+    shape: PlaceableShape;
 
     /** The tiling texture used for this template, if any */
     texture: PIXI.Texture | undefined;
@@ -81,9 +76,7 @@ declare class MeasuredTemplate<
     /*  Incremental Refresh                         */
     /* -------------------------------------------- */
 
-    protected override _applyRenderFlags(flags: {
-        [K in keyof typeof MeasuredTemplate.RENDER_FLAGS]?: boolean;
-    }): void;
+    protected override _applyRenderFlags(flags: TemplateRenderFlags): void;
 
     /**
      * Refresh the displayed state of the MeasuredTemplate.
@@ -106,7 +99,7 @@ declare class MeasuredTemplate<
      * Compute the geometry for the template using its document data.
      * Subclasses can override this method to take control over how different shapes are rendered.
      */
-    protected _computeShape(): PIXI.Circle | PIXI.Rectangle | PIXI.Polygon;
+    protected _computeShape(): TemplateShape;
 
     /**
      * Refresh the display of the template outline and shape.
@@ -141,10 +134,7 @@ declare class MeasuredTemplate<
     highlightGrid(): void;
 
     /** Get the shape to highlight on a Scene which uses grid-less mode. */
-    protected _getGridHighlightShape():
-        | PIXI.Polygon
-        | PIXI.Circle
-        | PIXI.Rectangle;
+    protected _getGridHighlightShape(): TemplateShape;
 
     /** Get an array of points which define top-left grid spaces to highlight for square or hexagonal grids. */
     protected _getGridHighlightPositions(): Point[];
@@ -153,10 +143,7 @@ declare class MeasuredTemplate<
     /*  Methods                                     */
     /* -------------------------------------------- */
 
-    override rotate(
-        angle: number,
-        snap: number,
-    ): Promise<TDocument | undefined>;
+    override rotate(angle: number, snap: number): Promise<this>;
 
     /* -------------------------------------------- */
     /*  Document Event Handlers                     */
@@ -201,3 +188,11 @@ declare interface MeasuredTemplate<
 > extends PlaceableObject<TDocument> {
     get layer(): TemplateLayer<this>;
 }
+
+declare type TemplateShape = Extract<
+    PlaceableShape,
+    PIXI.Circle | PIXI.Polygon | PIXI.Rectangle
+>;
+declare type TemplateRenderFlags = {
+    [K in keyof typeof MeasuredTemplate.RENDER_FLAGS]?: boolean;
+};

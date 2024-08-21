@@ -3,7 +3,7 @@ import type {
     DocumentSheetV2,
 } from "../../../client-esm/applications/api/module.d.ts";
 
-declare class ClientBaseAmbientLight<
+export declare class ClientBaseAmbientLight<
     TParent extends ClientBaseScene | null,
 > extends foundry.documents.BaseAmbientLight<TParent> {
     protected _sheet: DocumentSheet<this> | null;
@@ -1562,9 +1562,13 @@ export class ClientBaseActor<
     /**
      * Present a Dialog form to create a new Document of this type.
      * Choose a name and a type from a select menu of types.
-     * @param [data]       Initial data with which to populate the creation form
-     * @param [context={}] Additional context options or dialog positioning options
+     * @param data             Initial data with which to populate the creation form
+     * @param [context={}]     Additional context options or dialog positioning options
+     * @param [context.parent] A parent document within which the created Document should belong
+     * @param [context.pack]   A compendium pack within which the Document should be created
+     * @param [context.types]  A restriction the selectable sub-types of the Dialog.
      * @returns A Promise which resolves to the created Document, or null if the dialog was closed.
+     * @memberof ClientDocumentMixin
      */
     static createDialog<TDocument extends foundry.abstract.Document>(
         this: ConstructorOf<TDocument>,
@@ -1572,6 +1576,7 @@ export class ClientBaseActor<
         context?: {
             parent?: TDocument["parent"];
             pack?: Collection<TDocument> | null;
+            types?: string[];
         } & Partial<FormApplicationOptions>,
     ): Promise<TDocument | null>;
 

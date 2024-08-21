@@ -1,5 +1,5 @@
 import type * as abstract from "../abstract/module.d.ts";
-import { ALL_DOCUMENT_TYPES } from "../constants.js";
+import type { ALL_DOCUMENT_TYPES } from "../constants.d.ts";
 import type { EffectChangeData } from "../documents/active-effect.d.ts";
 import type Color from "../utils/color.d.ts";
 import type { TombstoneDataSchema } from "./data.d.ts";
@@ -837,7 +837,10 @@ type ArrayFieldOptions<
     TRequired extends boolean,
     TNullable extends boolean,
     THasInitial extends boolean,
-> = DataFieldOptions<TSourceProp, TRequired, TNullable, THasInitial>;
+> = DataFieldOptions<TSourceProp, TRequired, TNullable, THasInitial> & {
+    min?: number;
+    max?: number;
+};
 
 /** A subclass of `DataField` which deals with array-typed data. */
 export class ArrayField<

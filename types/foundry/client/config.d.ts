@@ -7,8 +7,8 @@ import type {
     PointVisionSource,
 } from "../client-esm/canvas/sources/module.ts";
 import type * as terms from "../client-esm/dice/terms/module.d.ts";
-import TypeDataModel from "../common/abstract/type-data.js";
-import { DataSchema } from "../common/data/fields.js";
+import abstract = foundry.abstract;
+import data = foundry.data;
 
 declare global {
     interface Config<
@@ -48,6 +48,23 @@ declare global {
             avclient: boolean;
             mouseInteraction: boolean;
             time: boolean;
+        };
+
+        compendium: {
+            /**
+             * Configure a table of compendium UUID redirects. Must be configured before the game *ready* hook is fired.
+             *
+             * @example Re-map individual UUIDs
+             * ```js
+             * CONFIG.compendium.uuidRedirects["Compendium.system.heroes.Actor.Tf0JDPzHOrIxz6BH"] = "Compendium.system.villains.Actor.DKYLeIliXXzlAZ2G";
+             * ```
+             *
+             * @example Redirect UUIDs from one compendium to another.
+             * ```js
+             * CONFIG.compendium.uuidRedirects["Compendium.system.heroes"] = "Compendium.system.villains";
+             * ```
+             */
+            uuidRedirects: Record<string, string>;
         };
 
         /** Configure the DatabaseBackend used to perform Document operations */
@@ -128,7 +145,9 @@ declare global {
             collection: typeof Items;
             dataModels: Record<
                 string,
-                ConstructorOf<TypeDataModel<Item, DataSchema>>
+                ConstructorOf<
+                    abstract.TypeDataModel<Item, data.fields.DataSchema>
+                >
             >;
             typeIcons: Record<string, string>;
             typeLabels: Record<string, string | undefined>;
@@ -235,9 +254,6 @@ declare global {
             objectClass: ConstructorOf<
                 NonNullable<TAmbientLightDocument["object"]>
             >;
-            layerClass: ConstructorOf<
-                NonNullable<TAmbientLightDocument["object"]>["layer"]
-            >;
         };
 
         /** Configuration for the ActiveEffect embedded document type */
@@ -265,6 +281,26 @@ declare global {
             ) => TCombatant;
         };
 
+        /**
+         * Configuration for the JournalEntryPage embedded document type.
+         */
+        JournalEntryPage: {
+            documentClass: typeof JournalEntryPage;
+            dataModels: Record<
+                string,
+                ConstructorOf<
+                    abstract.TypeDataModel<
+                        abstract.Document,
+                        data.fields.DataSchema
+                    >
+                >
+            >;
+            typeLabels: {};
+            typeIcons: Record<string, string>;
+            defaultType: string;
+            sidebarIcon: string;
+        };
+
         /** Configuration for the MeasuredTemplate embedded document type and its representation on the game Canvas */
         MeasuredTemplate: {
             defaults: {
@@ -281,73 +317,35 @@ declare global {
             objectClass: ConstructorOf<
                 NonNullable<TMeasuredTemplateDocument["object"]>
             >;
-            layerClass: ConstructorOf<
-                NonNullable<TMeasuredTemplateDocument["object"]>["layer"]
-            >;
         };
 
         /** Configuration for the Region embedded document type and its representation on the game Canvas  */
         Region: {
             documentClass: ConstructorOf<TRegionDocument>;
             objectClass: ConstructorOf<TRegionDocument["object"]>;
-            layerClass: ConstructorOf<
-                NonNullable<TRegionDocument["object"]>["layer"]
-            >;
         };
 
         /** Configuration for the RegionBehavior embedded document type */
         RegionBehavior: {
             documentClass: ConstructorOf<TRegionBehavior>;
-            dataModels: {
-                [
-                    key: string
-                ]: ConstructorOf<foundry.data.regionBehaviors.RegionBehaviorType>;
-                adjustDarknessLevel: ConstructorOf<foundry.data.regionBehaviors.AdjustDarknessLevelRegionBehaviorType>;
-                executeMacro: ConstructorOf<foundry.data.regionBehaviors.ExecuteMacroRegionBehaviorType>;
-                executeScript: ConstructorOf<foundry.data.regionBehaviors.ExecuteScriptRegionBehaviorType>;
-                pauseGame: ConstructorOf<foundry.data.regionBehaviors.PauseGameRegionBehaviorType>;
-                suppressWeather: ConstructorOf<foundry.data.regionBehaviors.SuppressWeatherRegionBehaviorType>;
-                teleportToken: ConstructorOf<foundry.data.regionBehaviors.TeleportTokenRegionBehaviorType>;
-                toggleBehavior: ConstructorOf<foundry.data.regionBehaviors.ToggleBehaviorRegionBehaviorType>;
-            };
-            typeIcons: {
-                [key: string]: string;
-                adjustDarknessLevel: "fa-solid fa-circle-half-stroke";
-                executeMacro: "fa-solid fa-code";
-                executeScript: "fa-brands fa-js";
-                pauseGame: "fa-solid fa-pause";
-                suppressWeather: "fa-solid fa-cloud-slash";
-                teleportToken: "fa-solid fa-transporter-1";
-                toggleBehavior: "fa-solid fa-sliders";
-            };
-            typeLabels: {
-                [key: string]: string;
-                adjustDarknessLevel: "TYPES.RegionBehavior.adjustDarknessLevel";
-                executeMacro: "TYPES.RegionBehavior.executeMacro";
-                executeScript: "TYPES.RegionBehavior.executeScript";
-                pauseGame: "TYPES.RegionBehavior.pauseGame";
-                suppressWeather: "TYPES.RegionBehavior.suppressWeather";
-                teleportToken: "TYPES.RegionBehavior.teleportToken";
-                toggleBehavior: "TYPES.RegionBehavior.toggleBehavior";
-            };
+            dataModels: Record<
+                string,
+                ConstructorOf<foundry.data.regionBehaviors.RegionBehaviorType>
+            >;
+            typeIcons: Record<string, string>;
+            typeLabels: Record<string, string>;
         };
 
         /** Configuration for the Tile embedded document type and its representation on the game Canvas */
         Tile: {
             documentClass: ConstructorOf<TTileDocument>;
             objectClass: ConstructorOf<NonNullable<TTileDocument["object"]>>;
-            layerClass: ConstructorOf<
-                TilesLayer<NonNullable<TTileDocument["object"]>>
-            >;
         };
 
         /** Configuration for the Token embedded document type and its representation on the game Canvas */
         Token: {
             documentClass: ConstructorOf<TTokenDocument>;
             objectClass: ConstructorOf<NonNullable<TTokenDocument["object"]>>;
-            layerClass: ConstructorOf<
-                NonNullable<TTokenDocument["object"]>["layer"]
-            >;
             prototypeSheetClass: ConstructorOf<TTokenDocument["sheet"]>;
         };
 
@@ -355,9 +353,6 @@ declare global {
         Wall: {
             documentClass: ConstructorOf<TWallDocument>;
             objectClass: ConstructorOf<Wall<TWallDocument>>;
-            layerClass: ConstructorOf<
-                NonNullable<TWallDocument["object"]>["layer"]
-            >;
         };
 
         /* -------------------------------------------- */
@@ -397,7 +392,9 @@ declare global {
                 >
             >;
             globalLightSourceClass: ConstructorOf<GlobalLightSource>;
-            rulerClass: ConstructorOf<Ruler<TTokenDocument["object"]>>;
+            rulerClass: ConstructorOf<Ruler<TTokenDocument["object"]>> & {
+                get canMeasure(): boolean;
+            };
             visionSourceClass: ConstructorOf<
                 PointVisionSource<TTokenDocument["object"]>
             >;

@@ -23,7 +23,7 @@ declare global {
         static _activateSocketListeners(socket: unknown): void;
 
         /** The tokens inside this region. */
-        tokens: Set<TokenDocument<TParent>>;
+        tokens: Set<CollectionValue<NonNullable<TParent>["tokens"]>>;
 
         /**
          * Trigger the Region event.
@@ -87,11 +87,6 @@ declare global {
     interface CombatRegionEvent<
         TDocument extends RegionDocument = RegionDocument,
         TUser extends User = User,
-        TTokenDocument extends TokenDocument = TokenDocument,
-        TCombatant extends Combatant<
-            Combat | null,
-            TTokenDocument | null
-        > = Combatant<Combat | null, TTokenDocument | null>,
     > extends BaseRegionEvent<TDocument, TUser> {
         name:
             | "tokenRoundStart"
@@ -99,26 +94,24 @@ declare global {
             | "tokenTurnStart"
             | "tokenTurnEnd";
         data: {
-            token: TTokenDocument;
-            combatant: TCombatant;
+            token: SetElement<TDocument["tokens"]>;
+            combatant: SetElement<TDocument["tokens"]>["combatant"];
         };
     }
 
     interface TokenBasicMoveRegionEvent<
         TDocument extends RegionDocument = RegionDocument,
         TUser extends User = User,
-        TTokenDocument extends TokenDocument = TokenDocument,
     > extends BaseRegionEvent<TDocument, TUser> {
         name: "tokenEnter" | "tokenExit";
         data: {
-            token: TTokenDocument;
+            token: SetElement<TDocument["tokens"]>;
         };
     }
 
     interface TokenMoveRegionEvent<
         TDocument extends RegionDocument = RegionDocument,
         TUser extends User = User,
-        TTokenDocument extends TokenDocument = TokenDocument,
     > extends BaseRegionEvent<TDocument, TUser> {
         name: "tokenPreMove" | "tokenMove" | "tokenMoveIn" | "tokenMoveOut";
         data: {
@@ -127,7 +120,7 @@ declare global {
             origin: RegionMovementWaypoint;
             segments: RegionMovementSegment[];
             teleport: boolean;
-            token: TTokenDocument;
+            token: SetElement<TDocument["tokens"]>;
         };
     }
 
@@ -140,18 +133,13 @@ declare global {
     }
 
     type RegionEvent<
-        TTokenDocument extends TokenDocument = TokenDocument,
-        TUser extends User = User,
-        TCombatant extends Combatant<
-            Combat | null,
-            TTokenDocument | null
-        > = Combatant<Combat | null, TTokenDocument | null>,
         TDocument extends RegionDocument = RegionDocument,
+        TUser extends User = User,
     > =
         | BehaviorStatusRegionEvent<TDocument, TUser>
-        | CombatRegionEvent<TDocument, TUser, TTokenDocument, TCombatant>
-        | TokenMoveRegionEvent<TDocument, TUser, TTokenDocument>
-        | TokenBasicMoveRegionEvent<TDocument, TUser, TTokenDocument>;
+        | CombatRegionEvent<TDocument, TUser>
+        | TokenMoveRegionEvent<TDocument, TUser>
+        | TokenBasicMoveRegionEvent<TDocument, TUser>;
 
     interface SocketRegionEvent<TData extends object = object> {
         /** The UUID of the Region the event was triggered on */
