@@ -84,8 +84,8 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             const texture = await loadTexture(response.path);
             const tileSource: DeepPartial<TileSource> = {
                 texture: { src: response.path },
-                width: texture.baseTexture.width,
-                height: texture.baseTexture.height,
+                width: texture?.baseTexture.width,
+                height: texture?.baseTexture.height,
                 overhead,
                 hidden: this.event.altKey,
                 x: topLeft.x,
