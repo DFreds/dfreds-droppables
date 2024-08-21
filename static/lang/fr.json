@@ -1,27 +1,32 @@
 {
-    "Droppables.DropActorsFolder": "Déposer le dossier des Acteurs",
-    "Droppables.DropButton": "Déposer",
-    "Droppables.DropStyle": "Style de dépose",
-    "Droppables.DropExplanation": "Comment voudriez-vous arranger les acteurs dans le dossier sur la toile ?",
-    "Droppables.StackedUp": "Empilés",
-    "Droppables.Randomly": "Aléatoirement",
-    "Droppables.HorizontalLine": "Ligne de gauche à droite",
-    "Droppables.VerticalLine": "Ligne de haut en bas",
-    "Droppables.Elevation": "Élévation",
-    "Droppables.ElevationOptional": "Élévation (facultatif)",
+    "Droppables": {
+        "DropActorsFolder": "Déposer le dossier des Acteurs",
+        "DropButton": "Déposer",
+        "DropStyle": "Style de dépose",
+        "DropExplanation": "Comment voudriez-vous arranger les acteurs dans le dossier sur la toile ?",
+        "StackedUp": "Empilés",
+        "Randomly": "Aléatoirement",
+        "HorizontalLine": "Ligne de gauche à droite",
+        "VerticalLine": "Ligne de haut en bas",
+        "Elevation": "Élévation",
+        "ElevationOptional": "Élévation (facultatif)",
 
-    "Droppables.DropJournalFolder": "Déposer le dossier du journal",
-    "Droppables.DropJournalFolderExplanation": "Supprimer toutes les entrées de journal dans {folderName} en tant qu'épingles ?",
+        "DropJournalFolder": "Déposer le dossier du journal",
+        "DropJournalFolderExplanation": "Supprimer toutes les entrées de journal dans {folderName} en tant qu'épingles ?",
 
-    "Droppables.ActorUploadExplanation": "Select the actor type for each file. (French localization needed).",
-    "Droppables.TokenActorTypes": "Token Actor Types",
-    "Droppables.Confirm": "Confirm",
+        "ActorUploadExplanation": "Select the actor type for each file. (French localization needed).",
+        "TokenActorTypes": "Token Actor Types",
+        "Confirm": "Confirm",
 
-    "Droppables.SettingDropStyle": "Style de dépose",
-    "Droppables.SettingDropStyleHint": "C'est ainsi que les éléments du dossier seront déposés sur le canevas. Choisir \"Dialog\" vous demandera à chaque fois l'une des options.",
-    "Droppables.SettingDropStyleDialog": "Dialogue",
-    "Droppables.SettingDropStyleStack": "Empiler",
-    "Droppables.SettingDropStyleRandom": "Aléatoire",
-    "Droppables.SettingDropStyleHorizontalLine": "Ligne horizontale",
-    "Droppables.SettingDropStyleVerticalLine": "Ligne verticale"
+        "SettingDropStyle": "Style de dépose",
+        "SettingDropStyleHint": "C'est ainsi que les éléments du dossier seront déposés sur le canevas. Choisir \"Dialog\" vous demandera à chaque fois l'une des options.",
+        "SettingDropStyleDialog": "Dialogue",
+        "SettingDropStyleStack": "Empiler",
+        "SettingDropStyleRandom": "Aléatoire",
+        "SettingDropStyleHorizontalLine": "Ligne horizontale",
+        "SettingDropStyleVerticalLine": "Ligne verticale",
+
+        "SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload (Translation Needed)",
+        "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer. (Translation Needed)"
+    }
 }

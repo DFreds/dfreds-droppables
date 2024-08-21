@@ -1,27 +1,32 @@
 {
-    "Droppables.DropActorsFolder": "キャラクターフォルダの中身をここに置く",
-    "Droppables.DropButton": "置く",
-    "Droppables.DropStyle": "置き方",
-    "Droppables.DropExplanation": "マップ上に、どのように置く？",
-    "Droppables.StackedUp": "重ねておく",
-    "Droppables.Randomly": "ランダムに置く",
-    "Droppables.HorizontalLine": "左から右へ並べて置く",
-    "Droppables.VerticalLine": "上から下に並べて置く",
-    "Droppables.Elevation": "高さ",
-    "Droppables.ElevationOptional": "高さをここに記入",
+    "Droppables": {
+        "DropActorsFolder": "キャラクターフォルダの中身をここに置く",
+        "DropButton": "置く",
+        "DropStyle": "置き方",
+        "DropExplanation": "マップ上に、どのように置く？",
+        "StackedUp": "重ねておく",
+        "Randomly": "ランダムに置く",
+        "HorizontalLine": "左から右へ並べて置く",
+        "VerticalLine": "上から下に並べて置く",
+        "Elevation": "高さ",
+        "ElevationOptional": "高さをここに記入",
 
-    "Droppables.DropJournalFolder": "資料フォルダの中身をここに置く",
-    "Droppables.DropJournalFolderExplanation": "{folderName}フォルダの中身を全てここに置きますか？",
+        "DropJournalFolder": "資料フォルダの中身をここに置く",
+        "DropJournalFolderExplanation": "{folderName}フォルダの中身を全てここに置きますか？",
 
-    "Droppables.ActorUploadExplanation": "Select the actor type for each file. (Japanese localization needed).",
-    "Droppables.TokenActorTypes": "Token Actor Types",
-    "Droppables.Confirm": "Confirm",
+        "ActorUploadExplanation": "Select the actor type for each file. (Japanese localization needed).",
+        "TokenActorTypes": "Token Actor Types",
+        "Confirm": "Confirm",
 
-    "Droppables.SettingDropStyle": "置き方",
-    "Droppables.SettingDropStyleHint": "ここで、普段どのようにフォルダの中身を置くかを決めることができる。 \"ダイアログ\" を選択すれば、毎回置き方を選択できる。",
-    "Droppables.SettingDropStyleDialog": "ダイアログ",
-    "Droppables.SettingDropStyleStack": "重ねて置く",
-    "Droppables.SettingDropStyleRandom": "ランダムに置く",
-    "Droppables.SettingDropStyleHorizontalLine": "左から右へ並べて置く",
-    "Droppables.SettingDropStyleVerticalLine": "上から下に並べて置く"
+        "SettingDropStyle": "置き方",
+        "SettingDropStyleHint": "ここで、普段どのようにフォルダの中身を置くかを決めることができる。 \"ダイアログ\" を選択すれば、毎回置き方を選択できる。",
+        "SettingDropStyleDialog": "ダイアログ",
+        "SettingDropStyleStack": "重ねて置く",
+        "SettingDropStyleRandom": "ランダムに置く",
+        "SettingDropStyleHorizontalLine": "左から右へ並べて置く",
+        "SettingDropStyleVerticalLine": "上から下に並べて置く",
+
+        "SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload (Translation Needed)",
+        "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer. (Translation Needed)"
+    }
 }
