@@ -1,0 +1,32 @@
+{
+    "Droppables": {
+        "DropActorsFolder": "Posicionar Pasta de Atores",
+        "DropButton": "Posicionar",
+        "DropStyle": "Estilo de Posicionamento",
+        "DropExplanation": "Como deseja organizar os atores da pasta na tela?",
+        "StackedUp": "Empilhado",
+        "Randomly": "Aleatoriamente",
+        "HorizontalLine": "Esquerda para Linha Direita",
+        "VerticalLine": "Cima para Linha Debaixo",
+        "Elevation": "Elevação",
+        "ElevationOptional": "Elevação (opcional)",
+
+        "DropJournalFolder": "Posicionar Pasta de Diário",
+        "DropJournalFolderExplanation": "Posicionar todas as entradas do diário em {folderName} como pinos?",
+
+        "ActorUploadExplanation": "Selecione o tipo de ator para cada arquivo.",
+        "TokenActorTypes": "Tipos de Token de Ator",
+        "Confirm": "Confirmar",
+
+        "SettingDropStyle": "Estilo de Posicionamento",
+        "SettingDropStyleHint": "É assim que os itens na pasta serão colocados na tela. Ao escolher \"Diálogo\", você será solicitado a escolher uma das opções a cada vez.",
+        "SettingDropStyleDialog": "Diálogo",
+        "SettingDropStyleStack": "Pilha",
+        "SettingDropStyleRandom": "Aleatório",
+        "SettingDropStyleHorizontalLine": "Linha Horizontal",
+        "SettingDropStyleVerticalLine": "Linha Vertical",
+
+        "SettingEnableCanvasDragUpload": "Habilitar Arrastar/Carregar na Tela",
+        "SettingEnableCanvasDragUploadHint": "Se habilitado, você pode arrastar e carregar tokens, peças, áudios e entradas do diário na tela baseado na camada selecionada."
+    }
+}
