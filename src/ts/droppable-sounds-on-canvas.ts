@@ -1,9 +1,9 @@
-import { id as MODULE_ID } from "@static/module.json";
 import { AmbientSoundSource } from "types/foundry/common/documents/ambient-sound.js";
 import { Droppable } from "./droppable.ts";
 import { FilesDropData } from "./types.ts";
 import { Settings } from "./settings.ts";
 import { translateToTopLeftGrid } from "./util.ts";
+import { MODULE_ID } from "./constants.ts";
 
 class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
     #settings = new Settings();

@@ -1,4 +1,3 @@
-import { id as MODULE_ID } from "@static/module.json";
 import {
     CorePageType,
     JournalEntryPageSource,
@@ -9,6 +8,7 @@ import { Droppable } from "./droppable.ts";
 import { FilesDropData } from "./types.ts";
 import { Settings } from "./settings.ts";
 import { translateToTopLeftGrid } from "./util.ts";
+import { MODULE_ID } from "./constants.ts";
 
 interface NoteUploadData {
     response?: any;

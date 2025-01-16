@@ -1,12 +1,12 @@
 import "../styles/style.scss"; // Keep or else vite will not include this
 import { DroppableFolders, FolderDropData } from "./droppable-folders.ts";
 import { Settings } from "./settings.ts";
-import { id as MODULE_ID } from "@static/module.json";
 import { libWrapper } from "@static/lib/shim.ts";
 import { DroppableTokensOnCanvas } from "./droppable-tokens-on-canvas.ts";
 import { DroppableTilesOnCanvas } from "./droppable-tiles-on-canvas.ts";
 import { DroppableSoundsOnCanvas } from "./droppable-sounds-on-canvas.ts";
 import { DroppableNotesOnCanvas } from "./droppable-notes-on-canvas.ts";
+import { MODULE_ID } from "./constants.ts";
 
 Hooks.once("init", async () => {
     const settings = new Settings();
