@@ -4,6 +4,7 @@
     <label class="droppables-dialog-label">{{localize 'Droppables.DropStyle'}}</label>
     <div class="form-fields">
       <select name="drop-style">
+        {{!-- TODO migrate to {{selectOptions}} --}}
         {{#select dropStyle}}
         <option value="stack">{{localize 'Droppables.StackedUp'}}</option>
         <option value="random">{{localize 'Droppables.Randomly'}}</option>
