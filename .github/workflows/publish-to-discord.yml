@@ -16,5 +16,5 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           username: "DFreds Droppables - Release"
-          content: "||@all-updates @dfreds-droppables||"
+          content: "@all-updates @dfreds-droppables"
           footer_timestamp: true
