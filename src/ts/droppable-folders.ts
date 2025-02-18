@@ -20,7 +20,7 @@ interface DropJournalFolderInput {
 
 interface FolderDropData {
     type: string;
-    uuid: FolderUUID;
+    uuid: string;
     x: number;
     y: number;
     elevation?: number;
@@ -41,7 +41,7 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         const json = TextEditor.getDragEventData(this.event);
         return {
             type: json["type"] as string,
-            uuid: json["uuid"] as FolderUUID,
+            uuid: json["uuid"] as string,
             x: json["x"] as number,
             y: json["y"] as number,
             elevation: json["elevation"] as number | undefined,
@@ -289,9 +289,15 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
 
         for (const actor of actors) {
             const width =
-                getProperty<number>(actor, "prototypeToken.width") || 1;
+                (foundry.utils.getProperty(
+                    actor,
+                    "prototypeToken.width",
+                ) as number) || 1;
             const height =
-                getProperty<number>(actor, "prototypeToken.height") || 1;
+                (foundry.utils.getProperty(
+                    actor,
+                    "prototypeToken.height",
+                ) as number) || 1;
 
             await this.#dropActor({
                 actor,

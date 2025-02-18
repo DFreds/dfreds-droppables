@@ -44,9 +44,4 @@ declare global {
             Hotbar
         >;
     }
-
-    type FolderUUID = `Folder.${string}`;
-    function fromUuid(uuid: FolderUUID): Promise<Folder | null>;
-
-    function getProperty<Type>(object: Object, key: string): Type;
 }
