@@ -47,7 +47,6 @@ Hooks.once("setup", async () => {
     );
 });
 
-// TODO need to double check this works in v11 when it's updated
 Hooks.on("3DCanvasConfig", (config: any) => {
     config.INTERACTIONS.dropFunctions.Folder = async function (
         event: DragEvent,
