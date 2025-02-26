@@ -84,6 +84,9 @@ Supported Files: Images, videos, PDFs, and text files
 
 ![Dropping Notes](docs/droppable-notes.mp4)
 
-### libWrapper
+## Required Modules
 
-This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. While this is not a hard dependency, it is recommended to install it for the best experience and compatibility with other modules.
+- [libWrapper](https://foundryvtt.com/packages/lib-wrapper) by ruipin - A
+  library that wraps core Foundry methods to make it easier for module
+  developers to add functionality. Note that if you for some reason don't want
+  to install this, a shim will be used instead.
