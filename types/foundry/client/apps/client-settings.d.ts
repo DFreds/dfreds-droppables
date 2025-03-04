@@ -9,4 +9,6 @@ declare class SettingsConfig extends FormApplication {
         event: Event,
         formData: Record<string, unknown>,
     ): Promise<void>;
+
+    static reloadConfirm(options: { world?: boolean }): Promise<void>;
 }
