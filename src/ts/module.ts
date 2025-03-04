@@ -10,7 +10,7 @@ import { MODULE_ID } from "./constants.ts";
 
 Hooks.once("init", async () => {
     const settings = new Settings();
-    settings.registerSettings();
+    settings.register();
 });
 
 Hooks.once("setup", async () => {
