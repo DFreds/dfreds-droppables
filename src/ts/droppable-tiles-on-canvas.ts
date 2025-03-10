@@ -30,7 +30,7 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         );
         if (!isGM && !isAllowedToUpload) {
             ui.notifications.warn(
-                "You do not have permission to upload files.",
+                game.i18n.localize(EN_JSON.Droppables.NoUploadFiles),
             );
             return false;
         }

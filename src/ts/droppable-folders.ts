@@ -148,12 +148,14 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
 
         new Dialog(
             {
-                title: game.i18n.localize("Droppables.DropActorsFolder"),
+                title: game.i18n.localize(EN_JSON.Droppables.DropActorsFolder),
                 content: content,
                 buttons: {
                     yes: {
                         icon: '<i class="fas fa-level-down-alt"></i>',
-                        label: game.i18n.localize("Droppables.DropButton"),
+                        label: game.i18n.localize(
+                            EN_JSON.Droppables.DropButton,
+                        ),
                         callback: async (html) => {
                             const dropStyle = html
                                 .find('select[name="drop-style"]')
@@ -358,9 +360,9 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         const topLeft = translateToTopLeftGrid(event);
 
         Dialog.confirm({
-            title: game.i18n.localize("Droppables.DropJournalFolder"),
+            title: game.i18n.localize(EN_JSON.Droppables.DropJournalFolder),
             content: `<p>${game.i18n.format(
-                "Droppables.DropJournalFolderExplanation",
+                EN_JSON.Droppables.DropJournalFolderExplanation,
                 { folderName: folder?.name ?? "" },
             )}</p>`,
             yes: async () => {

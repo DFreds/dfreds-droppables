@@ -42,7 +42,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         );
         if (!isGM && !isAllowedToUpload) {
             ui.notifications.warn(
-                "You do not have permission to upload files.",
+                game.i18n.localize(EN_JSON.Droppables.NoUploadFiles),
             );
             return false;
         }
@@ -52,7 +52,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         );
         if (!isGM && !canCreateJournals) {
             ui.notifications.warn(
-                "You do not have permission to create journals.",
+                game.i18n.localize(EN_JSON.Droppables.NoCreateJournals),
             );
             return false;
         }
@@ -62,7 +62,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         );
         if (!isGM && !canCreateNotes) {
             ui.notifications.warn(
-                "You do not have permission to create notes.",
+                game.i18n.localize(EN_JSON.Droppables.NoCreateNotes),
             );
             return false;
         }

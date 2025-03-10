@@ -43,7 +43,7 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
         );
         if (!isGM && !isAllowedToUpload) {
             ui.notifications.warn(
-                "You do not have permission to upload files.",
+                game.i18n.localize(EN_JSON.Droppables.NoUploadFiles),
             );
             return false;
         }
@@ -53,7 +53,7 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
         );
         if (!isGM && !canCreateTokens) {
             ui.notifications.warn(
-                "You do not have permission to create tokens.",
+                game.i18n.localize(EN_JSON.Droppables.NoCreateTokens),
             );
             return false;
         }
@@ -63,7 +63,7 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
         );
         if (!isGM && !canCreateActors) {
             ui.notifications.warn(
-                "You do not have permission to create actors.",
+                game.i18n.localize(EN_JSON.Droppables.NoCreateActors),
             );
             return false;
         }
@@ -156,9 +156,9 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
             },
         );
         return Dialog.prompt({
-            title: game.i18n.localize("Droppables.TokenActorTypes"),
+            title: game.i18n.localize(EN_JSON.Droppables.TokenActorTypes),
             content: content,
-            label: game.i18n.localize("Droppables.Confirm"),
+            label: game.i18n.localize(EN_JSON.Droppables.Confirm),
             rejectClose: false,
             callback: async (html) => {
                 const tokenDropDatas = html

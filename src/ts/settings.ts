@@ -12,24 +12,25 @@ class Settings {
     register(): void {
         // TODO other languages localize
         game.settings.register(MODULE_ID, this.#FOLDER_DROP_STYLE, {
-            name: "Droppables.SettingDropStyle",
-            hint: "Droppables.SettingDropStyleHint",
+            name: EN_JSON.Droppables.SettingDropStyle,
+            hint: EN_JSON.Droppables.SettingDropStyleHint,
             scope: "client",
             config: true,
             default: "dialog",
             choices: {
-                dialog: "Droppables.SettingDropStyleDialog",
-                stack: "Droppables.SettingDropStyleStack",
-                random: "Droppables.SettingDropStyleRandom",
-                horizontalLine: "Droppables.SettingDropStyleHorizontalLine",
-                verticalLine: "Droppables.SettingDropStyleVerticalLine",
+                dialog: EN_JSON.Droppables.SettingDropStyleDialog,
+                stack: EN_JSON.Droppables.SettingDropStyleStack,
+                random: EN_JSON.Droppables.SettingDropStyleRandom,
+                horizontalLine:
+                    EN_JSON.Droppables.SettingDropStyleHorizontalLine,
+                verticalLine: EN_JSON.Droppables.SettingDropStyleVerticalLine,
             },
             type: String,
         });
 
         game.settings.register(MODULE_ID, this.#ENABLE_CANVAS_DRAG_UPLOAD, {
-            name: "Droppables.SettingEnableCanvasDragUpload",
-            hint: "Droppables.SettingEnableCanvasDragUploadHint",
+            name: EN_JSON.Droppables.SettingEnableCanvasDragUpload,
+            hint: EN_JSON.Droppables.SettingEnableCanvasDragUploadHint,
             scope: "client",
             config: true,
             default: true,

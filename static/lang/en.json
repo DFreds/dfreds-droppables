@@ -11,6 +11,12 @@
         "Elevation": "Elevation",
         "ElevationOptional": "Elevation (optional)",
 
+        "NoUploadFiles": "You do not have permission to upload files.",
+        "NoCreateJournals": "You do not have permission to create journals.",
+        "NoCreateNotes": "You do not have permission to create notes.",
+        "NoCreateTokens": "You do not have permission to create tokens.",
+        "NoCreateActors": "You do not have permission to create actors.",
+
         "DropJournalFolder": "Drop Journal Folder",
         "DropJournalFolderExplanation": "Drop all journal entries in {folderName} as pins?",
 
