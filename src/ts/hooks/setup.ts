@@ -10,6 +10,10 @@ import { Listener } from "./index.ts";
 const Setup: Listener = {
     listen(): void {
         Hooks.once("setup", async () => {
+            if (BUILD_MODE === "development") {
+                CONFIG.debug.hooks = true;
+            }
+
             libWrapper.register(
                 MODULE_ID,
                 "Canvas.prototype._onDrop",
@@ -18,7 +22,7 @@ const Setup: Listener = {
                     wrapped: (event: DragEvent) => any,
                     event: DragEvent,
                 ) {
-                    const droppables = [
+                    const canvasDroppables = [
                         new DroppableFolders(event),
                         new DroppableTokensOnCanvas(event),
                         new DroppableTilesOnCanvas(event),
@@ -29,7 +33,7 @@ const Setup: Listener = {
                     // const url = this.event.dataTransfer?.getData("Text");
 
                     let didDrop = false;
-                    for (const droppable of droppables) {
+                    for (const droppable of canvasDroppables) {
                         didDrop = await droppable.handleDrop();
                         if (didDrop) {
                             break;
