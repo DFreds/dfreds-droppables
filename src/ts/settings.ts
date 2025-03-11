@@ -10,7 +10,6 @@ class Settings {
      * Register all settings for the module
      */
     register(): void {
-        // TODO other languages localize
         game.settings.register(MODULE_ID, this.#FOLDER_DROP_STYLE, {
             name: EN_JSON.Droppables.SettingDropStyle,
             hint: EN_JSON.Droppables.SettingDropStyleHint,
