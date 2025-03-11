@@ -138,24 +138,42 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         elevation,
         isHidden,
     }: DropActorFolderInput): Promise<void> {
+        const dropStyles = [
+            {
+                value: "stack",
+                label: game.i18n.localize(EN_JSON.Droppables.StackedUp),
+            },
+            {
+                value: "random",
+                label: game.i18n.localize(EN_JSON.Droppables.Randomly),
+            },
+            {
+                value: "horizontalLine",
+                label: game.i18n.localize(EN_JSON.Droppables.HorizontalLine),
+            },
+            {
+                value: "verticalLine",
+                label: game.i18n.localize(EN_JSON.Droppables.VerticalLine),
+            },
+        ];
+
         const content = await renderTemplate(
             "modules/dfreds-droppables/templates/drop-dialog.hbs",
             {
-                dropStyle: this.#settings.lastUsedDropStyle,
+                dropStyles,
+                savedDropStyle: this.#settings.lastUsedDropStyle,
                 startingElevation: elevation ? Math.round(elevation) : null,
             },
         );
 
         new Dialog(
             {
-                title: game.i18n.localize(EN_JSON.Droppables.DropActorsFolder),
+                title: EN_JSON.Droppables.DropActorsFolder,
                 content: content,
                 buttons: {
                     yes: {
                         icon: '<i class="fas fa-level-down-alt"></i>',
-                        label: game.i18n.localize(
-                            EN_JSON.Droppables.DropButton,
-                        ),
+                        label: EN_JSON.Droppables.DropButton,
                         callback: async (html) => {
                             const dropStyle = html
                                 .find('select[name="drop-style"]')
