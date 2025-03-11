@@ -1,7 +1,7 @@
-import { Droppable } from "./droppable.ts";
-import { log } from "./logger.ts";
-import { Settings } from "./settings.ts";
-import { translateToTopLeftGrid } from "./util.ts";
+import { Droppable } from "../droppable.ts";
+import { log } from "../logger.ts";
+import { Settings } from "../settings.ts";
+import { translateToTopLeftGrid } from "../util.ts";
 
 interface DropActorFolderInput {
     actors: Actor[];

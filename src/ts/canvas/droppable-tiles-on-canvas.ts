@@ -1,11 +1,11 @@
-import { AmbientSoundSource } from "types/foundry/common/documents/ambient-sound.js";
-import { Droppable } from "./droppable.ts";
-import { FilesDropData } from "./types.ts";
-import { Settings } from "./settings.ts";
-import { translateToTopLeftGrid } from "./util.ts";
-import { MODULE_ID } from "./constants.ts";
+import { TileSource } from "types/foundry/common/documents/tile.js";
+import { Droppable } from "../droppable.ts";
+import { FilesDropData } from "../types.ts";
+import { Settings } from "../settings.ts";
+import { translateToTopLeftGrid } from "../util.ts";
+import { MODULE_ID } from "../constants.ts";
 
-class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
+class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
     #settings = new Settings();
 
     constructor(event: DragEvent) {
@@ -19,9 +19,9 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
-        const isSoundLayer =
-            canvas.activeLayer?.name?.includes("SoundsLayer") ?? false;
-        if (!isSoundLayer) {
+        const isTileLayer =
+            canvas.activeLayer?.name?.includes("TilesLayer") ?? false;
+        if (!isTileLayer) {
             return false;
         }
 
@@ -55,7 +55,9 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
 
         return {
             files: Array.from(files).filter((file) => {
-                return file.type.includes("audio");
+                return (
+                    file.type.includes("image") || file.type.includes("video")
+                );
             }),
             url: this.event.dataTransfer?.getData("text"),
         };
@@ -65,36 +67,43 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
         if (!this.canHandleDrop()) return false;
         this.event.preventDefault();
 
-        const ambientSoundSources: DeepPartial<AmbientSoundSource>[] = [];
-
+        const overhead =
+            ui.controls.controls
+                .find((control) => control.name === "tiles")
+                ?.tools.find((tool) => tool.name === "foreground")?.active ??
+            false;
+        const tileSources: DeepPartial<TileSource>[] = [];
         for (const file of this.data.files) {
             // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
             const response = (await FilePicker.uploadPersistent(
                 MODULE_ID,
-                "sounds",
+                "tiles",
                 file,
             )) as any;
             const topLeft = translateToTopLeftGrid(this.event);
-            const ambientSoundSource: DeepPartial<AmbientSoundSource> = {
-                path: response.path,
+            const texture = await loadTexture(response.path);
+            const tileSource: DeepPartial<TileSource> = {
+                texture: { src: response.path },
+                width: texture?.baseTexture.width,
+                height: texture?.baseTexture.height,
+                overhead,
+                hidden: this.event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,
-                radius: 10,
-                easing: true,
-                repeat: true,
-                volume: 1.0,
             };
 
-            ambientSoundSources.push(ambientSoundSource);
+            tileSources.push(tileSource);
         }
 
-        await canvas.scene?.createEmbeddedDocuments(
-            "AmbientSound",
-            ambientSoundSources,
-        );
+        canvas.perception.update({ refreshLighting: true, refreshTiles: true });
+
+        await canvas.scene?.createEmbeddedDocuments("Tile", tileSources, {
+            broadcast: true,
+            data: [],
+        });
 
         return true;
     }
 }
 
-export { DroppableSoundsOnCanvas };
+export { DroppableTilesOnCanvas };

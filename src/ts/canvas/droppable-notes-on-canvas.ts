@@ -4,11 +4,11 @@ import {
 } from "types/foundry/common/documents/journal-entry-page.js";
 import { JournalEntrySource } from "types/foundry/common/documents/journal-entry.js";
 import { NoteSource } from "types/foundry/common/documents/note.js";
-import { Droppable } from "./droppable.ts";
-import { FilesDropData } from "./types.ts";
-import { Settings } from "./settings.ts";
-import { translateToTopLeftGrid } from "./util.ts";
-import { MODULE_ID } from "./constants.ts";
+import { Droppable } from "../droppable.ts";
+import { FilesDropData } from "../types.ts";
+import { Settings } from "../settings.ts";
+import { translateToTopLeftGrid } from "../util.ts";
+import { MODULE_ID } from "../constants.ts";
 
 interface NoteUploadData {
     response?: any;
