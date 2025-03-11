@@ -37,9 +37,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
-        const isAllowedToUpload = game.user.hasPermission(
-            CONST.USER_PERMISSIONS.FILES_UPLOAD,
-        );
+        const isAllowedToUpload = game.user.hasPermission("FILES_UPLOAD");
         if (!isGM && !isAllowedToUpload) {
             ui.notifications.warn(
                 game.i18n.localize(EN_JSON.Droppables.NoUploadFiles),
@@ -47,9 +45,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
-        const canCreateJournals = game.user.hasPermission(
-            CONST.USER_PERMISSIONS.JOURNAL_CREATE,
-        );
+        const canCreateJournals = game.user.hasPermission("JOURNAL_CREATE");
         if (!isGM && !canCreateJournals) {
             ui.notifications.warn(
                 game.i18n.localize(EN_JSON.Droppables.NoCreateJournals),
@@ -57,9 +53,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
-        const canCreateNotes = game.user.hasPermission(
-            CONST.USER_PERMISSIONS.NOTE_CREATE,
-        );
+        const canCreateNotes = game.user.hasPermission("NOTE_CREATE");
         if (!isGM && !canCreateNotes) {
             ui.notifications.warn(
                 game.i18n.localize(EN_JSON.Droppables.NoCreateNotes),

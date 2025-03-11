@@ -37,10 +37,7 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
         if (!isTokenLayer) {
             return false;
         }
-
-        const isAllowedToUpload = game.user.hasPermission(
-            CONST.USER_PERMISSIONS.FILES_UPLOAD,
-        );
+        const isAllowedToUpload = game.user.hasPermission("FILES_UPLOAD");
         if (!isGM && !isAllowedToUpload) {
             ui.notifications.warn(
                 game.i18n.localize(EN_JSON.Droppables.NoUploadFiles),
@@ -48,9 +45,7 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
-        const canCreateTokens = game.user.hasPermission(
-            CONST.USER_PERMISSIONS.TOKEN_CREATE,
-        );
+        const canCreateTokens = game.user.hasPermission("TOKEN_CREATE");
         if (!isGM && !canCreateTokens) {
             ui.notifications.warn(
                 game.i18n.localize(EN_JSON.Droppables.NoCreateTokens),
@@ -58,9 +53,7 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
-        const canCreateActors = game.user.hasPermission(
-            CONST.USER_PERMISSIONS.ACTOR_CREATE,
-        );
+        const canCreateActors = game.user.hasPermission("ACTOR_CREATE");
         if (!isGM && !canCreateActors) {
             ui.notifications.warn(
                 game.i18n.localize(EN_JSON.Droppables.NoCreateActors),

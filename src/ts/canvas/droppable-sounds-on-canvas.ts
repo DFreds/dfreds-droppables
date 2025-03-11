@@ -25,9 +25,7 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
             return false;
         }
 
-        const isAllowedToUpload = game.user.hasPermission(
-            CONST.USER_PERMISSIONS.FILES_UPLOAD,
-        );
+        const isAllowedToUpload = game.user.hasPermission("FILES_UPLOAD");
         if (!isGM && !isAllowedToUpload) {
             ui.notifications.warn(
                 game.i18n.localize(EN_JSON.Droppables.NoUploadFiles),
