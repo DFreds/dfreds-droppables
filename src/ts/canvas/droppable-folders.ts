@@ -141,19 +141,19 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         const dropStyles = [
             {
                 value: "stack",
-                label: game.i18n.localize(EN_JSON.Droppables.StackedUp),
+                label: game.i18n.localize("Droppables.StackedUp"),
             },
             {
                 value: "random",
-                label: game.i18n.localize(EN_JSON.Droppables.Randomly),
+                label: game.i18n.localize("Droppables.Randomly"),
             },
             {
                 value: "horizontalLine",
-                label: game.i18n.localize(EN_JSON.Droppables.HorizontalLine),
+                label: game.i18n.localize("Droppables.HorizontalLine"),
             },
             {
                 value: "verticalLine",
-                label: game.i18n.localize(EN_JSON.Droppables.VerticalLine),
+                label: game.i18n.localize("Droppables.VerticalLine"),
             },
         ];
 
@@ -168,12 +168,12 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
 
         new Dialog(
             {
-                title: EN_JSON.Droppables.DropActorsFolder,
+                title: "Droppables.DropActorsFolder",
                 content: content,
                 buttons: {
                     yes: {
                         icon: '<i class="fas fa-level-down-alt"></i>',
-                        label: EN_JSON.Droppables.DropButton,
+                        label: "Droppables.DropButton",
                         callback: async (html) => {
                             const dropStyle = html
                                 .find('select[name="drop-style"]')
@@ -378,9 +378,9 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         const topLeft = translateToTopLeftGrid(event);
 
         Dialog.confirm({
-            title: game.i18n.localize(EN_JSON.Droppables.DropJournalFolder),
+            title: game.i18n.localize("Droppables.DropJournalFolder"),
             content: `<p>${game.i18n.format(
-                EN_JSON.Droppables.DropJournalFolderExplanation,
+                "Droppables.DropJournalFolderExplanation",
                 { folderName: folder?.name ?? "" },
             )}</p>`,
             yes: async () => {

@@ -7,9 +7,6 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 const PACKAGE_ID = "modules/dfreds-droppables";
-const EN_JSON = JSON.parse(
-    fs.readFileSync("./static/lang/en.json", { encoding: "utf-8" }),
-);
 
 const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
     const buildMode =
@@ -67,7 +64,6 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
         publicDir: "static",
         define: {
             BUILD_MODE: JSON.stringify(buildMode),
-            EN_JSON: JSON.stringify(EN_JSON),
         },
         esbuild: { keepNames: true },
         build: {
