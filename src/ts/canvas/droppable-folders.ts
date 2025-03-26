@@ -168,12 +168,12 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
 
         new Dialog(
             {
-                title: "Droppables.DropActorsFolder",
+                title: game.i18n.localize("Droppables.DropActorsFolder"),
                 content: content,
                 buttons: {
                     yes: {
                         icon: '<i class="fas fa-level-down-alt"></i>',
-                        label: "Droppables.DropButton",
+                        label: game.i18n.localize("Droppables.DropButton"),
                         callback: async (html) => {
                             const dropStyle = html
                                 .find('select[name="drop-style"]')
