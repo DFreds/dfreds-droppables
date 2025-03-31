@@ -4,8 +4,7 @@ import { Listener } from "./index.ts";
 const Init: Listener = {
     listen(): void {
         Hooks.once("init", async () => {
-            const settings = new Settings();
-            settings.register();
+            new Settings().register();
         });
     },
 };

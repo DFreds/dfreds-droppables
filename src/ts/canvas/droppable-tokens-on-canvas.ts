@@ -28,49 +28,44 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
     override canHandleDrop(): boolean {
         const isGM = game.user.isGM;
 
-        if (!this.#settings.canvasDragUpload) {
+        // Early exit conditions
+        if (
+            !this.#settings.canvasDragUpload ||
+            !canvas.activeLayer?.name?.includes("TokenLayer") ||
+            !this.data.files.length
+        ) {
             return false;
         }
 
-        const isTokenLayer =
-            canvas.activeLayer?.name?.includes("TokenLayer") ?? false;
-        if (!isTokenLayer) {
-            return false;
-        }
-        const isAllowedToUpload = game.user.hasPermission("FILES_UPLOAD");
-        if (!isGM && !isAllowedToUpload) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoUploadFiles"),
-            );
-            return false;
-        }
-
-        const canCreateTokens = game.user.hasPermission("TOKEN_CREATE");
-        if (!isGM && !canCreateTokens) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoCreateTokens"),
-            );
-            return false;
-        }
-
-        const canCreateActors = game.user.hasPermission("ACTOR_CREATE");
-        if (!isGM && !canCreateActors) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoCreateActors"),
-            );
-            return false;
-        }
-
-        const hasFiles = this.data.files.length > 0;
-        if (!hasFiles) {
-            return false;
-        }
-
-        const hasUrl = !!this.data.url;
-        if (hasUrl) {
+        if (this.data.url) {
             // If a URL exists, just let Foundry handle it for now
             // TODO probably want to eventually handle this
             return false;
+        }
+
+        // Permission checks for non-GM users
+        if (!isGM) {
+            const permissions = [
+                {
+                    check: "FILES_UPLOAD",
+                    message: "Droppables.NoUploadFiles",
+                },
+                {
+                    check: "TOKEN_CREATE",
+                    message: "Droppables.NoCreateTokens",
+                },
+                {
+                    check: "ACTOR_CREATE",
+                    message: "Droppables.NoCreateActors",
+                },
+            ];
+
+            for (const { check, message } of permissions) {
+                if (!game.user.hasPermission(check as UserPermissionString)) {
+                    ui.notifications.warn(game.i18n.localize(message));
+                    return false;
+                }
+            }
         }
 
         return true;

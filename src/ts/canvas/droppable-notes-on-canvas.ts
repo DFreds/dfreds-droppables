@@ -27,50 +27,46 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
     override canHandleDrop(): boolean {
         const isGM = game.user.isGM;
 
-        if (!this.#settings.canvasDragUpload) {
+        // Check basic requirements
+        if (
+            !this.#settings.canvasDragUpload ||
+            !canvas.activeLayer?.name?.includes("NotesLayer") ||
+            !this.data.files.length
+        ) {
             return false;
         }
 
-        const isNoteLayer =
-            canvas.activeLayer?.name?.includes("NotesLayer") ?? false;
-        if (!isNoteLayer) {
-            return false;
-        }
-
-        const isAllowedToUpload = game.user.hasPermission("FILES_UPLOAD");
-        if (!isGM && !isAllowedToUpload) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoUploadFiles"),
-            );
-            return false;
-        }
-
-        const canCreateJournals = game.user.hasPermission("JOURNAL_CREATE");
-        if (!isGM && !canCreateJournals) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoCreateJournals"),
-            );
-            return false;
-        }
-
-        const canCreateNotes = game.user.hasPermission("NOTE_CREATE");
-        if (!isGM && !canCreateNotes) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoCreateNotes"),
-            );
-            return false;
-        }
-
-        const hasFiles = this.data.files.length > 0;
-        if (!hasFiles) {
-            return false;
-        }
-
-        const hasUrl = !!this.data.url;
-        if (hasUrl) {
+        if (this.data.url) {
             // If a URL exists, just let Foundry handle it for now
             // TODO probably want to eventually handle this
             return false;
+        }
+
+        // Check permissions for non-GM users
+        if (!isGM) {
+            const permissions = [
+                {
+                    permission: "FILES_UPLOAD",
+                    message: "Droppables.NoUploadFiles",
+                },
+                {
+                    permission: "JOURNAL_CREATE",
+                    message: "Droppables.NoCreateJournals",
+                },
+                {
+                    permission: "NOTE_CREATE",
+                    message: "Droppables.NoCreateNotes",
+                },
+            ];
+
+            for (const { permission, message } of permissions) {
+                if (
+                    !game.user.hasPermission(permission as UserPermissionString)
+                ) {
+                    ui.notifications.warn(game.i18n.localize(message));
+                    return false;
+                }
+            }
         }
 
         return true;

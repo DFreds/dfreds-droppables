@@ -13,35 +13,26 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
     }
 
     override canHandleDrop(): boolean {
-        const isGM = game.user.isGM;
-
-        if (!this.#settings.canvasDragUpload) {
+        // Early exit conditions
+        if (
+            !this.#settings.canvasDragUpload ||
+            !canvas.activeLayer?.name?.includes("TilesLayer") ||
+            !this.data.files.length
+        ) {
             return false;
         }
 
-        const isTileLayer =
-            canvas.activeLayer?.name?.includes("TilesLayer") ?? false;
-        if (!isTileLayer) {
+        if (this.data.url) {
+            // If a URL exists, just let Foundry handle it for now
+            // TODO probably want to eventually handle this
             return false;
         }
 
-        const isAllowedToUpload = game.user.hasPermission("FILES_UPLOAD");
-        if (!isGM && !isAllowedToUpload) {
+        // Check upload permissions for non-GM users
+        if (!game.user.isGM && !game.user.hasPermission("FILES_UPLOAD")) {
             ui.notifications.warn(
                 game.i18n.localize("Droppables.NoUploadFiles"),
             );
-            return false;
-        }
-
-        const hasFiles = this.data.files.length > 0;
-        if (!hasFiles) {
-            return false;
-        }
-
-        const hasUrl = !!this.data.url;
-        if (hasUrl) {
-            // If a URL exists, just let Foundry handle it for now
-            // TODO probably want to eventually handle this
             return false;
         }
 
