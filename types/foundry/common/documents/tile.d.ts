@@ -61,6 +61,8 @@ type TileSchema = {
     locked: fields.BooleanField;
     /** Is the tile an overhead tile? */
     overhead: fields.BooleanField;
+    /** The elevation of the tile */
+    elevation: fields.NumberField<number, number, true, false, true>;
     roof: fields.BooleanField;
     /** The tile's occlusion settings */
     occlusion: fields.SchemaField<TileOcclusionSchema>;

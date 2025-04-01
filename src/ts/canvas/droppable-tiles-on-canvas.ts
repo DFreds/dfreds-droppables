@@ -57,10 +57,8 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         this.event.preventDefault();
 
         const overhead =
-            ui.controls.controls
-                .find((control) => control.name === "tiles")
-                ?.tools.find((tool) => tool.name === "foreground")?.active ??
-            false;
+            // @ts-expect-error tiles is defined
+            ui.controls.controls.tiles?.tools?.foreground?.active ?? false;
         const tileSources: DeepPartial<TileSource>[] = [];
         for (const file of this.data.files) {
             // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
@@ -75,7 +73,7 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
                 texture: { src: response.path },
                 width: texture?.baseTexture.width,
                 height: texture?.baseTexture.height,
-                overhead,
+                elevation: overhead ? 20 : 0,
                 hidden: this.event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,
