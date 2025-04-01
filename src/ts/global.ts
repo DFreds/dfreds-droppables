@@ -45,5 +45,7 @@ declare global {
         >;
     }
 
+    type AnyFunction = (...args: any) => any;
+
     const BUILD_MODE: "development" | "stage" | "production";
 }
