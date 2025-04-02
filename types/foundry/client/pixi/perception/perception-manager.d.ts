@@ -35,6 +35,12 @@ declare global {
                 propagate: ["refreshLightSources", "refreshVisionSources"];
                 reset: [];
             };
+            refreshOcclusion: {
+                propagate: ["refreshOcclusionStates", "refreshOcclusionMask"];
+                reset: [];
+            };
+            refreshOcclusionStates: { propagate: []; reset: [] };
+            refreshOcclusionMask: { propagate: []; reset: [] };
             soundFadeDuration: { propagate: []; reset: [] };
             forceUpdateFog: { propagate: []; reset: [] };
         };

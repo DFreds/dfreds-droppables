@@ -82,7 +82,10 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
             tileSources.push(tileSource);
         }
 
-        canvas.perception.update({ refreshLighting: true, refreshTiles: true });
+        canvas.perception.update({
+            refreshLighting: true,
+            refreshOcclusion: true,
+        });
 
         await canvas.scene?.createEmbeddedDocuments("Tile", tileSources, {
             broadcast: true,
