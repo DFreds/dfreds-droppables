@@ -4,7 +4,7 @@ import {
 } from "types/foundry/common/documents/journal-entry-page.js";
 import { JournalEntrySource } from "types/foundry/common/documents/journal-entry.js";
 import { NoteSource } from "types/foundry/common/documents/note.js";
-import { Droppable } from "../droppable.ts";
+import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
@@ -17,14 +17,18 @@ interface NoteUploadData {
     fileName: string;
 }
 
-class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
+class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
+    data: FilesDropData;
+
+    #event: DragEvent;
     #settings = new Settings();
 
     constructor(event: DragEvent) {
-        super(event);
+        this.#event = event;
+        this.data = this.retrieveData();
     }
 
-    override canHandleDrop(): boolean {
+    canHandleDrop(): boolean {
         const isGM = game.user.isGM;
 
         // Check basic requirements
@@ -72,8 +76,8 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         return true;
     }
 
-    override retrieveData(): FilesDropData {
-        const files = this.event.dataTransfer?.files || new FileList();
+    retrieveData(): FilesDropData {
+        const files = this.#event.dataTransfer?.files || new FileList();
 
         return {
             files: Array.from(files).filter((file) => {
@@ -84,13 +88,13 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
                     file.type.includes("text")
                 );
             }),
-            url: this.event.dataTransfer?.getData("text"),
+            url: this.#event.dataTransfer?.getData("text"),
         };
     }
 
-    override async handleDrop(): Promise<boolean> {
+    async handleDrop(): Promise<boolean> {
         if (!this.canHandleDrop()) return false;
-        this.event.preventDefault();
+        this.#event.preventDefault();
 
         const uploadedData = await this.#uploadData();
         await this.#createJournalAndNotes(uploadedData);
@@ -169,7 +173,7 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         };
 
         const journal = await JournalEntry.create(journalSource);
-        const topLeft = translateToTopLeftGrid(this.event);
+        const topLeft = translateToTopLeftGrid(this.#event);
         const noteSource: DeepPartial<NoteSource> = {
             entryId: journal?.id,
             x: topLeft.x,
@@ -180,4 +184,4 @@ class DroppableNotesOnCanvas extends Droppable<DragEvent, FilesDropData> {
     }
 }
 
-export { DroppableNotesOnCanvas };
+export { NotesOnCanvasHandler };

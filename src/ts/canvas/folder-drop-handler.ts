@@ -1,4 +1,4 @@
-import { Droppable } from "../droppable.ts";
+import { DroppableHandler } from "../droppable.ts";
 import { log } from "../logger.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
@@ -26,19 +26,23 @@ interface FolderDropData {
     elevation?: number;
 }
 
-class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
+class FolderDropHandler implements DroppableHandler<FolderDropData> {
+    data: FolderDropData;
+
+    #event: DragEvent;
     #settings = new Settings();
 
     constructor(event: DragEvent) {
-        super(event);
+        this.#event = event;
+        this.data = this.retrieveData();
     }
 
-    override canHandleDrop(): boolean {
+    canHandleDrop(): boolean {
         return this.data.type === "Folder";
     }
 
-    override retrieveData(): FolderDropData {
-        const json = TextEditor.getDragEventData(this.event);
+    retrieveData(): FolderDropData {
+        const json = TextEditor.getDragEventData(this.#event);
         return {
             type: json["type"] as string,
             uuid: json["uuid"] as string,
@@ -48,17 +52,17 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
         };
     }
 
-    override async handleDrop(): Promise<boolean> {
+    async handleDrop(): Promise<boolean> {
         if (!this.canHandleDrop()) return false;
-        this.event.preventDefault();
+        this.#event.preventDefault();
 
         const folder = await this.#getFolder();
 
         if (folder?.type === "Actor") {
-            await this.#handleActorFolder(this.data, folder, this.event);
+            await this.#handleActorFolder(this.data, folder, this.#event);
             return true;
         } else if (folder?.type === "JournalEntry") {
-            await this.#handleJournalFolder(folder, this.event);
+            await this.#handleJournalFolder(folder, this.#event);
             return true;
         } else {
             return false;
@@ -413,5 +417,5 @@ class DroppableFolders extends Droppable<DragEvent, FolderDropData> {
     }
 }
 
-export { DroppableFolders };
+export { FolderDropHandler };
 export type { FolderDropData };

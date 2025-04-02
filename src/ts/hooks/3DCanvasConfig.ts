@@ -1,7 +1,7 @@
 import {
-    DroppableFolders,
     FolderDropData,
-} from "../canvas/droppable-folders.ts";
+    FolderDropHandler,
+} from "../canvas/folder-drop-handler.ts";
 import { Listener } from "./index.ts";
 
 const ThreeDCanvasConfig: Listener = {
@@ -12,7 +12,7 @@ const ThreeDCanvasConfig: Listener = {
                 data: FolderDropData,
             ) {
                 canvas.tokens.activate();
-                const droppableFolders = new DroppableFolders(event);
+                const droppableFolders = new FolderDropHandler(event);
                 droppableFolders.data = data;
                 await droppableFolders.handleDrop();
             };

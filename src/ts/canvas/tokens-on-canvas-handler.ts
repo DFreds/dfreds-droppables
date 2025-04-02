@@ -1,5 +1,5 @@
 import { TokenSource } from "types/foundry/common/documents/token.js";
-import { Droppable } from "../droppable.ts";
+import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
@@ -18,14 +18,18 @@ interface TokenUploadData {
     fileName: string;
 }
 
-class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
+class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
+    data: FilesDropData;
+
+    #event: DragEvent;
     #settings = new Settings();
 
     constructor(event: DragEvent) {
-        super(event);
+        this.#event = event;
+        this.data = this.retrieveData();
     }
 
-    override canHandleDrop(): boolean {
+    canHandleDrop(): boolean {
         const isGM = game.user.isGM;
 
         // Early exit conditions
@@ -71,20 +75,20 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
         return true;
     }
 
-    override retrieveData(): FilesDropData {
-        const files = this.event.dataTransfer?.files || new FileList();
+    retrieveData(): FilesDropData {
+        const files = this.#event.dataTransfer?.files || new FileList();
 
         return {
             files: Array.from(files).filter((file) => {
                 return file.type.includes("image");
             }),
-            url: this.event.dataTransfer?.getData("text"),
+            url: this.#event.dataTransfer?.getData("text"),
         };
     }
 
-    override async handleDrop(): Promise<boolean> {
+    async handleDrop(): Promise<boolean> {
         if (!this.canHandleDrop()) return false;
-        this.event.preventDefault();
+        this.#event.preventDefault();
 
         const types = game.documentTypes.Actor.filter(
             (type) => type !== CONST.BASE_DOCUMENT_TYPE,
@@ -184,10 +188,10 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
         const createdActors = await Actor.createDocuments(actorSources);
         const tokenSources: DeepPartial<TokenSource>[] = [];
         for (const actor of createdActors) {
-            const topLeft = translateToTopLeftGrid(this.event);
+            const topLeft = translateToTopLeftGrid(this.#event);
             const tokenSource: DeepPartial<TokenSource> = {
                 texture: { src: actor.img },
-                hidden: this.event.altKey,
+                hidden: this.#event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,
                 actorId: actor.id,
@@ -208,4 +212,4 @@ class DroppableTokensOnCanvas extends Droppable<DragEvent, FilesDropData> {
     }
 }
 
-export { DroppableTokensOnCanvas };
+export { TokensOnCanvasHandler };

@@ -1,18 +1,22 @@
 import { TileSource } from "types/foundry/common/documents/tile.js";
-import { Droppable } from "../droppable.ts";
+import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
 
-class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
+class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
+    data: FilesDropData;
+
+    #event: DragEvent;
     #settings = new Settings();
 
     constructor(event: DragEvent) {
-        super(event);
+        this.#event = event;
+        this.data = this.retrieveData();
     }
 
-    override canHandleDrop(): boolean {
+    canHandleDrop(): boolean {
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
@@ -39,8 +43,8 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
         return true;
     }
 
-    override retrieveData(): FilesDropData {
-        const files = this.event.dataTransfer?.files || new FileList();
+    retrieveData(): FilesDropData {
+        const files = this.#event.dataTransfer?.files || new FileList();
 
         return {
             files: Array.from(files).filter((file) => {
@@ -48,13 +52,13 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
                     file.type.includes("image") || file.type.includes("video")
                 );
             }),
-            url: this.event.dataTransfer?.getData("text"),
+            url: this.#event.dataTransfer?.getData("text"),
         };
     }
 
-    override async handleDrop(): Promise<boolean> {
+    async handleDrop(): Promise<boolean> {
         if (!this.canHandleDrop()) return false;
-        this.event.preventDefault();
+        this.#event.preventDefault();
 
         const overhead =
             // @ts-expect-error tiles is defined
@@ -67,14 +71,14 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
                 "tiles",
                 file,
             )) as any;
-            const topLeft = translateToTopLeftGrid(this.event);
+            const topLeft = translateToTopLeftGrid(this.#event);
             const texture = await loadTexture(response.path);
             const tileSource: DeepPartial<TileSource> = {
                 texture: { src: response.path },
                 width: texture?.baseTexture.width,
                 height: texture?.baseTexture.height,
                 elevation: overhead ? 20 : 0,
-                hidden: this.event.altKey,
+                hidden: this.#event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,
             };
@@ -96,4 +100,4 @@ class DroppableTilesOnCanvas extends Droppable<DragEvent, FilesDropData> {
     }
 }
 
-export { DroppableTilesOnCanvas };
+export { TilesOnCanvasHandler };

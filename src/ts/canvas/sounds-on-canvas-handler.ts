@@ -1,18 +1,22 @@
 import { AmbientSoundSource } from "types/foundry/common/documents/ambient-sound.js";
-import { Droppable } from "../droppable.ts";
+import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
 
-class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
+class SoundsOnCanvasHandler implements DroppableHandler<FilesDropData> {
+    data: FilesDropData;
+
+    #event: DragEvent;
     #settings = new Settings();
 
     constructor(event: DragEvent) {
-        super(event);
+        this.#event = event;
+        this.data = this.retrieveData();
     }
 
-    override canHandleDrop(): boolean {
+    canHandleDrop(): boolean {
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
@@ -39,20 +43,20 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
         return true;
     }
 
-    override retrieveData(): FilesDropData {
-        const files = this.event.dataTransfer?.files || new FileList();
+    retrieveData(): FilesDropData {
+        const files = this.#event.dataTransfer?.files || new FileList();
 
         return {
             files: Array.from(files).filter((file) => {
                 return file.type.includes("audio");
             }),
-            url: this.event.dataTransfer?.getData("text"),
+            url: this.#event.dataTransfer?.getData("text"),
         };
     }
 
-    override async handleDrop(): Promise<boolean> {
+    async handleDrop(): Promise<boolean> {
         if (!this.canHandleDrop()) return false;
-        this.event.preventDefault();
+        this.#event.preventDefault();
 
         const ambientSoundSources: DeepPartial<AmbientSoundSource>[] = [];
 
@@ -63,7 +67,7 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
                 "sounds",
                 file,
             )) as any;
-            const topLeft = translateToTopLeftGrid(this.event);
+            const topLeft = translateToTopLeftGrid(this.#event);
             const ambientSoundSource: DeepPartial<AmbientSoundSource> = {
                 path: response.path,
                 x: topLeft.x,
@@ -86,4 +90,4 @@ class DroppableSoundsOnCanvas extends Droppable<DragEvent, FilesDropData> {
     }
 }
 
-export { DroppableSoundsOnCanvas };
+export { SoundsOnCanvasHandler };

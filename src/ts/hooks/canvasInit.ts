@@ -1,9 +1,10 @@
-import { DroppableFolders } from "../canvas/droppable-folders.ts";
-import { DroppableNotesOnCanvas } from "../canvas/droppable-notes-on-canvas.ts";
-import { DroppableSoundsOnCanvas } from "../canvas/droppable-sounds-on-canvas.ts";
-import { DroppableTilesOnCanvas } from "../canvas/droppable-tiles-on-canvas.ts";
-import { DroppableTokensOnCanvas } from "../canvas/droppable-tokens-on-canvas.ts";
+import { DroppableManager } from "../droppable.ts";
+import { FolderDropHandler } from "../canvas/folder-drop-handler.ts";
+import { TokensOnCanvasHandler } from "../canvas/tokens-on-canvas-handler.ts";
 import { Listener } from "./index.ts";
+import { TilesOnCanvasHandler } from "../canvas/tiles-on-canvas-handler.ts";
+import { SoundsOnCanvasHandler } from "../canvas/sounds-on-canvas-handler.ts";
+import { NotesOnCanvasHandler } from "../canvas/notes-on-canvas-handler.ts";
 
 const CanvasInit: Listener = {
     listen(): void {
@@ -15,24 +16,16 @@ const CanvasInit: Listener = {
 
             const defaultOnDrop = board.ondrop;
 
-            // TODO re-investigate #onDrop `dropCanvasData` after updates
             board.ondrop = async (event: DragEvent) => {
-                const canvasDroppables = [
-                    new DroppableFolders(event),
-                    new DroppableTokensOnCanvas(event),
-                    new DroppableTilesOnCanvas(event),
-                    new DroppableSoundsOnCanvas(event),
-                    new DroppableNotesOnCanvas(event),
-                ];
-                // const url = this.event.dataTransfer?.getData("Text");
-                let didDrop = false;
-                for (const droppable of canvasDroppables) {
-                    didDrop = await droppable.handleDrop();
-                    if (didDrop) {
-                        break;
-                    }
-                }
+                const manager = new DroppableManager();
 
+                manager.registerHandler(new FolderDropHandler(event));
+                manager.registerHandler(new TokensOnCanvasHandler(event));
+                manager.registerHandler(new TilesOnCanvasHandler(event));
+                manager.registerHandler(new SoundsOnCanvasHandler(event));
+                manager.registerHandler(new NotesOnCanvasHandler(event));
+
+                const didDrop = await manager.handleDrop();
                 if (!didDrop) {
                     defaultOnDrop?.call(board, event);
                 }

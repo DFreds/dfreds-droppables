@@ -1,19 +1,25 @@
-abstract class Droppable<TEvent extends Event, TData> {
-    event: TEvent;
-    data: TData;
-
-    protected constructor(event: TEvent) {
-        this.event = event;
-        this.data = this.retrieveData();
-    }
-
-    protected canHandleDrop(): boolean {
-        return false;
-    }
-
-    abstract retrieveData(): TData;
-
-    abstract handleDrop(): boolean | Promise<boolean>;
+interface DroppableHandler<TData> {
+    canHandleDrop(): boolean;
+    retrieveData(): TData;
+    handleDrop(): boolean | Promise<boolean>;
 }
 
-export { Droppable };
+class DroppableManager {
+    #handlers: DroppableHandler<any>[] = [];
+
+    registerHandler(handler: DroppableHandler<any>): void {
+        this.#handlers.push(handler);
+    }
+
+    async handleDrop(): Promise<boolean> {
+        for (const handler of this.#handlers) {
+            if (handler.canHandleDrop()) {
+                return handler.handleDrop();
+            }
+        }
+        return false;
+    }
+}
+
+export type { DroppableHandler };
+export { DroppableManager };
