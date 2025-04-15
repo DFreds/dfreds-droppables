@@ -204,7 +204,6 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
             });
         }
 
-        // TODO actorless option where you delete the associated actor after?
         return canvas.scene?.createEmbeddedDocuments("Token", tokenSources, {
             broadcast: true,
             data: [],
