@@ -19,6 +19,7 @@
 
         "DropJournalFolder": "Drop Journal Folder",
         "DropJournalFolderExplanation": "Drop all journal entries in {folderName} as pins?",
+        "JournalSceneName": "Note in Scene: {name} - {dateTime}",
 
         "ActorUploadExplanation": "Select the actor type for each file.",
         "TokenActorTypes": "Token Actor Types",

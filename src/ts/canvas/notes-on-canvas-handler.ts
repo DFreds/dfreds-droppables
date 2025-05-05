@@ -167,8 +167,19 @@ class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
                     },
                 };
             });
+
+        const dateTime = new Date().toLocaleString(undefined, {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
         const journalSource: DeepPartial<JournalEntrySource> = {
-            name: canvas.scene?.name,
+            name: game.i18n.format("Droppables.JournalSceneName", {
+                name: canvas.scene?.name ?? "",
+                dateTime,
+            }),
             pages: journalPageSources,
         };
 
