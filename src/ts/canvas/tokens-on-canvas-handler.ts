@@ -5,6 +5,10 @@ import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
 
+const { DialogV2 } = foundry.applications.api;
+// @ts-expect-error not typed yet
+const { renderTemplate } = foundry.applications.handlebars;
+
 interface TokenDropData {
     fileName: string;
     filePath: string;
@@ -147,36 +151,42 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
                 uploadedData,
             },
         );
-        return Dialog.prompt({
-            title: game.i18n.localize("Droppables.TokenActorTypes"),
-            content: content,
-            label: game.i18n.localize("Droppables.Confirm"),
-            rejectClose: false,
-            callback: async (html) => {
-                const tokenDropDatas = html
-                    .find('select[name="type"]')
-                    .map((_idx, ele) => {
-                        const data = $(ele).data();
-                        const typeSelection = $(ele).val();
-                        const tokenDropData: TokenDropData = {
-                            fileName: data?.fileName ?? "Unknown",
-                            filePath: data?.filePath as FilePath,
-                            type:
-                                typeSelection?.toString() ??
-                                CONST.BASE_DOCUMENT_TYPE,
-                        };
-
-                        return tokenDropData;
-                    })
-                    .get();
-                await this.#createActorsAndTokens(tokenDropDatas);
+        return DialogV2.prompt({
+            window: {
+                title: game.i18n.localize("Droppables.TokenActorTypes"),
+                controls: [],
             },
-        } as PromptDialogData);
+            content,
+            ok: {
+                label: game.i18n.localize("Droppables.Confirm"),
+                callback: async (_event, _button, dialog) => {
+                    const $html = $(dialog.element);
+
+                    const dropData = $html
+                        .find('select[name="type"]')
+                        .map((_idx, ele) => {
+                            const data = $(ele).data();
+                            const typeSelection = $(ele).val();
+                            const tokenDropData: TokenDropData = {
+                                fileName: data?.fileName ?? "Unknown",
+                                filePath: data?.filePath as FilePath,
+                                type:
+                                    typeSelection?.toString() ??
+                                    CONST.BASE_DOCUMENT_TYPE,
+                            };
+
+                            return tokenDropData;
+                        })
+                        .get();
+                    await this.#createActorsAndTokens(dropData);
+                },
+            },
+        });
     }
 
-    async #createActorsAndTokens(tokenDropDatas: TokenDropData[]) {
+    async #createActorsAndTokens(dropData: TokenDropData[]) {
         const actorSources = [];
-        for (const tokenDropData of tokenDropDatas) {
+        for (const tokenDropData of dropData) {
             const actorSource = {
                 name: tokenDropData.fileName.split(".")[0],
                 type: tokenDropData.type,

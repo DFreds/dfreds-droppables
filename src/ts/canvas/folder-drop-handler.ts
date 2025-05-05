@@ -3,6 +3,10 @@ import { log } from "../logger.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 
+const { DialogV2 } = foundry.applications.api;
+// @ts-expect-error not typed yet
+const { renderTemplate } = foundry.applications.handlebars;
+
 interface DropActorFolderInput {
     actors: Actor[];
     xPosition: number;
@@ -141,7 +145,7 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
         yPosition,
         elevation,
         isHidden,
-    }: DropActorFolderInput): Promise<void> {
+    }: DropActorFolderInput): Promise<boolean> {
         const dropStyles = [
             {
                 value: "stack",
@@ -170,68 +174,67 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
             },
         );
 
-        new Dialog(
-            {
+        return DialogV2.confirm({
+            window: {
                 title: game.i18n.localize("Droppables.DropActorsFolder"),
-                content: content,
-                buttons: {
-                    yes: {
-                        icon: '<i class="fas fa-level-down-alt"></i>',
-                        label: game.i18n.localize("Droppables.DropButton"),
-                        callback: async (html) => {
-                            const dropStyle = html
-                                .find('select[name="drop-style"]')
-                                .val();
-                            const dropElevation = parseFloat(
-                                html
-                                    .find('input[name="elevation"]')
-                                    .val() as string,
-                            );
+                controls: [],
+            },
+            content,
+            position: {
+                width: 320,
+            },
+            yes: {
+                icon: "fas fa-level-down-alt",
+                label: game.i18n.localize("Droppables.DropButton"),
+                callback: async (_event, _button, dialog) => {
+                    const $html = $(dialog.element);
+                    const dropStyle = $html
+                        .find('select[name="drop-style"]')
+                        .val();
+                    const dropElevation = parseFloat(
+                        $html.find('input[name="elevation"]').val() as string,
+                    );
 
-                            this.#settings.lastUsedDropStyle =
-                                dropStyle as string;
+                    this.#settings.lastUsedDropStyle = dropStyle as string;
 
-                            if (dropStyle === "stack") {
-                                await this.#dropStack({
-                                    actors,
-                                    xPosition,
-                                    yPosition,
-                                    isHidden,
-                                    elevation: dropElevation,
-                                });
-                            } else if (dropStyle === "random") {
-                                await this.#dropRandom({
-                                    actors,
-                                    xPosition,
-                                    yPosition,
-                                    isHidden,
-                                    elevation: dropElevation,
-                                });
-                            } else if (dropStyle === "horizontalLine") {
-                                await this.#dropLine({
-                                    isHorizontal: true,
-                                    actors,
-                                    xPosition,
-                                    yPosition,
-                                    isHidden,
-                                    elevation: dropElevation,
-                                });
-                            } else if (dropStyle === "verticalLine") {
-                                await this.#dropLine({
-                                    isHorizontal: false,
-                                    actors,
-                                    xPosition,
-                                    yPosition,
-                                    isHidden,
-                                    elevation: dropElevation,
-                                });
-                            }
-                        },
-                    },
+                    if (dropStyle === "stack") {
+                        await this.#dropStack({
+                            actors,
+                            xPosition,
+                            yPosition,
+                            isHidden,
+                            elevation: dropElevation,
+                        });
+                    } else if (dropStyle === "random") {
+                        await this.#dropRandom({
+                            actors,
+                            xPosition,
+                            yPosition,
+                            isHidden,
+                            elevation: dropElevation,
+                        });
+                    } else if (dropStyle === "horizontalLine") {
+                        await this.#dropLine({
+                            isHorizontal: true,
+                            actors,
+                            xPosition,
+                            yPosition,
+                            isHidden,
+                            elevation: dropElevation,
+                        });
+                    } else if (dropStyle === "verticalLine") {
+                        await this.#dropLine({
+                            isHorizontal: false,
+                            actors,
+                            xPosition,
+                            yPosition,
+                            isHidden,
+                            elevation: dropElevation,
+                        });
+                    }
                 },
             },
-            { width: 320 },
-        ).render(true);
+        });
     }
 
     async #dropStack({
@@ -377,24 +380,31 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
     async #handleJournalFolder(
         folder: Folder,
         event: DragEvent,
-    ): Promise<void> {
+    ): Promise<boolean> {
         const entries = folder?.contents as JournalEntry[];
         const topLeft = translateToTopLeftGrid(event);
 
-        Dialog.confirm({
-            title: game.i18n.localize("Droppables.DropJournalFolder"),
+        return DialogV2.confirm({
+            window: {
+                title: game.i18n.localize("Droppables.DropJournalFolder"),
+                controls: [],
+            },
             content: `<p>${game.i18n.format(
                 "Droppables.DropJournalFolderExplanation",
                 { folderName: folder?.name ?? "" },
             )}</p>`,
-            yes: async () => {
-                for (const entry of entries) {
-                    await this.#dropJournalEntry({
-                        entry,
-                        xPosition: topLeft.x,
-                        yPosition: topLeft.y,
-                    });
-                }
+            yes: {
+                icon: "fas fa-level-down-alt",
+                label: game.i18n.localize("Droppables.DropButton"),
+                callback: async () => {
+                    for (const entry of entries) {
+                        await this.#dropJournalEntry({
+                            entry,
+                            xPosition: topLeft.x,
+                            yPosition: topLeft.y,
+                        });
+                    }
+                },
             },
         });
     }

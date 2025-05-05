@@ -100,9 +100,9 @@ export default abstract class DialogV2<
 
 export interface DialogV2Button {
     /** The button action identifier. */
-    action: string;
+    action?: string;
     /** The button label. Will be localized. */
-    label: string;
+    label?: string;
     /** FontAwesome icon classes. */
     icon?: string;
     /** CSS classes to apply to the button. */
@@ -157,7 +157,7 @@ export interface DialogV2WaitOptions {
 export type DialogV2ButtonCallback = (
     event: PointerEvent | SubmitEvent,
     button: HTMLButtonElement,
-    dialog: HTMLDialogElement,
+    dialog: DialogV2,
 ) => Promise<unknown>;
 
 /**
