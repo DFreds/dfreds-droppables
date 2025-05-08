@@ -1,32 +1,39 @@
 {
     "Droppables": {
-        "DropActorsFolder": "キャラクターフォルダの中身をここに置く",
+        "DropActorsFolder": "キャラクターフォルダの中身を置く",
         "DropButton": "置く",
         "DropStyle": "置き方",
-        "DropExplanation": "マップ上に、どのように置く？",
-        "StackedUp": "重ねておく",
-        "Randomly": "ランダムに置く",
-        "HorizontalLine": "左から右へ並べて置く",
-        "VerticalLine": "上から下に並べて置く",
+        "DropExplanation": "フォルダ内のキャラクターを、マップ上にどのように置きますか？",
+        "StackedUp": "重ねる",
+        "Randomly": "ランダム",
+        "HorizontalLine": "左から右へ",
+        "VerticalLine": "上から下へ",
         "Elevation": "高さ",
-        "ElevationOptional": "高さをここに記入",
+        "ElevationOptional": "高さ (任意)",
 
-        "DropJournalFolder": "資料フォルダの中身をここに置く",
-        "DropJournalFolderExplanation": "{folderName}フォルダの中身を全てここに置きますか？",
+        "NoUploadFiles": "ファイルアップロードの権限がありません。",
+        "NoCreateJournals": "資料作成の権限がありません。",
+        "NoCreateNotes": "地点メモ作成の権限がありません。",
+        "NoCreateTokens": "コマ作成の権限がありません。",
+        "NoCreateActors": "キャラクター作成の権限がありません。",
 
-        "ActorUploadExplanation": "Select the actor type for each file. (Japanese localization needed).",
-        "TokenActorTypes": "Token Actor Types",
-        "Confirm": "Confirm",
+        "DropJournalFolder": "資料フォルダの中身を置く",
+        "DropJournalFolderExplanation": "{folderName}フォルダの中身を全てここに地点メモとして置きますか？",
+        "JournalSceneName": "地点メモ: {name} - {dateTime}",
+
+        "ActorUploadExplanation": "各ファイルのキャラクター種別を選択してください。",
+        "TokenActorTypes": "コマのキャラクター種別",
+        "Confirm": "確認",
 
         "SettingDropStyle": "置き方",
-        "SettingDropStyleHint": "ここで、普段どのようにフォルダの中身を置くかを決めることができる。 \"ダイアログ\" を選択すれば、毎回置き方を選択できる。",
+        "SettingDropStyleHint": "ここで、普段どのようにフォルダの中身を置くかを決めることができます。 \"ダイアログ\" を選択すれば、毎回置き方を選択できます。",
         "SettingDropStyleDialog": "ダイアログ",
-        "SettingDropStyleStack": "重ねて置く",
-        "SettingDropStyleRandom": "ランダムに置く",
-        "SettingDropStyleHorizontalLine": "左から右へ並べて置く",
-        "SettingDropStyleVerticalLine": "上から下に並べて置く",
+        "SettingDropStyleStack": "重ねる",
+        "SettingDropStyleRandom": "ランダム",
+        "SettingDropStyleHorizontalLine": "左から右へ",
+        "SettingDropStyleVerticalLine": "上から下へ",
 
-        "SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload (Translation Needed)",
-        "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer. (Translation Needed)"
+        "SettingEnableCanvasDragUpload": "マップにドラッグ/アップロード有効化",
+        "SettingEnableCanvasDragUploadHint": "有効にすると、コマ・タイル・音声・資料を、選択中のレイヤーに基づいてマップ上にドラッグ&アップロードできます。"
     }
 }
