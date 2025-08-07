@@ -1,3 +1,5 @@
+import { Point } from "@common/_types.mjs";
+
 function translateToTopLeftGrid(event: DragEvent): Point {
     const transform = canvas.tokens.worldTransform;
     const tx = (event.clientX - transform.tx) / canvas.stage.scale.x;

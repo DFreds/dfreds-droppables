@@ -1,9 +1,13 @@
-import { TileSource } from "types/foundry/common/documents/tile.js";
 import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
+import { TileSource } from "@client/documents/_module.mjs";
+import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
+
+const { FilePicker } = foundry.applications.apps;
+const { loadTexture } = foundry.canvas;
 
 class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     data: FilesDropData;
@@ -61,7 +65,6 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
         this.#event.preventDefault();
 
         const overhead =
-            // @ts-expect-error tiles is defined
             ui.controls.controls.tiles?.tools?.foreground?.active ?? false;
         const tileSources: DeepPartial<TileSource>[] = [];
         for (const file of this.data.files) {
@@ -77,6 +80,7 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
                 texture: { src: response.path },
                 width: texture?.baseTexture.width,
                 height: texture?.baseTexture.height,
+                // @ts-expect-error elevation is defined
                 elevation: overhead ? 20 : 0,
                 hidden: this.#event.altKey,
                 x: topLeft.x,
@@ -94,7 +98,7 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
         await canvas.scene?.createEmbeddedDocuments("Tile", tileSources, {
             broadcast: true,
             data: [],
-        });
+        } as unknown as DatabaseCreateOperation<Scene>);
 
         return true;
     }

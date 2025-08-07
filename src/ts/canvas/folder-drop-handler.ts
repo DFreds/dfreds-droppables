@@ -4,8 +4,8 @@ import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 
 const { DialogV2 } = foundry.applications.api;
-// @ts-expect-error not typed yet
 const { renderTemplate } = foundry.applications.handlebars;
+const { TextEditor } = foundry.applications.ux;
 
 interface DropActorFolderInput {
     actors: Actor[];
@@ -416,6 +416,7 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
     }: DropJournalFolderInput): Promise<
         NoteDocument<Scene | null> | undefined
     > {
+        // @ts-expect-error not typed for some reason
         return NoteDocument.create(
             {
                 entryId: entry.id,

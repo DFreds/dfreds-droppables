@@ -1,9 +1,11 @@
-import { AmbientSoundSource } from "types/foundry/common/documents/ambient-sound.js";
 import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
+import { AmbientSoundSource } from "@client/documents/_module.mjs";
+
+const { FilePicker } = foundry.applications.apps;
 
 class SoundsOnCanvasHandler implements DroppableHandler<FilesDropData> {
     data: FilesDropData;

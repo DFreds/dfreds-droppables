@@ -1,13 +1,19 @@
-import { TokenSource } from "types/foundry/common/documents/token.js";
 import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
+import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
+import {
+    FilePath,
+    ImageFilePath,
+    USER_PERMISSIONS,
+} from "@common/constants.mjs";
+import { TokenSource } from "@client/documents/_module.mjs";
 
 const { DialogV2 } = foundry.applications.api;
-// @ts-expect-error not typed yet
 const { renderTemplate } = foundry.applications.handlebars;
+const { FilePicker } = foundry.applications.apps;
 
 interface TokenDropData {
     fileName: string;
@@ -54,22 +60,17 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
         // Permission checks for non-GM users
         if (!isGM) {
             const permissions = [
-                {
-                    check: "FILES_UPLOAD",
-                    message: "Droppables.NoUploadFiles",
-                },
-                {
-                    check: "TOKEN_CREATE",
-                    message: "Droppables.NoCreateTokens",
-                },
-                {
-                    check: "ACTOR_CREATE",
-                    message: "Droppables.NoCreateActors",
-                },
+                { check: "FILES_UPLOAD", message: "Droppables.NoUploadFiles" },
+                { check: "TOKEN_CREATE", message: "Droppables.NoCreateTokens" },
+                { check: "ACTOR_CREATE", message: "Droppables.NoCreateActors" },
             ];
 
             for (const { check, message } of permissions) {
-                if (!game.user.hasPermission(check as UserPermissionString)) {
+                if (
+                    !game.user.hasPermission(
+                        check as keyof typeof USER_PERMISSIONS,
+                    )
+                ) {
                     ui.notifications.warn(game.i18n.localize(message));
                     return false;
                 }
@@ -147,9 +148,7 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
     async #promptForActorTypes(uploadedData: TokenUploadData[]) {
         const content = await renderTemplate(
             `modules/${MODULE_ID}/templates/drop-token-files-dialog.hbs`,
-            {
-                uploadedData,
-            },
+            { uploadedData },
         );
         return DialogV2.prompt({
             window: {
@@ -200,7 +199,7 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
         for (const actor of createdActors) {
             const topLeft = translateToTopLeftGrid(this.#event);
             const tokenSource: DeepPartial<TokenSource> = {
-                texture: { src: actor.img },
+                texture: { src: actor.img as ImageFilePath },
                 hidden: this.#event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,
@@ -209,15 +208,13 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
             };
             tokenSources.push(tokenSource);
 
-            await actor.update({
-                prototypeToken: tokenSource,
-            });
+            await actor.update({ prototypeToken: tokenSource });
         }
 
         return canvas.scene?.createEmbeddedDocuments("Token", tokenSources, {
             broadcast: true,
             data: [],
-        });
+        } as unknown as DatabaseCreateOperation<Scene>);
     }
 }
 

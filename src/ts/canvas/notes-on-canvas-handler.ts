@@ -1,14 +1,13 @@
-import {
-    CorePageType,
-    JournalEntryPageSource,
-} from "types/foundry/common/documents/journal-entry-page.js";
-import { JournalEntrySource } from "types/foundry/common/documents/journal-entry.js";
-import { NoteSource } from "types/foundry/common/documents/note.js";
 import { DroppableHandler } from "../droppable.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
+import { CorePageType, JournalEntryPageSource } from "@common/documents/journal-entry-page.mjs";
+import { JournalEntrySource, NoteSource } from "@client/documents/_module.mjs";
+import { USER_PERMISSIONS } from "@common/constants.mjs";
+
+const { FilePicker } = foundry.applications.apps;
 
 interface NoteUploadData {
     response?: any;
@@ -65,7 +64,7 @@ class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
 
             for (const { permission, message } of permissions) {
                 if (
-                    !game.user.hasPermission(permission as UserPermissionString)
+                    !game.user.hasPermission(permission as keyof typeof USER_PERMISSIONS)
                 ) {
                     ui.notifications.warn(game.i18n.localize(message));
                     return false;
