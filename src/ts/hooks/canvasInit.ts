@@ -5,6 +5,7 @@ import { Listener } from "./index.ts";
 import { TilesOnCanvasHandler } from "../canvas/tiles-on-canvas-handler.ts";
 import { SoundsOnCanvasHandler } from "../canvas/sounds-on-canvas-handler.ts";
 import { NotesOnCanvasHandler } from "../canvas/notes-on-canvas-handler.ts";
+import { SingleActorDropHandler } from "../canvas/single-actor-drop-handler.ts";
 
 const CanvasInit: Listener = {
     listen(): void {
@@ -19,6 +20,7 @@ const CanvasInit: Listener = {
             board.ondrop = async (event: DragEvent) => {
                 const manager = new DroppableManager();
 
+                manager.registerHandler(new SingleActorDropHandler(event));
                 manager.registerHandler(new FolderDropHandler(event));
                 manager.registerHandler(new TokensOnCanvasHandler(event));
                 manager.registerHandler(new TilesOnCanvasHandler(event));
