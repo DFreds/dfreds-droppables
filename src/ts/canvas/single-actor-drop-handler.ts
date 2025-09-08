@@ -62,8 +62,11 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
         const elevation: number = this.data.elevation ?? 0;
         const isHidden = this.#event.altKey;
 
-        // If not NPC, just drop a single token without dialog
-        if (actor.type !== "npc") {
+        // Show dialog only for unlinked NPCs. For all others, drop a single token immediately.
+        const isNpc = actor.type === "npc";
+        const isLinked = Boolean(foundry.utils.getProperty(actor, "prototypeToken.actorLink"));
+
+        if (!isNpc || isLinked) {
             await this.#dropActor({
                 actor,
                 xPosition,
@@ -74,7 +77,7 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
             return true;
         }
 
-        // NPC: show dialog with count input
+        // Unlinked NPC: show dialog with count input
         const dropStyles = [
             { value: "stack", label: game.i18n.localize("Droppables.StackedUp") },
             { value: "random", label: game.i18n.localize("Droppables.Randomly") },
