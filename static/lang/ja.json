@@ -34,6 +34,7 @@
         "SettingDropStyleVerticalLine": "上から下へ",
 
         "SettingEnableCanvasDragUpload": "マップにドラッグ/アップロード有効化",
-        "SettingEnableCanvasDragUploadHint": "有効にすると、コマ・タイル・音声・資料を、選択中のレイヤーに基づいてマップ上にドラッグ&アップロードできます。"
+        "SettingEnableCanvasDragUploadHint": "有効にすると、コマ・タイル・音声・資料を、選択中のレイヤーに基づいてマップ上にドラッグ&アップロードできます。",
+        "CountForSingleToken": "コマをいくつ配置しますか？"
     }
 }

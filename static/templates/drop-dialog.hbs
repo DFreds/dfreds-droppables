@@ -4,6 +4,23 @@
     onsubmit="event.preventDefault();"
 >
     <p>{{localize "Droppables.DropExplanation"}}</p>
+    {{#if allowCount}}
+        <div class="form-group">
+            <label for="count">{{localize "Droppables.CountForSingleToken"}}</label>
+            <div class="form-fields">
+                <input
+                    type="number"
+                    id="count"
+                    name="count"
+                    min="1"
+                    step="1"
+                    placeholder="{{defaultCount}}"
+                    value=""
+                    autofocus
+                />
+            </div>
+        </div>
+    {{/if}}
     <div class="form-group">
         <label class="droppables-dialog-label" for="drop-style">{{localize
                 "Droppables.DropStyle"
@@ -31,21 +48,4 @@
             />
         </div>
     </div>
-    {{#if allowCount}}
-    <div class="form-group">
-        <label for="count">{{localize "Droppables.Count"}}</label>
-        <div class="form-fields">
-            <input
-                type="number"
-                id="count"
-                name="count"
-                min="1"
-                step="1"
-                placeholder="{{defaultCount}}"
-                value=""
-                autofocus
-            />
-        </div>
-    </div>
-    {{/if}}
 </form>
