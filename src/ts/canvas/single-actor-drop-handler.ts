@@ -98,7 +98,6 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
                 savedDropStyle: this.#settings.lastUsedDropStyle,
                 startingElevation: elevation ? Math.round(elevation) : null,
                 allowCount: true,
-                defaultCount: 1,
             },
         );
 
