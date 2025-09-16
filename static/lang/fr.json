@@ -27,6 +27,7 @@
         "SettingDropStyleVerticalLine": "Ligne verticale",
 
         "SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload (Translation Needed)",
-        "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer. (Translation Needed)"
+        "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer. (Translation Needed)",
+        "CountForSingleToken": "Combien de jetons?"
     }
 }

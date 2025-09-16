@@ -27,6 +27,7 @@
         "SettingDropStyleVerticalLine": "Linha Vertical",
 
         "SettingEnableCanvasDragUpload": "Habilitar Arrastar/Carregar na Tela",
-        "SettingEnableCanvasDragUploadHint": "Se habilitado, você pode arrastar e carregar tokens, peças, áudios e entradas do diário na tela baseado na camada selecionada."
+        "SettingEnableCanvasDragUploadHint": "Se habilitado, você pode arrastar e carregar tokens, peças, áudios e entradas do diário na tela baseado na camada selecionada.",
+        "CountForSingleToken": "Quantos tokens?"
     }
 }
