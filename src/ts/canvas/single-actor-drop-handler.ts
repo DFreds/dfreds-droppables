@@ -35,7 +35,10 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
     }
 
     canHandleDrop(): boolean {
-        return this.data.type === "Actor";
+        return (
+            this.data.type === "Actor" &&
+            (this.#settings.enableUnlinkedActorDropHandler || this.#event.shiftKey)
+        );
     }
 
     retrieveData(): ActorDropData {

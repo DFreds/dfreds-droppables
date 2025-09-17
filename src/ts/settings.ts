@@ -3,6 +3,7 @@ import { MODULE_ID } from "./constants.ts";
 class Settings {
     // Settings keys
     #FOLDER_DROP_STYLE = "dropStyle";
+    #ENABLE_UNLINKED_ACTOR_DROP_HANDLER = "enableUnlinkedActorDropHandler";
     #ENABLE_CANVAS_DRAG_UPLOAD = "enableCanvasDragUpload";
     #LAST_USED_FOLDER_DROP_STYLE = "lastUsedDropStyle";
 
@@ -25,6 +26,19 @@ class Settings {
             },
             type: String,
         });
+
+        game.settings.register(
+            MODULE_ID,
+            this.#ENABLE_UNLINKED_ACTOR_DROP_HANDLER,
+            {
+                name: "Droppables.SettingEnableUnlinkedActorDropHandler",
+                hint: "Droppables.SettingEnableUnlinkedActorDropHandlerHint",
+                scope: "client",
+                config: true,
+                default: false,
+                type: Boolean,
+            },
+        );
 
         game.settings.register(MODULE_ID, this.#ENABLE_CANVAS_DRAG_UPLOAD, {
             name: "Droppables.SettingEnableCanvasDragUpload",
@@ -51,6 +65,18 @@ class Settings {
      */
     get dropStyle(): string {
         return game.settings.get(MODULE_ID, this.#FOLDER_DROP_STYLE) as string;
+    }
+
+    /**
+     * Returns the game setting for the unlinked actor drop handler
+     *
+     * @returns a boolean indicating if the unlinked actor drop handler is enabled
+     */
+    get enableUnlinkedActorDropHandler(): boolean {
+        return game.settings.get(
+            MODULE_ID,
+            this.#ENABLE_UNLINKED_ACTOR_DROP_HANDLER,
+        ) as boolean;
     }
 
     /**
