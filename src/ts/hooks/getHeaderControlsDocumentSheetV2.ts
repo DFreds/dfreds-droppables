@@ -7,7 +7,12 @@ const GetHeaderControlsDocumentSheetV2: Listener = {
                 $(sheet.element as HTMLElement).find(
                     "button[data-action='copyUuid']",
                 ).length > 0;
-            if (!hasCopyUuidButton) return;
+            const hasDragDropButton =
+                $(sheet.element as HTMLElement).find(
+                    "button[data-action='dragDrop']",
+                ).length > 0;
+
+            if (!hasCopyUuidButton || hasDragDropButton) return;
 
             const dragDropLabel = game.i18n.localize("CONTROLS.DragDrop");
             const linkButton = $(`
