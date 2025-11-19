@@ -1,8 +1,12 @@
+import { Settings } from "../settings.ts";
 import { Listener } from "./index.ts";
 
 const GetHeaderControlsDocumentSheetV2: Listener = {
     listen(): void {
         Hooks.on("getHeaderControlsDocumentSheetV2", (sheet: any) => {
+            const settings = new Settings();
+            if (!settings.enableDocumentDragDropLink) return;
+
             const hasCopyUuidButton =
                 $(sheet.element as HTMLElement).find(
                     "button[data-action='copyUuid']",

@@ -5,6 +5,7 @@ class Settings {
     #FOLDER_DROP_STYLE = "dropStyle";
     #ENABLE_UNLINKED_ACTOR_DROP_HANDLER = "enableUnlinkedActorDropHandler";
     #ENABLE_CANVAS_DRAG_UPLOAD = "enableCanvasDragUpload";
+    #ENABLE_DOCUMENT_DRAG_DROP_LINK = "enableDocumentDragDropLink";
     #LAST_USED_FOLDER_DROP_STYLE = "lastUsedDropStyle";
 
     /**
@@ -43,6 +44,15 @@ class Settings {
         game.settings.register(MODULE_ID, this.#ENABLE_CANVAS_DRAG_UPLOAD, {
             name: "Droppables.SettingEnableCanvasDragUpload",
             hint: "Droppables.SettingEnableCanvasDragUploadHint",
+            scope: "client",
+            config: true,
+            default: true,
+            type: Boolean,
+        });
+
+        game.settings.register(MODULE_ID, this.#ENABLE_DOCUMENT_DRAG_DROP_LINK, {
+            name: "Droppables.SettingEnableDocumentDragDropLink",
+            hint: "Droppables.SettingEnableDocumentDragDropLinkHint",
             scope: "client",
             config: true,
             default: true,
@@ -88,6 +98,18 @@ class Settings {
         return game.settings.get(
             MODULE_ID,
             this.#ENABLE_CANVAS_DRAG_UPLOAD,
+        ) as boolean;
+    }
+
+    /**
+     * Returns the game setting for the document drag drop link
+     *
+     * @returns a boolean indicating if document drag drop link is enabled
+     */
+    get enableDocumentDragDropLink(): boolean {
+        return game.settings.get(
+            MODULE_ID,
+            this.#ENABLE_DOCUMENT_DRAG_DROP_LINK,
         ) as boolean;
     }
 
