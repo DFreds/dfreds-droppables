@@ -28,6 +28,10 @@
 
         "SettingEnableCanvasDragUpload": "Habilitar Arrastar/Carregar na Tela",
         "SettingEnableCanvasDragUploadHint": "Se habilitado, você pode arrastar e carregar tokens, peças, áudios e entradas do diário na tela baseado na camada selecionada.",
+
+        "SettingEnableDocumentDragDropLink": "Habilitar Link de Arrastar/Soltar",
+        "SettingEnableDocumentDragDropLinkHint": "Se habilitado, um botão de link será adicionado à cabeçalho da planilha de documento para permitir o link de arrastar/soltar de documentos.",
+
         "CountForSingleToken": "Quantos tokens?"
     }
 }

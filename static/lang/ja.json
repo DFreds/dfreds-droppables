@@ -35,6 +35,10 @@
 
         "SettingEnableCanvasDragUpload": "マップにドラッグ/アップロード有効化",
         "SettingEnableCanvasDragUploadHint": "有効にすると、コマ・タイル・音声・資料を、選択中のレイヤーに基づいてマップ上にドラッグ&アップロードできます。",
+
+        "SettingEnableDocumentDragDropLink": "ドキュメントドラッグ/ドロップリンク有効化",
+        "SettingEnableDocumentDragDropLinkHint": "有効にすると、ドキュメントシートのヘッダーにリンクボタンが追加され、ドキュメントをドラッグ&ドロップでリンクできます。",
+
         "CountForSingleToken": "コマをいくつ配置しますか？"
     }
 }

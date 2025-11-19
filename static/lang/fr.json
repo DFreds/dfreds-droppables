@@ -14,9 +14,9 @@
         "DropJournalFolder": "Déposer le dossier du journal",
         "DropJournalFolderExplanation": "Supprimer toutes les entrées de journal dans {folderName} en tant qu'épingles ?",
 
-        "ActorUploadExplanation": "Select the actor type for each file. (French localization needed).",
-        "TokenActorTypes": "Token Actor Types",
-        "Confirm": "Confirm",
+        "ActorUploadExplanation": "Sélectionnez le type d'acteur pour chaque fichier.",
+        "TokenActorTypes": "Types d'acteur de jeton",
+        "Confirm": "Confirmer",
 
         "SettingDropStyle": "Style de dépose",
         "SettingDropStyleHint": "C'est ainsi que les éléments du dossier seront déposés sur le canevas. Choisir \"Dialog\" vous demandera à chaque fois l'une des options.",
@@ -26,8 +26,12 @@
         "SettingDropStyleHorizontalLine": "Ligne horizontale",
         "SettingDropStyleVerticalLine": "Ligne verticale",
 
-        "SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload (Translation Needed)",
-        "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer. (Translation Needed)",
+        "SettingEnableCanvasDragUpload": "Activer le déplacement/téléchargement sur le canevas",
+        "SettingEnableCanvasDragUploadHint": "Si activé, vous pouvez déplacer et télécharger les jetons, tuiles, audio et entrées de journal sur le canevas en fonction de la couche sélectionnée.",
+
+        "SettingEnableDocumentDragDropLink": "Activer le lien de déplacement/dépôt de document",
+        "SettingEnableDocumentDragDropLinkHint": "Si activé, un bouton de lien sera ajouté à l'en-tête de la feuille de document pour permettre le lien de déplacement/dépôt de documents.",
+
         "CountForSingleToken": "Combien de jetons?"
     }
 }

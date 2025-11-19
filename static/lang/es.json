@@ -14,9 +14,9 @@
         "DropJournalFolder": "Colocar carpeta de Diario",
         "DropJournalFolderExplanation": "¿Colocar todos los registros del diario {folderName} como marcadores?",
 
-        "ActorUploadExplanation": "Select the actor type for each file. (Spanish localization needed).",
-        "TokenActorTypes": "Token Actor Types",
-        "Confirm": "Confirm",
+        "ActorUploadExplanation": "Seleccione el tipo de actor para cada archivo.",
+        "TokenActorTypes": "Tipos de Actor de Token",
+        "Confirm": "Confirmar",
 
         "SettingDropStyle": "Colocar Estilo",
         "SettingDropStyleHint": "Así es como los ítemes de la carpeta se colocarían en el lienzo. Elegir \"Ventana de Diálogo\" pedirá seleccionar una opción para cada uno.",
@@ -26,8 +26,12 @@
         "SettingDropStyleHorizontalLine": "Línea Horizontal",
         "SettingDropStyleVerticalLine": "Línea Vertical",
 
-        "SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload (Translation Needed)",
-        "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer. (Translation Needed)",
+        "SettingEnableCanvasDragUpload": "Habilitar Arrastrar/Cargar en el Lienzo",
+        "SettingEnableCanvasDragUploadHint": "Si está habilitado, puede arrastrar y cargar tokens, mosaicos, audio y entradas de diario en el lienzo según la capa seleccionada.",
+
+        "SettingEnableDocumentDragDropLink": "Habilitar Enlace de Arrastrar/Soltar",
+        "SettingEnableDocumentDragDropLinkHint": "Si está habilitado, un botón de enlace se agregará a la cabecera de la hoja de documento para permitir el enlace de arrastrar/soltar de documentos.",
+
         "CountForSingleToken": "¿Cuántos tokens?"
     }
 }
