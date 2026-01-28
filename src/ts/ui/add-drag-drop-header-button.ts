@@ -12,7 +12,7 @@ function addDragDropHeaderButton(sheet: any): void {
 
     const dragDropLabel = game.i18n.localize("CONTROLS.DragDrop");
     const linkButton = $(`
-                    <button type="button" class="header-control fa-solid fa-link icon" draggable="true" data-action="dragDrop"
+                    <button type="button" class="header-control fa-solid fa-hand icon" draggable="true" data-action="dragDrop"
                             data-tooltip="${dragDropLabel}" aria-label="${dragDropLabel}"></button>
                 `);
     linkButton.on("dragstart", (event) => {
