@@ -21,23 +21,23 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     }
 
     canHandleDrop(): boolean {
+        const url = this.#getDropUrl();
+
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
             !canvas.activeLayer?.name?.includes("TilesLayer") ||
-            !this.data.files.length
+            (!this.data.files.length && !url)
         ) {
             return false;
         }
 
-        if (this.data.url) {
-            // If a URL exists, just let Foundry handle it for now
-            // TODO probably want to eventually handle this
-            return false;
-        }
-
         // Check upload permissions for non-GM users
-        if (!game.user.isGM && !game.user.hasPermission("FILES_UPLOAD")) {
+        if (
+            !url &&
+            !game.user.isGM &&
+            !game.user.hasPermission("FILES_UPLOAD")
+        ) {
             ui.notifications.warn(
                 game.i18n.localize("Droppables.NoUploadFiles"),
             );
@@ -60,6 +60,11 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
         };
     }
 
+    #getDropUrl(): string | undefined {
+        const url = this.data.url?.trim();
+        return url ? url : undefined;
+    }
+
     async handleDrop(): Promise<boolean> {
         if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
@@ -67,27 +72,43 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
         const overhead =
             ui.controls.controls.tiles?.tools?.foreground?.active ?? false;
         const tileSources: DeepPartial<TileSource>[] = [];
-        for (const file of this.data.files) {
-            // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
-            const response = (await FilePicker.uploadPersistent(
-                MODULE_ID,
-                "tiles",
-                file,
-            )) as any;
+        const url = this.#getDropUrl();
+        if (url) {
             const topLeft = translateToTopLeftGrid(this.#event);
-            const texture = await loadTexture(response.path);
-            const tileSource: DeepPartial<TileSource> = {
-                texture: { src: response.path },
+            const texture = await loadTexture(url);
+            tileSources.push({
+                // @ts-expect-error elevation is defined
+                texture: { src: url },
                 width: texture?.baseTexture.width,
                 height: texture?.baseTexture.height,
-                // @ts-expect-error elevation is defined
                 elevation: overhead ? 20 : 0,
                 hidden: this.#event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,
-            };
+            });
+        } else {
+            for (const file of this.data.files) {
+                // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
+                const response = (await FilePicker.uploadPersistent(
+                    MODULE_ID,
+                    "tiles",
+                    file,
+                )) as any;
+                const topLeft = translateToTopLeftGrid(this.#event);
+                const texture = await loadTexture(response.path);
+                const tileSource: DeepPartial<TileSource> = {
+                    texture: { src: response.path },
+                    width: texture?.baseTexture.width,
+                    height: texture?.baseTexture.height,
+                    // @ts-expect-error elevation is defined
+                    elevation: overhead ? 20 : 0,
+                    hidden: this.#event.altKey,
+                    x: topLeft.x,
+                    y: topLeft.y,
+                };
 
-            tileSources.push(tileSource);
+                tileSources.push(tileSource);
+            }
         }
 
         canvas.perception.update({

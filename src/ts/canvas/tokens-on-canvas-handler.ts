@@ -41,19 +41,14 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
 
     canHandleDrop(): boolean {
         const isGM = game.user.isGM;
+        const url = this.#getDropUrl();
 
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
             !canvas.activeLayer?.name?.includes("TokenLayer") ||
-            !this.data.files.length
+            (!this.data.files.length && !url)
         ) {
-            return false;
-        }
-
-        if (this.data.url) {
-            // If a URL exists, just let Foundry handle it for now
-            // TODO probably want to eventually handle this
             return false;
         }
 
@@ -109,7 +104,7 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
             {},
         );
 
-        const uploadedData = await this.#uploadData({
+        const uploadedData = await this.#getUploadData({
             typeLocalizations,
             selectedType: types[0],
         });
@@ -117,6 +112,45 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
         await this.#promptForActorTypes(uploadedData);
 
         return true;
+    }
+
+    #getDropUrl(): string | undefined {
+        const url = this.data.url?.trim();
+        return url ? url : undefined;
+    }
+
+    #getFileNameFromUrl(url: string): string {
+        try {
+            const parsed = new URL(url);
+            const pathName = parsed.pathname ?? "";
+            const last = pathName.split("/").filter(Boolean).at(-1);
+            return last ? decodeURIComponent(last) : "Dropped Image";
+        } catch {
+            const last = url.split(/[\\/]/).filter(Boolean).at(-1);
+            return last ? last : "Dropped Image";
+        }
+    }
+
+    async #getUploadData({
+        typeLocalizations,
+        selectedType,
+    }: {
+        typeLocalizations: Record<string, string>;
+        selectedType: string;
+    }): Promise<TokenUploadData[]> {
+        const url = this.#getDropUrl();
+        if (url) {
+            return [
+                {
+                    response: { path: url },
+                    types: typeLocalizations,
+                    selectedType,
+                    fileName: this.#getFileNameFromUrl(url),
+                },
+            ];
+        }
+
+        return this.#uploadData({ typeLocalizations, selectedType });
     }
 
     async #uploadData({
