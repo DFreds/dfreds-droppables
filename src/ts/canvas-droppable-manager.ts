@@ -1,13 +1,13 @@
-interface DroppableHandler<TData> {
+interface CanvasDroppableHandler<TData> {
     canHandleDrop(): boolean;
     retrieveData(): TData;
     handleDrop(): boolean | Promise<boolean>;
 }
 
-class DroppableManager {
-    #handlers: DroppableHandler<any>[] = [];
+class CanvasDroppableManager {
+    #handlers: CanvasDroppableHandler<any>[] = [];
 
-    registerHandler(handler: DroppableHandler<any>): void {
+    registerHandler(handler: CanvasDroppableHandler<any>): void {
         this.#handlers.push(handler);
     }
 
@@ -21,5 +21,5 @@ class DroppableManager {
     }
 }
 
-export type { DroppableHandler };
-export { DroppableManager };
+export type { CanvasDroppableHandler };
+export { CanvasDroppableManager };

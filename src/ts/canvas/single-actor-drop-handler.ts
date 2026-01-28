@@ -1,4 +1,4 @@
-import { DroppableHandler } from "../droppable.ts";
+import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 
@@ -23,7 +23,7 @@ interface DropManyInput {
     isHorizontal?: boolean;
 }
 
-class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
+class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
     data: ActorDropData;
 
     #event: DragEvent;

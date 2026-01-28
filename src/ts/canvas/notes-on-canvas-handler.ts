@@ -1,4 +1,4 @@
-import { DroppableHandler } from "../droppable.ts";
+import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
@@ -16,7 +16,7 @@ interface NoteUploadData {
     fileName: string;
 }
 
-class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
+class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     data: FilesDropData;
 
     #event: DragEvent;

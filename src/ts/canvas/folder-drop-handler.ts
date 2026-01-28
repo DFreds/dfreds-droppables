@@ -1,4 +1,4 @@
-import { DroppableHandler } from "../droppable.ts";
+import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
 import { log } from "../logger.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
@@ -30,7 +30,7 @@ interface FolderDropData {
     elevation?: number;
 }
 
-class FolderDropHandler implements DroppableHandler<FolderDropData> {
+class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
     data: FolderDropData;
 
     #event: DragEvent;

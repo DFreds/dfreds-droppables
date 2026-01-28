@@ -1,4 +1,4 @@
-import { DroppableManager } from "../droppable.ts";
+import { CanvasDroppableManager } from "../canvas-droppable-manager.ts";
 import { FolderDropHandler } from "../canvas/folder-drop-handler.ts";
 import { TokensOnCanvasHandler } from "../canvas/tokens-on-canvas-handler.ts";
 import { Listener } from "./index.ts";
@@ -18,7 +18,7 @@ const CanvasInit: Listener = {
             const defaultOnDrop = board.ondrop;
 
             board.ondrop = async (event: DragEvent) => {
-                const manager = new DroppableManager();
+                const manager = new CanvasDroppableManager();
 
                 manager.registerHandler(new SingleActorDropHandler(event));
                 manager.registerHandler(new FolderDropHandler(event));

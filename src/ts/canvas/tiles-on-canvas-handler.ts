@@ -1,4 +1,4 @@
-import { DroppableHandler } from "../droppable.ts";
+import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
@@ -9,7 +9,7 @@ import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
 const { FilePicker } = foundry.applications.apps;
 const { loadTexture } = foundry.canvas;
 
-class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
+class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     data: FilesDropData;
 
     #event: DragEvent;

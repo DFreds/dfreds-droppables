@@ -1,4 +1,4 @@
-import { DroppableHandler } from "../droppable.ts";
+import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
 import { FilesDropData } from "../types.ts";
 import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
@@ -7,7 +7,7 @@ import { AmbientSoundSource } from "@client/documents/_module.mjs";
 
 const { FilePicker } = foundry.applications.apps;
 
-class SoundsOnCanvasHandler implements DroppableHandler<FilesDropData> {
+class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     data: FilesDropData;
 
     #event: DragEvent;
