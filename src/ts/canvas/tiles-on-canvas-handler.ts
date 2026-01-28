@@ -4,10 +4,16 @@ import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
 import { TileSource } from "@client/documents/_module.mjs";
+import { FilePath, ImageFilePath, VideoFilePath } from "@common/constants.mjs";
 import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
 
 const { FilePicker } = foundry.applications.apps;
 const { loadTexture } = foundry.canvas;
+
+interface TileUploadData {
+    fileName: string;
+    filePath: FilePath;
+}
 
 class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     data: FilesDropData;
@@ -60,55 +66,89 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         };
     }
 
+    async handleDrop(): Promise<boolean> {
+        if (!this.canHandleDrop()) return false;
+        this.#event.preventDefault();
+
+        const uploadedData = await this.#getUploadData();
+        await this.#createTiles(uploadedData);
+
+        return true;
+    }
+
     #getDropUrl(): string | undefined {
         const url = this.data.url?.trim();
         return url ? url : undefined;
     }
 
-    async handleDrop(): Promise<boolean> {
-        if (!this.canHandleDrop()) return false;
-        this.#event.preventDefault();
+    async #getUploadData(): Promise<TileUploadData[]> {
+        const url = this.#getDropUrl();
+        if (url) {
+            return [
+                {
+                    fileName: this.#getFileNameFromUrl(url),
+                    filePath: url as FilePath,
+                },
+            ];
+        }
 
+        return this.#uploadData();
+    }
+
+    async #uploadData(): Promise<TileUploadData[]> {
+        const uploadedData: TileUploadData[] = [];
+
+        for (const file of this.data.files) {
+            // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
+            const response = (await FilePicker.uploadPersistent(
+                MODULE_ID,
+                "tiles",
+                file,
+            )) as any;
+
+            uploadedData.push({
+                fileName: file.name,
+                filePath: response.path as FilePath,
+            });
+        }
+
+        return uploadedData;
+    }
+
+    #getFileNameFromUrl(url: string): string {
+        try {
+            const parsed = new URL(url);
+            const pathName = parsed.pathname ?? "";
+            const last = pathName.split("/").filter(Boolean).at(-1);
+            return last ? decodeURIComponent(last) : "Dropped Media";
+        } catch {
+            // Not a valid absolute URL; fall back to a simple best-effort name.
+            const last = url.split(/[\\/]/).filter(Boolean).at(-1);
+            return last ? last : "Dropped Media";
+        }
+    }
+
+    async #createTiles(uploadedData: TileUploadData[]): Promise<void> {
         const overhead =
             ui.controls.controls.tiles?.tools?.foreground?.active ?? false;
         const tileSources: DeepPartial<TileSource>[] = [];
-        const url = this.#getDropUrl();
-        if (url) {
-            const topLeft = translateToTopLeftGrid(this.#event);
-            const texture = await loadTexture(url);
-            tileSources.push({
-                // @ts-expect-error elevation is defined
-                texture: { src: url },
+        const topLeft = translateToTopLeftGrid(this.#event);
+
+        for (const { filePath } of uploadedData) {
+            const src = filePath as ImageFilePath | VideoFilePath;
+            const texture = await loadTexture(src);
+            const tileSource: DeepPartial<TileSource> = {
+                texture: { src },
                 width: texture?.baseTexture.width,
                 height: texture?.baseTexture.height,
+                // @ts-expect-error elevation is defined on Tile source in foundry types
                 elevation: overhead ? 20 : 0,
                 hidden: this.#event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,
-            });
-        } else {
-            for (const file of this.data.files) {
-                // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
-                const response = (await FilePicker.uploadPersistent(
-                    MODULE_ID,
-                    "tiles",
-                    file,
-                )) as any;
-                const topLeft = translateToTopLeftGrid(this.#event);
-                const texture = await loadTexture(response.path);
-                const tileSource: DeepPartial<TileSource> = {
-                    texture: { src: response.path },
-                    width: texture?.baseTexture.width,
-                    height: texture?.baseTexture.height,
-                    // @ts-expect-error elevation is defined
-                    elevation: overhead ? 20 : 0,
-                    hidden: this.#event.altKey,
-                    x: topLeft.x,
-                    y: topLeft.y,
-                };
+            };
 
-                tileSources.push(tileSource);
-            }
+            tileSources.push(tileSource);
         }
 
         canvas.perception.update({
@@ -120,8 +160,6 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
             broadcast: true,
             data: [],
         } as unknown as DatabaseCreateOperation<Scene>);
-
-        return true;
     }
 }
 

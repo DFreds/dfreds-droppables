@@ -139,6 +139,7 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         selectedType: string;
     }): Promise<TokenUploadData[]> {
         const url = this.#getDropUrl();
+
         if (url) {
             return [
                 {
