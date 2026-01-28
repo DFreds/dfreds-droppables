@@ -28,19 +28,20 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
     canHandleDrop(): boolean {
         const url = this.#getDropUrl();
+        const urlType = url ? this.#determineUrlType(url) : undefined;
 
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
             !canvas.activeLayer?.name?.includes("TilesLayer") ||
-            (!this.data.files.length && !url)
+            (!this.data.files.length && !urlType)
         ) {
             return false;
         }
 
         // Check upload permissions for non-GM users
         if (
-            !url &&
+            this.data.files.length &&
             !game.user.isGM &&
             !game.user.hasPermission("FILES_UPLOAD")
         ) {
@@ -83,13 +84,13 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
     async #getUploadData(): Promise<TileUploadData[]> {
         const url = this.#getDropUrl();
-        if (url) {
-            return [
-                {
-                    fileName: this.#getFileNameFromUrl(url),
-                    filePath: url as FilePath,
-                },
-            ];
+        const urlType = url ? this.#determineUrlType(url) : undefined;
+
+        if (url && urlType) {
+            return [{
+                fileName: this.#getFileNameFromUrl(url),
+                filePath: url as FilePath,
+            }];
         }
 
         return this.#uploadData();
@@ -126,6 +127,21 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
             const last = url.split(/[\\/]/).filter(Boolean).at(-1);
             return last ? last : "Dropped Media";
         }
+    }
+
+    #determineUrlType(url: string): "image" | "video" | undefined {
+        const lower = url.toLowerCase();
+
+        // Basic extension-based detection; this mirrors the types we accept for files.
+        if (/\.(apng|avif|bmp|gif|jpe?g|png|svg|tiff?|webp)$/.test(lower)) {
+            return "image";
+        }
+
+        if (/\.(m4v|mp4|ogv|webm)$/.test(lower)) {
+            return "video";
+        }
+
+        return undefined;
     }
 
     async #createTiles(uploadedData: TileUploadData[]): Promise<void> {

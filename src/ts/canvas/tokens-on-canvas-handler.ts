@@ -42,12 +42,13 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     canHandleDrop(): boolean {
         const isGM = game.user.isGM;
         const url = this.#getDropUrl();
+        const urlType = url ? this.#determineUrlType(url) : undefined;
 
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
             !canvas.activeLayer?.name?.includes("TokenLayer") ||
-            (!this.data.files.length && !url)
+            (!this.data.files.length && !urlType)
         ) {
             return false;
         }
@@ -55,15 +56,19 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         // Permission checks for non-GM users
         if (!isGM) {
             const permissions = [
-                { check: "FILES_UPLOAD", message: "Droppables.NoUploadFiles" },
-                { check: "TOKEN_CREATE", message: "Droppables.NoCreateTokens" },
-                { check: "ACTOR_CREATE", message: "Droppables.NoCreateActors" },
+                ...(!urlType && this.data.files.length
+                    ? [
+                        { permission: "FILES_UPLOAD", message: "Droppables.NoUploadFiles" },
+                    ]
+                    : []),
+                { permission: "TOKEN_CREATE", message: "Droppables.NoCreateTokens" },
+                { permission: "ACTOR_CREATE", message: "Droppables.NoCreateActors" },
             ];
 
-            for (const { check, message } of permissions) {
+            for (const { permission, message } of permissions) {
                 if (
                     !game.user.hasPermission(
-                        check as keyof typeof USER_PERMISSIONS,
+                        permission as keyof typeof USER_PERMISSIONS,
                     )
                 ) {
                     ui.notifications.warn(game.i18n.localize(message));
@@ -119,6 +124,17 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         return url ? url : undefined;
     }
 
+    #determineUrlType(url: string): "image" | undefined {
+        const lower = url.toLowerCase();
+
+        // Only allow image URLs for tokens.
+        if (/\.(apng|avif|bmp|gif|jpe?g|png|svg|tiff?|webp)$/.test(lower)) {
+            return "image";
+        }
+
+        return undefined;
+    }
+
     #getFileNameFromUrl(url: string): string {
         try {
             const parsed = new URL(url);
@@ -139,8 +155,9 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         selectedType: string;
     }): Promise<TokenUploadData[]> {
         const url = this.#getDropUrl();
+        const urlType = url ? this.#determineUrlType(url) : undefined;
 
-        if (url) {
+        if (url && urlType) {
             return [
                 {
                     response: { path: url },
