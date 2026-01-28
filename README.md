@@ -40,6 +40,8 @@
 - Easily drop entire folders of actors onto the canvas in a stack, line, or randomly
 - Easily drop folders of notes onto the canvas
 - Drop various files onto the canvas to automatically upload them to your world and create tokens, tiles, sounds, or notes
+- Drop images directly from browsers to automatically set the images for tokens, tiles, or notes
+- Drag and drop documents directly from their sheet onto any supported area
 
 ![Dropping Actors](https://www.dfreds-modules.com/assets/images/droppables-0301af60368fe6df1201ade8f7c98bf7.gif)
 
