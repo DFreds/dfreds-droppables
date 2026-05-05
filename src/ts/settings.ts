@@ -74,7 +74,7 @@ class Settings {
      * @returns a string representing the chosen drop style
      */
     get dropStyle(): string {
-        return game.settings.get(MODULE_ID, this.#FOLDER_DROP_STYLE) as string;
+        return game.settings.get(MODULE_ID, this.#FOLDER_DROP_STYLE) as unknown as string;
     }
 
     /**
@@ -86,7 +86,7 @@ class Settings {
         return game.settings.get(
             MODULE_ID,
             this.#ENABLE_UNLINKED_ACTOR_DROP_HANDLER,
-        ) as boolean;
+        ) as unknown as boolean;
     }
 
     /**
@@ -98,7 +98,7 @@ class Settings {
         return game.settings.get(
             MODULE_ID,
             this.#ENABLE_CANVAS_DRAG_UPLOAD,
-        ) as boolean;
+        ) as unknown as boolean;
     }
 
     /**
@@ -110,7 +110,7 @@ class Settings {
         return game.settings.get(
             MODULE_ID,
             this.#ENABLE_DOCUMENT_DRAG_DROP_LINK,
-        ) as boolean;
+        ) as unknown as boolean;
     }
 
     /**
@@ -122,7 +122,7 @@ class Settings {
         return game.settings.get(
             MODULE_ID,
             this.#LAST_USED_FOLDER_DROP_STYLE,
-        ) as string;
+        ) as unknown as string;
     }
 
     /**

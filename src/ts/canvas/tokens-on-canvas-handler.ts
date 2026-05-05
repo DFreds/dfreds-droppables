@@ -246,7 +246,7 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
             actorSources.push(actorSource);
         }
 
-        const createdActors = await Actor.createDocuments(actorSources);
+        const createdActors = await Actor.createDocuments(actorSources) as Actor[];
         const tokenSources: DeepPartial<TokenSource>[] = [];
         for (const actor of createdActors) {
             const topLeft = translateToTopLeftGrid(this.#event);

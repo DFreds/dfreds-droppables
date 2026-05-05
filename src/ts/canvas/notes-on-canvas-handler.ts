@@ -223,7 +223,7 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         });
 
         const journalSource: DeepPartial<JournalEntrySource> = {
-            name: game.i18n.format("Droppables.JournalSceneName", {
+            name: game.i18n.localize("Droppables.JournalSceneName", {
                 name: canvas.scene?.name ?? "",
                 dateTime,
             }),

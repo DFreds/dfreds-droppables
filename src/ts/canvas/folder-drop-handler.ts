@@ -389,7 +389,7 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
                 title: game.i18n.localize("Droppables.DropJournalFolder"),
                 controls: [],
             },
-            content: `<p>${game.i18n.format(
+            content: `<p>${game.i18n.localize(
                 "Droppables.DropJournalFolderExplanation",
                 { folderName: folder?.name ?? "" },
             )}</p>`,
