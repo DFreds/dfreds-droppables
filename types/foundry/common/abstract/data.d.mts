@@ -30,7 +30,7 @@ export default abstract class DataModel<
     readonly parent: TParent;
 
     /** The defined and cached Data Schema for all instances of this DataModel. */
-    static _schema: fields.SchemaField<DataSchema> | undefined;
+    static _schema: fields.DataModelSchemaField | undefined;
 
     /** Configure the data model instance before validation and initialization workflows are performed. */
     protected _configure(): void;
@@ -46,11 +46,11 @@ export default abstract class DataModel<
     static defineSchema(): DataSchema;
 
     /** Define the data schema for documents of this type. */
-    static get schema(): fields.SchemaField<DataSchema>;
+    static get schema(): fields.DataModelSchemaField;
 
     /** Define the data schema for this document instance. */
     // PROJECT NOTE: this must be overloaded in an interface merge declaration
-    get schema(): fields.SchemaField<TSchema>;
+    get schema(): fields.DataModelSchemaField<TSchema>;
 
     /** Is the current state of this DataModel invalid? */
     get invalid(): boolean;
@@ -214,7 +214,7 @@ export default abstract class DataModel<
      * @param source The candidate source data from which the model will be constructed
      * @returns Migrated source data, if necessary
      */
-    static migrateData<T extends DataModel>(this: ConstructorOf<T>, source: Record<string, unknown>): T["_source"];
+    static migrateData(source: Record<string, unknown>): Record<string, unknown>;
 
     /**
      * Wrap data migration in a try/catch which attempts it safely

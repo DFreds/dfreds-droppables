@@ -2,8 +2,8 @@ import { SettingConfig, SettingSubmenuConfig } from "@client/_types.mjs";
 import ApplicationV2 from "@client/applications/api/application.mjs";
 import SettingsConfig from "@client/applications/settings/config.mjs";
 import Application from "@client/appv1/api/application-v1.mjs";
+import { ChatMessageMode } from "@client/config.mjs";
 import Setting from "@client/documents/setting.mjs";
-import { RollMode } from "@common/constants.mjs";
 import Collection from "@common/utils/collection.mjs";
 
 export interface ClientSettingsStorage extends Map<"client" | "world" | "user", Storage | WorldSettings> {
@@ -106,30 +106,33 @@ export default class ClientSettings {
 
     /**
      * Get the value of a game setting for a certain module and setting key
-     * @param module    The module namespace under which the setting is registered
+     * @param namespace    The module namespace under which the setting is registered
      * @param key       The setting key to retrieve
+     * @param {object} options      Additional options for setting retrieval
+     * @param {boolean} [options.document]  Retrieve the full Setting document instance instead of just its value
      */
-    get(module: "core", key: "compendiumConfiguration"): Record<string, { private: boolean; locked: boolean }>;
-    get(module: "core", key: "fontSize"): number;
-    get(module: "core", key: "noCanvas"): boolean;
-    get(module: "core", key: "rollMode"): RollMode;
-    get(module: "core", key: "uiConfig"): { colorScheme: { applications: string; interface: string } };
-    get(module: string, key: string): unknown;
+    get(namespace: "core", key: "compendiumConfiguration"): Record<string, { private: boolean; locked: boolean }>;
+    get(namespace: "core", key: "fontSize"): number;
+    get(namespace: "core", key: "noCanvas"): boolean;
+    get(namespace: "core", key: "messageMode"): ChatMessageMode;
+    get(namespace: "core", key: "uiConfig"): { colorScheme: { applications: string; interface: string } };
+    get(namespace: string, key: string, options?: { document: true }): Setting;
+    get(namespace: string, key: string, options?: { document?: boolean }): unknown;
 
     /**
      * Get the value of a game setting for a certain module and setting key
-     * @param module    The module namespace under which the setting is registered
+     * @param namespace    The module namespace under which the setting is registered
      * @param key   The setting key to retrieve
      * @param value The data to assign to the setting key
      */
-    set(module: string, key: string, value: unknown): Promise<unknown>;
+    set(namespace: string, key: string, value: unknown): Promise<unknown>;
 }
 
 interface SettingRegistration<
     TChoices extends Record<string, unknown> | undefined = Record<string, unknown> | undefined,
 > extends Omit<SettingConfig<TChoices>, "config" | "key" | "namespace" | "scope"> {
     config?: boolean;
-    scope?: "client" | "world";
+    scope?: "client" | "world" | "user";
 }
 
 interface ClientSettingsMap extends Map<string, SettingConfig> {

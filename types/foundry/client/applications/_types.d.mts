@@ -11,7 +11,7 @@ export interface ApplicationConfiguration {
     /** The HTMLElement tag type used for the outer Application frame */
     tag: string;
     /** Configuration of the window behaviors for this Application */
-    window: ApplicationWindowConfiguration;
+    window: Partial<ApplicationWindowConfiguration>;
     /** Click actions supported by the Application and their event handler functions */
     actions: Record<string, ApplicationClickAction>;
     /** Configuration used if the application top-level element is a form */
@@ -195,12 +195,12 @@ export interface FormNode {
 }
 
 export interface FormFooterButton {
-    type: string;
+    type: "button" | "reset" | "submit";
     name?: string;
     icon?: string;
     label?: string;
+    tooltip?: string;
     action?: string;
     cssClass?: string;
-    /** @default false */
     disabled?: boolean;
 }

@@ -1,3 +1,4 @@
+import { ChatMessageCreateOperation } from "@client/documents/chat-message.mjs";
 import {
     DatabaseCreateCallbackOptions,
     DatabaseCreateOperation,
@@ -8,10 +9,9 @@ import {
 } from "@common/abstract/_types.mjs";
 import Document from "@common/abstract/document.mjs";
 import EmbeddedCollection from "@common/abstract/embedded-collection.mjs";
-import { ChatMessageCreateOperation } from "@common/documents/chat-message.mjs";
 import BaseCombat from "@common/documents/combat.mjs";
-import { Combatant, TokenDocument, User } from "./_module.mjs";
-import { CombatTurnEventContext } from "./_types.mjs";
+import { Actor, Combatant, TokenDocument, User } from "./_module.mjs";
+import { CombatRoundEventContext, CombatTurnEventContext } from "./_types.mjs";
 import { ClientDocument, ClientDocumentStatic } from "./abstract/client-document.mjs";
 
 type BaseCombatStatic = typeof BaseCombat;
@@ -59,6 +59,9 @@ export default class Combat extends ClientBaseCombat {
     /** Is this combat active in the current scene? */
     get isActive(): boolean;
 
+    /** Is this Combat currently being viewed? */
+    get isView(): boolean;
+
     /* -------------------------------------------- */
     /*  Methods                                     */
     /* -------------------------------------------- */
@@ -73,15 +76,16 @@ export default class Combat extends ClientBaseCombat {
 
     /**
      * Get a Combatant using its Token id
-     * @param tokenId The id of the Token for which to acquire the combatant
+     * @param token A Token ID or a TokenDocument instance
+     * @returns An array of Combatants which represent the Token
      */
-    getCombatantByToken(tokenId: string): Combatant<this> | undefined;
+    getCombatantsByToken(token: string | TokenDocument): Combatant[];
 
     /**
-     * Get a Combatant using its Actor id
-     * @param actorId The id of the Actor for which to acquire the combatant
+     * Get a Combatant that represents the given Actor or Actor ID.
+     * @param actor An Actor ID or an Actor instance
      */
-    getCombatantByActor(actorId: string): Combatant<this> | undefined;
+    getCombatantsByActor(actor: Actor | string): Combatant[];
 
     /**
      * Calculate the time delta between two turns.
@@ -101,8 +105,6 @@ export default class Combat extends ClientBaseCombat {
 
     /** Advance the combat to the next turn */
     nextTurn(): Promise<this>;
-
-    override prepareDerivedData(): void;
 
     /** Rewind the combat to the previous round */
     previousRound(): Promise<this>;
@@ -278,7 +280,7 @@ export default class Combat extends ClientBaseCombat {
     protected _onExit(combatant: Combatant<this>): Promise<void>;
 
     /**
-     * Called after {@link Combat#_onExit} and takes care of clearing the movement history of the
+     * Called after {@link _onExit} and takes care of clearing the movement history of the
      * Combatant's Token.
      * This function is not called for Combatants that don't have a Token.
      * The default implementation clears the movement history always.
@@ -292,6 +294,9 @@ export default class Combat extends ClientBaseCombat {
      */
     protected _getCurrentState(combatant?: Combatant<this>): CombatHistoryData;
 
+    /** Update display of Token combat turn markers. */
+    protected _updateTurnMarkers(): void;
+
     /* -------------------------------------------- */
     /*  Turn Events                                 */
     /* -------------------------------------------- */
@@ -304,49 +309,56 @@ export default class Combat extends ClientBaseCombat {
      * 3. Begin Round
      * 4. Begin Turn
      * Each lifecycle event is an async method, and each is awaited before proceeding.
-     * @param [adjustedTurn]   Optionally, an adjusted turn to commit to the Combat.
+     * @param adjustedTurn Optionally, an adjusted turn to commit to the Combat.
      */
     protected _manageTurnEvents(adjustedTurn?: number): Promise<void>;
 
     /**
      * A workflow that occurs at the end of each Combat Turn.
-     * This workflow occurs after the Combat document update, prior round information exists in this.previous.
+     * This workflow occurs after the Combat document update.
      * This can be overridden to implement system-specific combat tracking behaviors.
+     * The default implementation of this function does nothing.
      * This method only executes for one designated GM user. If no GM users are present this method will not be called.
      * @param combatant The Combatant whose turn just ended
+     * @param context The context of the turn that just ended
      */
-    protected _onEndTurn(combatant: Combatant<this>): Promise<void>;
+    protected _onEndTurn(combatant: Combatant<this>, context: CombatTurnEventContext): Promise<void>;
 
     /**
      * A workflow that occurs at the end of each Combat Round.
-     * This workflow occurs after the Combat document update, prior round information exists in this.previous.
+     * This workflow occurs after the Combat document update.
      * This can be overridden to implement system-specific combat tracking behaviors.
+     * The default implementation of this function does nothing.
      * This method only executes for one designated GM user. If no GM users are present this method will not be called.
+     * @param context The context of the round that just ended
      */
-    protected _onEndRound(): Promise<void>;
+    protected _onEndRound(context: CombatRoundEventContext): Promise<void>;
 
     /**
      * A workflow that occurs at the start of each Combat Round.
-     * This workflow occurs after the Combat document update, new round information exists in this.current.
+     * This workflow occurs after the Combat document update.
      * This can be overridden to implement system-specific combat tracking behaviors.
+     * The default implementation of this function does nothing.
      * This method only executes for one designated GM user. If no GM users are present this method will not be called.
+     * @param context The context of the round that just started
      */
-    protected _onStartRound(): Promise<void>;
+    protected _onStartRound(context: CombatRoundEventContext): Promise<void>;
 
     /**
      * A workflow that occurs at the start of each Combat Turn.
-     * This workflow occurs after the Combat document update, new turn information exists in this.current.
+     * This workflow occurs after the Combat document update.
      * This can be overridden to implement system-specific combat tracking behaviors.
+     * The default implementation of this function does nothing.
      * This method only executes for one designated GM user. If no GM users are present this method will not be called.
      * @param combatant The Combatant whose turn just started
+     * @param context The context of the turn that just started
      */
-    protected _onStartTurn(combatant: Combatant<this>): Promise<void>;
+    protected _onStartTurn(combatant: Combatant<this>, context: CombatTurnEventContext): Promise<void>;
 
     /**
      * Called after {@link Combat#_onStartTurn} and takes care of clearing the movement history of the
      * Combatant's Token.
-     * This function is not called for Combatants that don't have a Token.
-     * The default implementation clears the movement history always.
+     * The default implementation clears the movement histories of all Combatants.
      * @param combatant The Combatant whose turn just started
      * @param context The context of the turn that just started
      */
