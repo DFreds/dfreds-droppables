@@ -33,7 +33,7 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
-            !canvas.activeLayer?.name?.includes("TilesLayer") ||
+            !canvas.activeLayer?.hookName?.includes("TilesLayer") ||
             (!this.data.files.length && !urlType)
         ) {
             return false;

@@ -22,7 +22,7 @@ class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
-            !canvas.activeLayer?.name?.includes("SoundsLayer") ||
+            !canvas.activeLayer?.hookName?.includes("SoundsLayer") ||
             !this.data.files.length
         ) {
             return false;

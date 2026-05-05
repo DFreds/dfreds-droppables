@@ -47,7 +47,7 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
-            !canvas.activeLayer?.name?.includes("TokenLayer") ||
+            !canvas.activeLayer?.hookName?.includes("TokenLayer") ||
             (!this.data.files.length && !urlType)
         ) {
             return false;

@@ -35,7 +35,7 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         // Check basic requirements
         if (
             !this.#settings.canvasDragUpload ||
-            !canvas.activeLayer?.name?.includes("NotesLayer") ||
+            !canvas.activeLayer?.hookName?.includes("NotesLayer") ||
             (!this.data.files.length && !urlType)
         ) {
             return false;
