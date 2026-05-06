@@ -29,9 +29,6 @@
         "SettingEnableCanvasDragUpload": "Habilitar Arrastrar/Cargar en el Lienzo",
         "SettingEnableCanvasDragUploadHint": "Si está habilitado, puede arrastrar y cargar tokens, mosaicos, audio y entradas de diario en el lienzo según la capa seleccionada.",
 
-        "SettingEnableDocumentDragDropLink": "Habilitar Enlace de Arrastrar/Soltar",
-        "SettingEnableDocumentDragDropLinkHint": "Si está habilitado, un botón de enlace se agregará a la cabecera de la hoja de documento para permitir el enlace de arrastrar/soltar de documentos.",
-
         "CountForSingleToken": "¿Cuántos tokens?"
     }
 }
