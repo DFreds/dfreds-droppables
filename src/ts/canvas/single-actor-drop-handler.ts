@@ -65,11 +65,10 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
         const elevation: number = this.data.elevation ?? 0;
         const isHidden = this.#event.altKey;
 
-        // Show dialog only for unlinked NPCs. For all others, drop a single token immediately.
-        const isNpc = actor.type === "npc";
+        // Show dialog only for unlinked actors. For all others, drop a single token immediately.
         const isLinked = Boolean(foundry.utils.getProperty(actor, "prototypeToken.actorLink"));
 
-        if (!isNpc || isLinked) {
+        if (isLinked) {
             await this.#dropActor({
                 actor,
                 xPosition,
