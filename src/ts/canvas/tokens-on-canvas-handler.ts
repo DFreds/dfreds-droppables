@@ -4,11 +4,7 @@ import { Settings } from "../settings.ts";
 import { translateToTopLeftGrid } from "../util.ts";
 import { MODULE_ID } from "../constants.ts";
 import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
-import {
-    FilePath,
-    ImageFilePath,
-    USER_PERMISSIONS,
-} from "@common/constants.mjs";
+import { FilePath, ImageFilePath, USER_PERMISSIONS } from "@common/constants.mjs";
 import { TokenSource } from "@client/documents/_module.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -57,20 +53,14 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         if (!isGM) {
             const permissions = [
                 ...(!urlType && this.data.files.length
-                    ? [
-                        { permission: "FILES_UPLOAD", message: "Droppables.NoUploadFiles" },
-                    ]
+                    ? [{ permission: "FILES_UPLOAD", message: "Droppables.NoUploadFiles" }]
                     : []),
                 { permission: "TOKEN_CREATE", message: "Droppables.NoCreateTokens" },
                 { permission: "ACTOR_CREATE", message: "Droppables.NoCreateActors" },
             ];
 
             for (const { permission, message } of permissions) {
-                if (
-                    !game.user.hasPermission(
-                        permission as keyof typeof USER_PERMISSIONS,
-                    )
-                ) {
+                if (!game.user.hasPermission(permission as keyof typeof USER_PERMISSIONS)) {
                     ui.notifications.warn(game.i18n.localize(message));
                     return false;
                 }
@@ -95,19 +85,12 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
 
-        const types = game.documentTypes.Actor.filter(
-            (type) => type !== CONST.BASE_DOCUMENT_TYPE,
-        );
-        const typeLocalizations = types.reduce(
-            (obj: Record<string, string>, typeLabel) => {
-                const label = CONFIG.Actor.typeLabels[typeLabel] ?? typeLabel;
-                obj[typeLabel] = game.i18n.has(label)
-                    ? game.i18n.localize(label)
-                    : typeLabel;
-                return obj;
-            },
-            {},
-        );
+        const types = game.documentTypes.Actor.filter((type) => type !== CONST.BASE_DOCUMENT_TYPE);
+        const typeLocalizations = types.reduce((obj: Record<string, string>, typeLabel) => {
+            const label = CONFIG.Actor.typeLabels[typeLabel] ?? typeLabel;
+            obj[typeLabel] = game.i18n.has(label) ? game.i18n.localize(label) : typeLabel;
+            return obj;
+        }, {});
 
         const uploadedData = await this.#getUploadData({
             typeLocalizations,
@@ -181,11 +164,7 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         const uploadedData: TokenUploadData[] = [];
 
         for (const file of this.data.files) {
-            const response = await FilePicker.uploadPersistent(
-                MODULE_ID,
-                "tokens",
-                file,
-            );
+            const response = await FilePicker.uploadPersistent(MODULE_ID, "tokens", file);
             uploadedData.push({
                 response,
                 types: typeLocalizations,
@@ -198,10 +177,9 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     }
 
     async #promptForActorTypes(uploadedData: TokenUploadData[]) {
-        const content = await renderTemplate(
-            `modules/${MODULE_ID}/templates/drop-token-files-dialog.hbs`,
-            { uploadedData },
-        );
+        const content = await renderTemplate(`modules/${MODULE_ID}/templates/drop-token-files-dialog.hbs`, {
+            uploadedData,
+        });
         return DialogV2.prompt({
             window: {
                 title: game.i18n.localize("Droppables.TokenActorTypes"),
@@ -221,9 +199,7 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
                             const tokenDropData: TokenDropData = {
                                 fileName: data?.fileName ?? "Unknown",
                                 filePath: data?.filePath as FilePath,
-                                type:
-                                    typeSelection?.toString() ??
-                                    CONST.BASE_DOCUMENT_TYPE,
+                                type: typeSelection?.toString() ?? CONST.BASE_DOCUMENT_TYPE,
                             };
 
                             return tokenDropData;
@@ -246,7 +222,7 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
             actorSources.push(actorSource);
         }
 
-        const createdActors = await Actor.createDocuments(actorSources) as Actor[];
+        const createdActors = (await Actor.createDocuments(actorSources)) as Actor[];
         const tokenSources: DeepPartial<TokenSource>[] = [];
         for (const actor of createdActors) {
             const topLeft = translateToTopLeftGrid(this.#event);

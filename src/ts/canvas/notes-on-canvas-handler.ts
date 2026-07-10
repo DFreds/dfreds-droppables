@@ -47,11 +47,11 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
                 // Only require file upload permission when we actually need to upload files.
                 ...(!urlType && this.data.files.length
                     ? [
-                        {
-                            permission: "FILES_UPLOAD",
-                            message: "Droppables.NoUploadFiles",
-                        },
-                    ]
+                          {
+                              permission: "FILES_UPLOAD",
+                              message: "Droppables.NoUploadFiles",
+                          },
+                      ]
                     : []),
                 {
                     permission: "JOURNAL_CREATE",
@@ -64,9 +64,7 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
             ];
 
             for (const { permission, message } of permissions) {
-                if (
-                    !game.user.hasPermission(permission as keyof typeof USER_PERMISSIONS)
-                ) {
+                if (!game.user.hasPermission(permission as keyof typeof USER_PERMISSIONS)) {
                     ui.notifications.warn(game.i18n.localize(message));
                     return false;
                 }
@@ -81,10 +79,12 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
         return {
             files: Array.from(files).filter((file) => {
-                return file.type.includes("image") ||
+                return (
+                    file.type.includes("image") ||
                     file.type.includes("pdf") ||
                     file.type.includes("video") ||
-                    file.type.includes("text");
+                    file.type.includes("text")
+                );
             }),
             url: this.#event.dataTransfer?.getData("text"),
         };
@@ -110,11 +110,13 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         const urlType = url ? this.#determineUrlType(url) : undefined;
 
         if (url && urlType) {
-            return [{
-                response: { path: url },
-                type: urlType,
-                fileName: this.#getFileNameFromUrl(url),
-            }];
+            return [
+                {
+                    response: { path: url },
+                    type: urlType,
+                    fileName: this.#getFileNameFromUrl(url),
+                },
+            ];
         }
 
         return this.#uploadData();
@@ -127,15 +129,13 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
             const type = this.#determineFileType(file);
 
             if (type === "text") {
-                const text = await new Promise<string | undefined>(
-                    (resolve) => {
-                        const reader = new FileReader();
-                        reader.addEventListener("load", async () => {
-                            resolve(reader.result?.toString());
-                        });
-                        reader.readAsText(file);
-                    },
-                );
+                const text = await new Promise<string | undefined>((resolve) => {
+                    const reader = new FileReader();
+                    reader.addEventListener("load", async () => {
+                        resolve(reader.result?.toString());
+                    });
+                    reader.readAsText(file);
+                });
 
                 uploadedData.push({
                     text,
@@ -143,11 +143,7 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
                     fileName: file.name,
                 });
             } else {
-                const response = await FilePicker.uploadPersistent(
-                    MODULE_ID,
-                    "journals",
-                    file,
-                );
+                const response = await FilePicker.uploadPersistent(MODULE_ID, "journals", file);
 
                 uploadedData.push({
                     response,
@@ -203,17 +199,16 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     }
 
     async #createJournalAndNotes(uploadedData: NoteUploadData[]) {
-        const journalPageSources: DeepPartial<JournalEntryPageSource>[] =
-            uploadedData.map((data) => {
-                return {
-                    name: data.fileName,
-                    type: data.type,
-                    src: data.response?.path,
-                    text: {
-                        content: data.text,
-                    },
-                };
-            });
+        const journalPageSources: DeepPartial<JournalEntryPageSource>[] = uploadedData.map((data) => {
+            return {
+                name: data.fileName,
+                type: data.type,
+                src: data.response?.path,
+                text: {
+                    content: data.text,
+                },
+            };
+        });
 
         const dateTime = new Date().toLocaleString(undefined, {
             month: "short",

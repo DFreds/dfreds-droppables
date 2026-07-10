@@ -77,11 +77,7 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
         return fromUuid(this.data.uuid);
     }
 
-    async #handleActorFolder(
-        data: FolderDropData,
-        folder: Folder,
-        event: DragEvent,
-    ) {
+    async #handleActorFolder(data: FolderDropData, folder: Folder, event: DragEvent) {
         const actors = folder?.contents as Actor[];
         const topLeft = translateToTopLeftGrid(event);
 
@@ -165,14 +161,11 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
             },
         ];
 
-        const content = await renderTemplate(
-            "modules/dfreds-droppables/templates/drop-dialog.hbs",
-            {
-                dropStyles,
-                savedDropStyle: this.#settings.lastUsedDropStyle,
-                startingElevation: elevation ? Math.round(elevation) : null,
-            },
-        );
+        const content = await renderTemplate("modules/dfreds-droppables/templates/drop-dialog.hbs", {
+            dropStyles,
+            savedDropStyle: this.#settings.lastUsedDropStyle,
+            startingElevation: elevation ? Math.round(elevation) : null,
+        });
 
         return DialogV2.confirm({
             window: {
@@ -188,12 +181,8 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
                 label: game.i18n.localize("Droppables.DropButton"),
                 callback: async (_event, _button, dialog) => {
                     const $html = $(dialog.element);
-                    const dropStyle = $html
-                        .find('select[name="drop-style"]')
-                        .val();
-                    const dropElevation = parseFloat(
-                        $html.find('input[name="elevation"]').val() as string,
-                    );
+                    const dropStyle = $html.find('select[name="drop-style"]').val();
+                    const dropElevation = parseFloat($html.find('input[name="elevation"]').val() as string);
 
                     this.#settings.lastUsedDropStyle = dropStyle as string;
 
@@ -237,13 +226,7 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
         });
     }
 
-    async #dropStack({
-        actors,
-        xPosition,
-        yPosition,
-        isHidden,
-        elevation = undefined,
-    }: DropActorFolderInput) {
+    async #dropStack({ actors, xPosition, yPosition, isHidden, elevation = undefined }: DropActorFolderInput) {
         for (const actor of actors) {
             await this.#dropActor({
                 actor,
@@ -255,21 +238,14 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
         }
     }
 
-    async #dropRandom({
-        actors,
-        xPosition,
-        yPosition,
-        isHidden,
-        elevation = undefined,
-    }: DropActorFolderInput) {
+    async #dropRandom({ actors, xPosition, yPosition, isHidden, elevation = undefined }: DropActorFolderInput) {
         let distance = 0;
         let dropped = 0;
         let offsetX = 0;
         let offsetY = 0;
 
         for (const actor of actors) {
-            const totalTries =
-                Math.pow(1 + distance * 2, 2) - Math.pow(distance * 2 - 1, 2);
+            const totalTries = Math.pow(1 + distance * 2, 2) - Math.pow(distance * 2 - 1, 2);
 
             const tries = Math.pow(1 + distance * 2, 2) - dropped;
 
@@ -315,16 +291,8 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
         let offsetY = 0;
 
         for (const actor of actors) {
-            const width =
-                (foundry.utils.getProperty(
-                    actor,
-                    "prototypeToken.width",
-                ) as number) || 1;
-            const height =
-                (foundry.utils.getProperty(
-                    actor,
-                    "prototypeToken.height",
-                ) as number) || 1;
+            const width = (foundry.utils.getProperty(actor, "prototypeToken.width") as number) || 1;
+            const height = (foundry.utils.getProperty(actor, "prototypeToken.height") as number) || 1;
 
             await this.#dropActor({
                 actor,
@@ -377,10 +345,7 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
         // });
     }
 
-    async #handleJournalFolder(
-        folder: Folder,
-        event: DragEvent,
-    ): Promise<boolean> {
+    async #handleJournalFolder(folder: Folder, event: DragEvent): Promise<boolean> {
         const entries = folder?.contents as JournalEntry[];
         const topLeft = translateToTopLeftGrid(event);
 
@@ -389,10 +354,9 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
                 title: game.i18n.localize("Droppables.DropJournalFolder"),
                 controls: [],
             },
-            content: `<p>${game.i18n.localize(
-                "Droppables.DropJournalFolderExplanation",
-                { folderName: folder?.name ?? "" },
-            )}</p>`,
+            content: `<p>${game.i18n.localize("Droppables.DropJournalFolderExplanation", {
+                folderName: folder?.name ?? "",
+            })}</p>`,
             yes: {
                 icon: "fas fa-level-down-alt",
                 label: game.i18n.localize("Droppables.DropButton"),
@@ -413,9 +377,7 @@ class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
         entry,
         xPosition,
         yPosition,
-    }: DropJournalFolderInput): Promise<
-        NoteDocument<Scene | null> | undefined
-    > {
+    }: DropJournalFolderInput): Promise<NoteDocument<Scene | null> | undefined> {
         // @ts-expect-error not typed for some reason
         return NoteDocument.create(
             {

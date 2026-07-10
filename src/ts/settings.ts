@@ -27,18 +27,14 @@ class Settings {
             type: String,
         });
 
-        game.settings.register(
-            MODULE_ID,
-            this.#ENABLE_UNLINKED_ACTOR_DROP_HANDLER,
-            {
-                name: "Droppables.SettingEnableUnlinkedActorDropHandler",
-                hint: "Droppables.SettingEnableUnlinkedActorDropHandlerHint",
-                scope: "client",
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-        );
+        game.settings.register(MODULE_ID, this.#ENABLE_UNLINKED_ACTOR_DROP_HANDLER, {
+            name: "Droppables.SettingEnableUnlinkedActorDropHandler",
+            hint: "Droppables.SettingEnableUnlinkedActorDropHandlerHint",
+            scope: "client",
+            config: true,
+            default: false,
+            type: Boolean,
+        });
 
         game.settings.register(MODULE_ID, this.#ENABLE_CANVAS_DRAG_UPLOAD, {
             name: "Droppables.SettingEnableCanvasDragUpload",
@@ -73,10 +69,7 @@ class Settings {
      * @returns a boolean indicating if the unlinked actor drop handler is enabled
      */
     get enableUnlinkedActorDropHandler(): boolean {
-        return game.settings.get(
-            MODULE_ID,
-            this.#ENABLE_UNLINKED_ACTOR_DROP_HANDLER,
-        ) as unknown as boolean;
+        return game.settings.get(MODULE_ID, this.#ENABLE_UNLINKED_ACTOR_DROP_HANDLER) as unknown as boolean;
     }
 
     /**
@@ -85,10 +78,7 @@ class Settings {
      * @returns a boolean indicating if canvas drag upload is enabled
      */
     get canvasDragUpload(): boolean {
-        return game.settings.get(
-            MODULE_ID,
-            this.#ENABLE_CANVAS_DRAG_UPLOAD,
-        ) as unknown as boolean;
+        return game.settings.get(MODULE_ID, this.#ENABLE_CANVAS_DRAG_UPLOAD) as unknown as boolean;
     }
 
     /**
@@ -97,10 +87,7 @@ class Settings {
      * @returns a string representing the last drop style
      */
     get lastUsedDropStyle(): string {
-        return game.settings.get(
-            MODULE_ID,
-            this.#LAST_USED_FOLDER_DROP_STYLE,
-        ) as unknown as string;
+        return game.settings.get(MODULE_ID, this.#LAST_USED_FOLDER_DROP_STYLE) as unknown as string;
     }
 
     /**

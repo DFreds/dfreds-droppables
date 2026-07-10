@@ -40,14 +40,8 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         }
 
         // Check upload permissions for non-GM users
-        if (
-            this.data.files.length &&
-            !game.user.isGM &&
-            !game.user.hasPermission("FILES_UPLOAD")
-        ) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoUploadFiles"),
-            );
+        if (this.data.files.length && !game.user.isGM && !game.user.hasPermission("FILES_UPLOAD")) {
+            ui.notifications.warn(game.i18n.localize("Droppables.NoUploadFiles"));
             return false;
         }
 
@@ -59,9 +53,7 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
         return {
             files: Array.from(files).filter((file) => {
-                return (
-                    file.type.includes("image") || file.type.includes("video")
-                );
+                return file.type.includes("image") || file.type.includes("video");
             }),
             url: this.#event.dataTransfer?.getData("text"),
         };
@@ -87,10 +79,12 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         const urlType = url ? this.#determineUrlType(url) : undefined;
 
         if (url && urlType) {
-            return [{
-                fileName: this.#getFileNameFromUrl(url),
-                filePath: url as FilePath,
-            }];
+            return [
+                {
+                    fileName: this.#getFileNameFromUrl(url),
+                    filePath: url as FilePath,
+                },
+            ];
         }
 
         return this.#uploadData();
@@ -101,11 +95,7 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
         for (const file of this.data.files) {
             // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
-            const response = (await FilePicker.uploadPersistent(
-                MODULE_ID,
-                "tiles",
-                file,
-            )) as any;
+            const response = (await FilePicker.uploadPersistent(MODULE_ID, "tiles", file)) as any;
 
             uploadedData.push({
                 fileName: file.name,
@@ -145,8 +135,7 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     }
 
     async #createTiles(uploadedData: TileUploadData[]): Promise<void> {
-        const overhead =
-            ui.controls.controls.tiles?.tools?.foreground?.active ?? false;
+        const overhead = ui.controls.controls.tiles?.tools?.foreground?.active ?? false;
         const tileSources: DeepPartial<TileSource>[] = [];
         const topLeft = translateToTopLeftGrid(this.#event);
 

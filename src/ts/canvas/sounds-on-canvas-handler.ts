@@ -36,9 +36,7 @@ class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
         // Check upload permissions for non-GM users
         if (!game.user.isGM && !game.user.hasPermission("FILES_UPLOAD")) {
-            ui.notifications.warn(
-                game.i18n.localize("Droppables.NoUploadFiles"),
-            );
+            ui.notifications.warn(game.i18n.localize("Droppables.NoUploadFiles"));
             return false;
         }
 
@@ -64,11 +62,7 @@ class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
         for (const file of this.data.files) {
             // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
-            const response = (await FilePicker.uploadPersistent(
-                MODULE_ID,
-                "sounds",
-                file,
-            )) as any;
+            const response = (await FilePicker.uploadPersistent(MODULE_ID, "sounds", file)) as any;
             const topLeft = translateToTopLeftGrid(this.#event);
             const ambientSoundSource: DeepPartial<AmbientSoundSource> = {
                 path: response.path,
@@ -83,10 +77,7 @@ class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
             ambientSoundSources.push(ambientSoundSource);
         }
 
-        await canvas.scene?.createEmbeddedDocuments(
-            "AmbientSound",
-            ambientSoundSources,
-        );
+        await canvas.scene?.createEmbeddedDocuments("AmbientSound", ambientSoundSources);
 
         return true;
     }

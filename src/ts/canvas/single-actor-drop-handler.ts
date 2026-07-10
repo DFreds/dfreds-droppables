@@ -35,10 +35,7 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
     }
 
     canHandleDrop(): boolean {
-        return (
-            this.data.type === "Actor" &&
-            (this.#settings.enableUnlinkedActorDropHandler || this.#event.shiftKey)
-        );
+        return this.data.type === "Actor" && (this.#settings.enableUnlinkedActorDropHandler || this.#event.shiftKey);
     }
 
     retrieveData(): ActorDropData {
@@ -94,15 +91,12 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
             },
         ];
 
-        const content = await renderTemplate(
-            "modules/dfreds-droppables/templates/drop-dialog.hbs",
-            {
-                dropStyles,
-                savedDropStyle: this.#settings.lastUsedDropStyle,
-                startingElevation: elevation ? Math.round(elevation) : null,
-                allowCount: true,
-            },
-        );
+        const content = await renderTemplate("modules/dfreds-droppables/templates/drop-dialog.hbs", {
+            dropStyles,
+            savedDropStyle: this.#settings.lastUsedDropStyle,
+            startingElevation: elevation ? Math.round(elevation) : null,
+            allowCount: true,
+        });
 
         await DialogV2.confirm({
             window: {
@@ -117,13 +111,8 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
                 callback: async (_event, _button, dialog) => {
                     const $html = $(dialog.element);
                     const dropStyle = $html.find('select[name="drop-style"]').val();
-                    const dropElevation = parseFloat(
-                        $html.find('input[name="elevation"]').val() as string,
-                    );
-                    const countRaw = parseInt(
-                        ($html.find('input[name="count"]').val() as string) ?? "1",
-                        10,
-                    );
+                    const dropElevation = parseFloat($html.find('input[name="elevation"]').val() as string);
+                    const countRaw = parseInt(($html.find('input[name="count"]').val() as string) ?? "1", 10);
                     const count = Math.max(1, Number.isNaN(countRaw) ? 1 : countRaw);
 
                     this.#settings.lastUsedDropStyle = dropStyle as string;
@@ -172,13 +161,7 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
         return true;
     }
 
-    async #dropStack({
-        actors,
-        xPosition,
-        yPosition,
-        isHidden,
-        elevation = undefined,
-    }: DropManyInput) {
+    async #dropStack({ actors, xPosition, yPosition, isHidden, elevation = undefined }: DropManyInput) {
         for (const actor of actors) {
             await this.#dropActor({
                 actor,
@@ -190,21 +173,14 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
         }
     }
 
-    async #dropRandom({
-        actors,
-        xPosition,
-        yPosition,
-        isHidden,
-        elevation = undefined,
-    }: DropManyInput) {
+    async #dropRandom({ actors, xPosition, yPosition, isHidden, elevation = undefined }: DropManyInput) {
         let distance = 0;
         let dropped = 0;
         let offsetX = 0;
         let offsetY = 0;
 
         for (const actor of actors) {
-            const totalTries =
-                Math.pow(1 + distance * 2, 2) - Math.pow(distance * 2 - 1, 2);
+            const totalTries = Math.pow(1 + distance * 2, 2) - Math.pow(distance * 2 - 1, 2);
 
             const tries = Math.pow(1 + distance * 2, 2) - dropped;
 
@@ -236,30 +212,15 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
         }
     }
 
-    async #dropLine({
-        isHorizontal,
-        actors,
-        xPosition,
-        yPosition,
-        isHidden,
-        elevation = undefined,
-    }: DropManyInput) {
+    async #dropLine({ isHorizontal, actors, xPosition, yPosition, isHidden, elevation = undefined }: DropManyInput) {
         const step = isHorizontal ? canvas.grid.sizeX : canvas.grid.sizeY;
 
         let offsetX = 0;
         let offsetY = 0;
 
         for (const actor of actors) {
-            const width =
-                (foundry.utils.getProperty(
-                    actor,
-                    "prototypeToken.width",
-                ) as number) || 1;
-            const height =
-                (foundry.utils.getProperty(
-                    actor,
-                    "prototypeToken.height",
-                ) as number) || 1;
+            const width = (foundry.utils.getProperty(actor, "prototypeToken.width") as number) || 1;
+            const height = (foundry.utils.getProperty(actor, "prototypeToken.height") as number) || 1;
 
             await this.#dropActor({
                 actor,

@@ -9,12 +9,7 @@ interface Listener {
 
 const HooksDroppables = {
     listen(): void {
-        const listeners: Listener[] = [
-            Init,
-            Setup,
-            ThreeDCanvasConfig,
-            CanvasInit,
-        ];
+        const listeners: Listener[] = [Init, Setup, ThreeDCanvasConfig, CanvasInit];
 
         for (const listener of listeners) {
             listener.listen();
