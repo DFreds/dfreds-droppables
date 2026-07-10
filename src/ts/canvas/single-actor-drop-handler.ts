@@ -35,6 +35,9 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
     }
 
     canHandleDrop(): boolean {
+        if (this.data.uuid.startsWith("Compendium")) {
+            return false;
+        }
         return this.data.type === "Actor" && (this.#settings.enableUnlinkedActorDropHandler || this.#event.shiftKey);
     }
 
