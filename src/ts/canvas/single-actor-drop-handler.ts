@@ -35,7 +35,7 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
     }
 
     canHandleDrop(): boolean {
-        if (this.data.uuid.startsWith("Compendium")) {
+        if (this.data.uuid && this.data.uuid.toLowerCase().startsWith("compendium")) {
             return false;
         }
         return this.data.type === "Actor" && (this.#settings.enableUnlinkedActorDropHandler || this.#event.shiftKey);
@@ -55,6 +55,8 @@ class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
     async handleDrop(): Promise<boolean> {
         if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
+
+        if (!this.data.uuid) return false;
 
         const actor = (await fromUuid(this.data.uuid)) as Actor | null;
         if (!actor) return false;
