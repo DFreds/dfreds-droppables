@@ -32,16 +32,27 @@
 </p>
 
 <p align="center">
-    <b>DFreds Droppables</b> is a FoundryVTT module which allows you to drag and drop an entire folder of tokens or journal entries onto the canvas as well as uploading files for tokens, tiles, sounds, or notes.
+    <b>DFreds Droppables</b> is a FoundryVTT module which allows you to drag and drop an entire folder of tokens or journal entries onto the canvas, upload files for tokens, tiles, sounds, or notes, and drop files directly onto sidebar directories to instantly create the matching documents.
 </p>
 
 ## Features
 
 - Easily drop entire folders of actors onto the canvas in a stack, line, or randomly
 - Easily drop folders of notes onto the canvas
-- Drop various files onto the canvas to automatically upload them to your world and create tokens, tiles, sounds, or notes
+- Drop a file onto the canvas to upload it and automatically create a document based on the active layer:
+  - **Token layer** - dropped images as new actors and tokens, prompting for the subtype
+  - **Tile layer** - dropped images or videos as tiles
+  - **Sound layer** - dropped audio files as ambient sounds
+  - **Notes layer** - dropped images, PDFs, videos, or text files as a journal entry pinned to the canvas
 - Drop images directly from browsers to automatically set the images for tokens, tiles, or notes
 - Drag and drop documents directly from their sheet onto any supported area
+- Drop a file onto a sidebar directory to upload it and automatically create a document of that type with the file assigned:
+  - **Actors** and **Items** - dropped images, prompting for the subtype
+  - **Scenes** - dropped images as the scene background
+  - **Journal** - dropped images, PDFs, videos, or text files as journal entry pages
+  - **Playlists** - dropped audio files as playlist sounds
+  - **Roll Tables**, **Cards**, and **Macros** - dropped images
+- Drop an exported `.json` file onto its sidebar directory to import it as a new document
 
 ![Dropping Actors](https://www.dfreds-modules.com/assets/images/droppables-0301af60368fe6df1201ade8f7c98bf7.gif)
 

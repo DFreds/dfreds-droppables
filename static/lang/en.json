@@ -16,6 +16,10 @@
         "NoCreateNotes": "You do not have permission to create notes.",
         "NoCreateTokens": "You do not have permission to create tokens.",
         "NoCreateActors": "You do not have permission to create actors.",
+        "NoCreateDocuments": "You do not have permission to create documents of this type.",
+        "ImportFailed": "Failed to import {fileName}. It may not be valid data for this directory.",
+        "SelectDocumentTypes": "Select Document Types",
+        "NewPlaylist": "New Playlist",
 
         "DropJournalFolder": "Drop Journal Folder",
         "DropJournalFolderExplanation": "Drop all journal entries in {folderName} as pins?",
@@ -35,6 +39,9 @@
 
         "SettingEnableCanvasDragUpload": "Enable Canvas Drag/Upload",
         "SettingEnableCanvasDragUploadHint": "If enabled, you can drag and upload tokens, tiles, audio, and journal entries onto the canvas based on the selected layer.",
+
+        "SettingEnableSidebarDragUpload": "Enable Sidebar Drag/Upload",
+        "SettingEnableSidebarDragUploadHint": "If enabled, you can drag files onto a sidebar directory to automatically create a document of that type. Dropped media (images, audio, PDFs, etc.) is uploaded and assigned, and dropped JSON exports are imported.",
 
         "SettingEnableUnlinkedActorDropHandler": "Enable Unlinked Actor Drop Handler",
         "SettingEnableUnlinkedActorDropHandlerHint": "If enabled, a dialog will be shown when dropping an unlinked actor onto the canvas to ask how many to drop. Note: This setting will be ignored if the Shift key is held down when dropping the actor.",

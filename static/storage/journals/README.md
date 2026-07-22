@@ -1,1 +1,1 @@
-This folder contains uploaded notes.
+This folder contains uploaded journal entries.

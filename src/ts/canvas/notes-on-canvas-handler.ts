@@ -143,7 +143,7 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
                     fileName: file.name,
                 });
             } else {
-                const response = await FilePicker.uploadPersistent(MODULE_ID, "journals", file);
+                const response = await FilePicker.uploadPersistent(MODULE_ID, "notes", file);
 
                 uploadedData.push({
                     response,

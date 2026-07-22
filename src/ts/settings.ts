@@ -5,6 +5,7 @@ class Settings {
     #FOLDER_DROP_STYLE = "dropStyle";
     #ENABLE_UNLINKED_ACTOR_DROP_HANDLER = "enableUnlinkedActorDropHandler";
     #ENABLE_CANVAS_DRAG_UPLOAD = "enableCanvasDragUpload";
+    #ENABLE_SIDEBAR_DRAG_UPLOAD = "enableSidebarDragUpload";
     #LAST_USED_FOLDER_DROP_STYLE = "lastUsedDropStyle";
 
     /**
@@ -45,6 +46,15 @@ class Settings {
             type: Boolean,
         });
 
+        game.settings.register(MODULE_ID, this.#ENABLE_SIDEBAR_DRAG_UPLOAD, {
+            name: "Droppables.SettingEnableSidebarDragUpload",
+            hint: "Droppables.SettingEnableSidebarDragUploadHint",
+            scope: "client",
+            config: true,
+            default: true,
+            type: Boolean,
+        });
+
         game.settings.register(MODULE_ID, this.#LAST_USED_FOLDER_DROP_STYLE, {
             name: "Last Used Folder Drop Style",
             scope: "client",
@@ -79,6 +89,15 @@ class Settings {
      */
     get canvasDragUpload(): boolean {
         return game.settings.get(MODULE_ID, this.#ENABLE_CANVAS_DRAG_UPLOAD) as unknown as boolean;
+    }
+
+    /**
+     * Returns the game setting for the sidebar drag upload
+     *
+     * @returns a boolean indicating if sidebar drag upload is enabled
+     */
+    get sidebarDragUpload(): boolean {
+        return game.settings.get(MODULE_ID, this.#ENABLE_SIDEBAR_DRAG_UPLOAD) as unknown as boolean;
     }
 
     /**
