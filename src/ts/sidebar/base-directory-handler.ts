@@ -1,16 +1,15 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
-import { SidebarDroppableHandler } from "./sidebar-droppable-manager.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
 import { Settings } from "../settings.ts";
-import { UploadedFile, getMatchingFiles, getTargetFolderId, uploadToPersistent } from "./util.ts";
-
-const IMAGE_TYPES = "image";
+import { UploadedFile, getFilesFromEvent, isImageFile, uploadToPersistent } from "../shared/files.ts";
+import { getTargetFolderId } from "./util.ts";
 
 /**
  * Shared logic for sidebar handlers that upload one or more media files and create a document of a
  * single type from them. Subclasses declare the document type, storage subdirectory, and how to turn
  * uploaded files into document creation sources.
  */
-abstract class BaseDirectoryHandler implements SidebarDroppableHandler<File[]> {
+abstract class BaseDirectoryHandler implements DroppableHandler<File[]> {
     data: File[];
 
     protected event: DragEvent;
@@ -31,7 +30,7 @@ abstract class BaseDirectoryHandler implements SidebarDroppableHandler<File[]> {
 
     /** Predicate for the files this handler accepts. Defaults to images. */
     protected filePredicate(file: File): boolean {
-        return file.type.includes(IMAGE_TYPES);
+        return isImageFile(file);
     }
 
     /**
@@ -63,7 +62,7 @@ abstract class BaseDirectoryHandler implements SidebarDroppableHandler<File[]> {
     }
 
     retrieveData(): File[] {
-        return getMatchingFiles(this.event, (file) => this.filePredicate(file));
+        return getFilesFromEvent(this.event, (file) => this.filePredicate(file));
     }
 
     async handleDrop(): Promise<boolean> {
@@ -82,6 +81,11 @@ abstract class BaseDirectoryHandler implements SidebarDroppableHandler<File[]> {
         return true;
     }
 
+    /**
+     * Uploads every accepted file to this handler's storage subdirectory.
+     *
+     * @returns The successfully uploaded files paired with their storage paths.
+     */
     protected async uploadAll(): Promise<UploadedFile[]> {
         const uploaded: UploadedFile[] = [];
 

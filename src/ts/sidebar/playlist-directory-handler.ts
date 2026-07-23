@@ -1,12 +1,13 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
-import { SidebarDroppableHandler } from "./sidebar-droppable-manager.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
 import { Settings } from "../settings.ts";
-import { fileNameToDocumentName, getMatchingFiles, getTargetFolderId, uploadToPersistent } from "./util.ts";
+import { fileNameToDocumentName, getFilesFromEvent, isAudioFile, uploadToPersistent } from "../shared/files.ts";
+import { getTargetFolderId } from "./util.ts";
 
 /**
  * Creates a Playlist from dropped audio files, adding each uploaded file as a sound in the playlist.
  */
-class PlaylistDirectoryHandler implements SidebarDroppableHandler<File[]> {
+class PlaylistDirectoryHandler implements DroppableHandler<File[]> {
     data: File[];
 
     #event: DragEvent;
@@ -38,7 +39,7 @@ class PlaylistDirectoryHandler implements SidebarDroppableHandler<File[]> {
     }
 
     retrieveData(): File[] {
-        return getMatchingFiles(this.#event, (file) => file.type.includes("audio"));
+        return getFilesFromEvent(this.#event, isAudioFile);
     }
 
     async handleDrop(): Promise<boolean> {

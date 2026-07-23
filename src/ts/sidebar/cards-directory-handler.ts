@@ -1,5 +1,5 @@
 import { BaseDirectoryHandler } from "./base-directory-handler.ts";
-import { UploadedFile, fileNameToDocumentName } from "./util.ts";
+import { UploadedFile, fileNameToDocumentName } from "../shared/files.ts";
 
 /**
  * Creates a Cards document (a deck) from a dropped image, assigning the image.

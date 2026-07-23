@@ -1,7 +1,8 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
-import { SidebarDroppableHandler } from "./sidebar-droppable-manager.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
 import { Settings } from "../settings.ts";
-import { getMatchingFiles, getTargetFolderId, isJsonFile } from "./util.ts";
+import { getFilesFromEvent, isJsonFile } from "../shared/files.ts";
+import { getTargetFolderId } from "./util.ts";
 
 const { readTextFromFile } = foundry.utils;
 
@@ -10,7 +11,7 @@ const { readTextFromFile } = foundry.utils;
  * import mechanism (the same one behind a directory's "Import Data" button). Applies to every
  * directory, so it is registered before the media handlers.
  */
-class JsonImportHandler implements SidebarDroppableHandler<File[]> {
+class JsonImportHandler implements DroppableHandler<File[]> {
     data: File[];
 
     #event: DragEvent;
@@ -37,7 +38,7 @@ class JsonImportHandler implements SidebarDroppableHandler<File[]> {
     }
 
     retrieveData(): File[] {
-        return getMatchingFiles(this.#event, isJsonFile);
+        return getFilesFromEvent(this.#event, isJsonFile);
     }
 
     async handleDrop(): Promise<boolean> {

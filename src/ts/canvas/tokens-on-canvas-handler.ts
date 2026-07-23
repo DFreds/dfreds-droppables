@@ -1,15 +1,20 @@
-import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
-import { FilesDropData } from "../types.ts";
-import { Settings } from "../settings.ts";
-import { translateToTopLeftGrid } from "../util.ts";
-import { MODULE_ID } from "../constants.ts";
-import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
-import { FilePath, ImageFilePath, USER_PERMISSIONS } from "@common/constants.mjs";
 import { TokenSource } from "@client/documents/_module.mjs";
-
-const { DialogV2 } = foundry.applications.api;
-const { renderTemplate } = foundry.applications.handlebars;
-const { FilePicker } = foundry.applications.apps;
+import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
+import { ImageFilePath, USER_PERMISSIONS } from "@common/constants.mjs";
+import { Settings } from "../settings.ts";
+import { promptForDocumentTypes } from "../shared/document-type-prompt.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
+import {
+    UploadedFile,
+    determineUrlType,
+    fileNameToDocumentName,
+    getFileNameFromUrl,
+    getFilesFromEvent,
+    isImageFile,
+    uploadToPersistent,
+} from "../shared/files.ts";
+import { FilesDropData } from "../types.ts";
+import { translateToTopLeftGrid } from "./util.ts";
 
 interface TokenDropData {
     fileName: string;
@@ -17,14 +22,7 @@ interface TokenDropData {
     type: string;
 }
 
-interface TokenUploadData {
-    response: any;
-    types: Record<string, string>;
-    selectedType: string;
-    fileName: string;
-}
-
-class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
+class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
     data: FilesDropData;
 
     #event: DragEvent;
@@ -38,13 +36,14 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     canHandleDrop(): boolean {
         const isGM = game.user.isGM;
         const url = this.#getDropUrl();
-        const urlType = url ? this.#determineUrlType(url) : undefined;
+        // Tokens only accept image URLs.
+        const isImageUrl = url ? determineUrlType(url) === "image" : false;
 
         // Early exit conditions
         if (
             !this.#settings.canvasDragUpload ||
             !canvas.activeLayer?.hookName?.includes("TokenLayer") ||
-            (!this.data.files.length && !urlType)
+            (!this.data.files.length && !isImageUrl)
         ) {
             return false;
         }
@@ -52,7 +51,7 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         // Permission checks for non-GM users
         if (!isGM) {
             const permissions = [
-                ...(!urlType && this.data.files.length
+                ...(!isImageUrl && this.data.files.length
                     ? [{ permission: "FILES_UPLOAD", message: "Droppables.NoUploadFiles" }]
                     : []),
                 { permission: "TOKEN_CREATE", message: "Droppables.NoCreateTokens" },
@@ -71,12 +70,8 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     }
 
     retrieveData(): FilesDropData {
-        const files = this.#event.dataTransfer?.files || new FileList();
-
         return {
-            files: Array.from(files).filter((file) => {
-                return file.type.includes("image");
-            }),
+            files: getFilesFromEvent(this.#event, isImageFile),
             url: this.#event.dataTransfer?.getData("text"),
         };
     }
@@ -85,19 +80,15 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
 
-        const types = game.documentTypes.Actor.filter((type) => type !== CONST.BASE_DOCUMENT_TYPE);
-        const typeLocalizations = types.reduce((obj: Record<string, string>, typeLabel) => {
-            const label = CONFIG.Actor.typeLabels[typeLabel] ?? typeLabel;
-            obj[typeLabel] = game.i18n.has(label) ? game.i18n.localize(label) : typeLabel;
-            return obj;
-        }, {});
-
-        const uploadedData = await this.#getUploadData({
-            typeLocalizations,
-            selectedType: types[0],
+        const uploadedData = await this.#getUploadData();
+        const typed = await promptForDocumentTypes({
+            documentName: "Actor",
+            uploadedData,
+            title: "Droppables.TokenActorTypes",
         });
+        if (!typed) return true;
 
-        await this.#promptForActorTypes(uploadedData);
+        await this.#createActorsAndTokens(typed);
 
         return true;
     }
@@ -107,115 +98,39 @@ class TokensOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         return url ? url : undefined;
     }
 
-    #determineUrlType(url: string): "image" | undefined {
-        const lower = url.toLowerCase();
-
-        // Only allow image URLs for tokens.
-        if (/\.(apng|avif|bmp|gif|jpe?g|png|svg|tiff?|webp)$/.test(lower)) {
-            return "image";
-        }
-
-        return undefined;
-    }
-
-    #getFileNameFromUrl(url: string): string {
-        try {
-            const parsed = new URL(url);
-            const pathName = parsed.pathname ?? "";
-            const last = pathName.split("/").filter(Boolean).at(-1);
-            return last ? decodeURIComponent(last) : "Dropped Image";
-        } catch {
-            const last = url.split(/[\\/]/).filter(Boolean).at(-1);
-            return last ? last : "Dropped Image";
-        }
-    }
-
-    async #getUploadData({
-        typeLocalizations,
-        selectedType,
-    }: {
-        typeLocalizations: Record<string, string>;
-        selectedType: string;
-    }): Promise<TokenUploadData[]> {
+    async #getUploadData(): Promise<UploadedFile[]> {
         const url = this.#getDropUrl();
-        const urlType = url ? this.#determineUrlType(url) : undefined;
 
-        if (url && urlType) {
+        if (url && determineUrlType(url) === "image") {
             return [
                 {
-                    response: { path: url },
-                    types: typeLocalizations,
-                    selectedType,
-                    fileName: this.#getFileNameFromUrl(url),
+                    fileName: getFileNameFromUrl(url, "Dropped Image"),
+                    filePath: url,
                 },
             ];
         }
 
-        return this.#uploadData({ typeLocalizations, selectedType });
+        return this.#uploadData();
     }
 
-    async #uploadData({
-        typeLocalizations,
-        selectedType,
-    }: {
-        typeLocalizations: Record<string, string>;
-        selectedType: string;
-    }): Promise<TokenUploadData[]> {
-        const uploadedData: TokenUploadData[] = [];
+    async #uploadData(): Promise<UploadedFile[]> {
+        const uploadedData: UploadedFile[] = [];
 
         for (const file of this.data.files) {
-            const response = await FilePicker.uploadPersistent(MODULE_ID, "tokens", file);
-            uploadedData.push({
-                response,
-                types: typeLocalizations,
-                selectedType,
-                fileName: file.name,
-            });
+            const filePath = await uploadToPersistent("tokens", file);
+            if (filePath) {
+                uploadedData.push({ fileName: file.name, filePath });
+            }
         }
 
         return uploadedData;
-    }
-
-    async #promptForActorTypes(uploadedData: TokenUploadData[]) {
-        const content = await renderTemplate(`modules/${MODULE_ID}/templates/drop-token-files-dialog.hbs`, {
-            uploadedData,
-        });
-        return DialogV2.prompt({
-            window: {
-                title: game.i18n.localize("Droppables.TokenActorTypes"),
-                controls: [],
-            },
-            content,
-            ok: {
-                label: game.i18n.localize("Droppables.Confirm"),
-                callback: async (_event, _button, dialog) => {
-                    const $html = $(dialog.element);
-
-                    const dropData = $html
-                        .find('select[name="type"]')
-                        .map((_idx, ele) => {
-                            const data = $(ele).data();
-                            const typeSelection = $(ele).val();
-                            const tokenDropData: TokenDropData = {
-                                fileName: data?.fileName ?? "Unknown",
-                                filePath: data?.filePath as FilePath,
-                                type: typeSelection?.toString() ?? CONST.BASE_DOCUMENT_TYPE,
-                            };
-
-                            return tokenDropData;
-                        })
-                        .get();
-                    await this.#createActorsAndTokens(dropData);
-                },
-            },
-        });
     }
 
     async #createActorsAndTokens(dropData: TokenDropData[]) {
         const actorSources = [];
         for (const tokenDropData of dropData) {
             const actorSource = {
-                name: tokenDropData.fileName.split(".")[0],
+                name: fileNameToDocumentName(tokenDropData.fileName),
                 type: tokenDropData.type,
                 img: tokenDropData.filePath as ImageFilePath,
             };

@@ -1,13 +1,12 @@
-import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
-import { FilesDropData } from "../types.ts";
-import { Settings } from "../settings.ts";
-import { translateToTopLeftGrid } from "../util.ts";
-import { MODULE_ID } from "../constants.ts";
 import { AmbientSoundSource } from "@client/documents/_module.mjs";
+import { AudioFilePath } from "@common/constants.mjs";
+import { Settings } from "../settings.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { getFilesFromEvent, isAudioFile, uploadToPersistent } from "../shared/files.ts";
+import { FilesDropData } from "../types.ts";
+import { translateToTopLeftGrid } from "./util.ts";
 
-const { FilePicker } = foundry.applications.apps;
-
-class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
+class SoundsOnCanvasHandler implements DroppableHandler<FilesDropData> {
     data: FilesDropData;
 
     #event: DragEvent;
@@ -44,12 +43,8 @@ class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     }
 
     retrieveData(): FilesDropData {
-        const files = this.#event.dataTransfer?.files || new FileList();
-
         return {
-            files: Array.from(files).filter((file) => {
-                return file.type.includes("audio");
-            }),
+            files: getFilesFromEvent(this.#event, isAudioFile),
             url: this.#event.dataTransfer?.getData("text"),
         };
     }
@@ -61,11 +56,10 @@ class SoundsOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         const ambientSoundSources: DeepPartial<AmbientSoundSource>[] = [];
 
         for (const file of this.data.files) {
-            // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
-            const response = (await FilePicker.uploadPersistent(MODULE_ID, "sounds", file)) as any;
+            const path = await uploadToPersistent("sounds", file);
             const topLeft = translateToTopLeftGrid(this.#event);
             const ambientSoundSource: DeepPartial<AmbientSoundSource> = {
-                path: response.path,
+                path: path as AudioFilePath,
                 x: topLeft.x,
                 y: topLeft.y,
                 radius: 10,

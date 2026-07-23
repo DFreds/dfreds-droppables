@@ -1,22 +1,27 @@
-import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
-import { FilesDropData } from "../types.ts";
-import { Settings } from "../settings.ts";
-import { translateToTopLeftGrid } from "../util.ts";
-import { MODULE_ID } from "../constants.ts";
-import { CorePageType, JournalEntryPageSource } from "@common/documents/journal-entry-page.mjs";
 import { JournalEntrySource, NoteSource } from "@client/documents/_module.mjs";
 import { USER_PERMISSIONS } from "@common/constants.mjs";
-
-const { FilePicker } = foundry.applications.apps;
+import { CorePageType, JournalEntryPageSource } from "@common/documents/journal-entry-page.mjs";
+import { Settings } from "../settings.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
+import {
+    determineFileType,
+    determineUrlType,
+    getFileNameFromUrl,
+    getFilesFromEvent,
+    isJournalFile,
+    uploadToPersistent,
+} from "../shared/files.ts";
+import { FilesDropData } from "../types.ts";
+import { translateToTopLeftGrid } from "./util.ts";
 
 interface NoteUploadData {
-    response?: any;
+    filePath?: string;
     text?: string;
     type: CorePageType;
     fileName: string;
 }
 
-class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
+class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     data: FilesDropData;
 
     #event: DragEvent;
@@ -30,7 +35,7 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     canHandleDrop(): boolean {
         const isGM = game.user.isGM;
         const url = this.#getDropUrl();
-        const urlType = url ? this.#determineUrlType(url) : undefined;
+        const urlType = url ? determineUrlType(url) : undefined;
 
         // Check basic requirements
         if (
@@ -75,17 +80,8 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     }
 
     retrieveData(): FilesDropData {
-        const files = this.#event.dataTransfer?.files || new FileList();
-
         return {
-            files: Array.from(files).filter((file) => {
-                return (
-                    file.type.includes("image") ||
-                    file.type.includes("pdf") ||
-                    file.type.includes("video") ||
-                    file.type.includes("text")
-                );
-            }),
+            files: getFilesFromEvent(this.#event, isJournalFile),
             url: this.#event.dataTransfer?.getData("text"),
         };
     }
@@ -107,14 +103,14 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
     async #getUploadData(): Promise<NoteUploadData[]> {
         const url = this.#getDropUrl();
-        const urlType = url ? this.#determineUrlType(url) : undefined;
+        const urlType = url ? determineUrlType(url) : undefined;
 
         if (url && urlType) {
             return [
                 {
-                    response: { path: url },
+                    filePath: url,
                     type: urlType,
-                    fileName: this.#getFileNameFromUrl(url),
+                    fileName: getFileNameFromUrl(url, "Dropped Media"),
                 },
             ];
         }
@@ -126,7 +122,7 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         const uploadedData: NoteUploadData[] = [];
 
         for (const file of this.data.files) {
-            const type = this.#determineFileType(file);
+            const type = determineFileType(file);
 
             if (type === "text") {
                 const text = await new Promise<string | undefined>((resolve) => {
@@ -143,10 +139,10 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
                     fileName: file.name,
                 });
             } else {
-                const response = await FilePicker.uploadPersistent(MODULE_ID, "notes", file);
+                const filePath = await uploadToPersistent("notes", file);
 
                 uploadedData.push({
-                    response,
+                    filePath,
                     type,
                     fileName: file.name,
                 });
@@ -156,54 +152,12 @@ class NotesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         return uploadedData;
     }
 
-    #determineFileType(file: File): CorePageType {
-        if (file.type.includes("pdf")) {
-            return "pdf";
-        }
-        if (file.type.includes("video")) {
-            return "video";
-        }
-        if (file.type.includes("text")) {
-            return "text";
-        }
-
-        return "image";
-    }
-
-    #determineUrlType(url: string): CorePageType | undefined {
-        const lower = url.toLowerCase();
-
-        // Basic extension-based detection; this mirrors the types we accept for files.
-        if (/\.(apng|avif|bmp|gif|jpe?g|png|svg|tiff?|webp)$/.test(lower)) {
-            return "image";
-        }
-
-        if (/\.(m4v|mp4|ogv|webm)$/.test(lower)) {
-            return "video";
-        }
-
-        return undefined;
-    }
-
-    #getFileNameFromUrl(url: string): string {
-        try {
-            const parsed = new URL(url);
-            const pathName = parsed.pathname ?? "";
-            const last = pathName.split("/").filter(Boolean).at(-1);
-            return last ? decodeURIComponent(last) : "Dropped Media";
-        } catch {
-            // Not a valid absolute URL; fall back to a simple best-effort name.
-            const last = url.split(/[\\/]/).filter(Boolean).at(-1);
-            return last ? last : "Dropped Media";
-        }
-    }
-
     async #createJournalAndNotes(uploadedData: NoteUploadData[]) {
         const journalPageSources: DeepPartial<JournalEntryPageSource>[] = uploadedData.map((data) => {
             return {
                 name: data.fileName,
                 type: data.type,
-                src: data.response?.path,
+                src: data.filePath,
                 text: {
                     content: data.text,
                 },

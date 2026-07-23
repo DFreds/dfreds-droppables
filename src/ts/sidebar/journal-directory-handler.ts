@@ -1,13 +1,23 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
 import { CorePageType } from "@common/documents/journal-entry-page.mjs";
-import { SidebarDroppableHandler } from "./sidebar-droppable-manager.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
 import { Settings } from "../settings.ts";
-import { fileNameToDocumentName, getMatchingFiles, getTargetFolderId, uploadToPersistent } from "./util.ts";
+import {
+    determineFileType,
+    fileNameToDocumentName,
+    getFilesFromEvent,
+    isJournalFile,
+    uploadToPersistent,
+} from "../shared/files.ts";
+import { getTargetFolderId } from "./util.ts";
 
+/**
+ * Data for a single journal entry page built from a dropped file.
+ */
 interface JournalPageData {
     fileName: string;
     type: CorePageType;
-    src?: string;
+    filePath?: string;
     text?: string;
 }
 
@@ -16,7 +26,7 @@ interface JournalPageData {
  * page of the matching type; text files are read inline into a text page. Mirrors the file handling
  * of the canvas notes handler, but creates directory entries instead of canvas notes.
  */
-class JournalDirectoryHandler implements SidebarDroppableHandler<File[]> {
+class JournalDirectoryHandler implements DroppableHandler<File[]> {
     data: File[];
 
     #event: DragEvent;
@@ -50,14 +60,7 @@ class JournalDirectoryHandler implements SidebarDroppableHandler<File[]> {
     }
 
     retrieveData(): File[] {
-        return getMatchingFiles(this.#event, (file) => {
-            return (
-                file.type.includes("image") ||
-                file.type.includes("pdf") ||
-                file.type.includes("video") ||
-                file.type.includes("text")
-            );
-        });
+        return getFilesFromEvent(this.#event, isJournalFile);
     }
 
     async handleDrop(): Promise<boolean> {
@@ -76,7 +79,7 @@ class JournalDirectoryHandler implements SidebarDroppableHandler<File[]> {
                     {
                         name: fileNameToDocumentName(file.name),
                         type: page.type,
-                        src: page.src,
+                        src: page.filePath,
                         text: { content: page.text },
                     },
                 ],
@@ -89,29 +92,15 @@ class JournalDirectoryHandler implements SidebarDroppableHandler<File[]> {
     }
 
     async #buildPage(file: File): Promise<JournalPageData> {
-        const type = this.#determineFileType(file);
+        const type = determineFileType(file);
 
         if (type === "text") {
             const text = await file.text();
             return { fileName: file.name, type, text };
         }
 
-        const src = await uploadToPersistent("journals", file);
-        return { fileName: file.name, type, src };
-    }
-
-    #determineFileType(file: File): CorePageType {
-        if (file.type.includes("pdf")) {
-            return "pdf";
-        }
-        if (file.type.includes("video")) {
-            return "video";
-        }
-        if (file.type.includes("text")) {
-            return "text";
-        }
-
-        return "image";
+        const filePath = await uploadToPersistent("journals", file);
+        return { fileName: file.name, type, filePath };
     }
 }
 

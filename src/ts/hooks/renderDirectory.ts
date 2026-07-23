@@ -1,5 +1,5 @@
 import { Listener } from "./index.ts";
-import { SidebarDroppableManager } from "../sidebar/sidebar-droppable-manager.ts";
+import { DroppableManager } from "../shared/droppable-manager.ts";
 import { JsonImportHandler } from "../sidebar/json-import-handler.ts";
 import { ActorDirectoryHandler } from "../sidebar/actor-directory-handler.ts";
 import { ItemDirectoryHandler } from "../sidebar/item-directory-handler.ts";
@@ -22,7 +22,7 @@ const RenderDirectory: Listener = {
             element.ondragover = (event: DragEvent) => event.preventDefault();
 
             element.ondrop = async (event: DragEvent) => {
-                const manager = new SidebarDroppableManager();
+                const manager = new DroppableManager();
 
                 // JSON import is registered first so it takes precedence for any directory.
                 manager.registerHandler(new JsonImportHandler({ event, directory }));

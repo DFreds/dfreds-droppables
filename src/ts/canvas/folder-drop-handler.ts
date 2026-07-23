@@ -1,7 +1,7 @@
-import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
 import { log } from "../logger.ts";
 import { Settings } from "../settings.ts";
-import { translateToTopLeftGrid } from "../util.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { translateToTopLeftGrid } from "./util.ts";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -30,7 +30,7 @@ interface FolderDropData {
     elevation?: number;
 }
 
-class FolderDropHandler implements CanvasDroppableHandler<FolderDropData> {
+class FolderDropHandler implements DroppableHandler<FolderDropData> {
     data: FolderDropData;
 
     #event: DragEvent;

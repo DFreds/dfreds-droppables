@@ -1,5 +1,6 @@
 import { BaseDirectoryHandler } from "./base-directory-handler.ts";
-import { UploadedFile, fileNameToDocumentName, promptForDocumentTypes } from "./util.ts";
+import { UploadedFile, fileNameToDocumentName } from "../shared/files.ts";
+import { promptForDocumentTypes } from "../shared/document-type-prompt.ts";
 
 /**
  * Creates an Actor from a dropped image, prompting for the actor subtype, and assigns the image as

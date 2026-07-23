@@ -1,6 +1,6 @@
-import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
 import { Settings } from "../settings.ts";
-import { translateToTopLeftGrid } from "../util.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { translateToTopLeftGrid } from "./util.ts";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -23,7 +23,7 @@ interface DropManyInput {
     isHorizontal?: boolean;
 }
 
-class SingleActorDropHandler implements CanvasDroppableHandler<ActorDropData> {
+class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
     data: ActorDropData;
 
     #event: DragEvent;

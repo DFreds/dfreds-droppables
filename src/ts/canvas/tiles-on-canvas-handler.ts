@@ -1,13 +1,18 @@
-import { CanvasDroppableHandler } from "../canvas-droppable-manager.ts";
-import { FilesDropData } from "../types.ts";
-import { Settings } from "../settings.ts";
-import { translateToTopLeftGrid } from "../util.ts";
-import { MODULE_ID } from "../constants.ts";
 import { TileSource } from "@client/documents/_module.mjs";
-import { FilePath, ImageFilePath, VideoFilePath } from "@common/constants.mjs";
 import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
+import { FilePath, ImageFilePath, VideoFilePath } from "@common/constants.mjs";
+import { Settings } from "../settings.ts";
+import { DroppableHandler } from "../shared/droppable-manager.ts";
+import {
+    determineUrlType,
+    getFileNameFromUrl,
+    getFilesFromEvent,
+    isImageOrVideoFile,
+    uploadToPersistent,
+} from "../shared/files.ts";
+import { FilesDropData } from "../types.ts";
+import { translateToTopLeftGrid } from "./util.ts";
 
-const { FilePicker } = foundry.applications.apps;
 const { loadTexture } = foundry.canvas;
 
 interface TileUploadData {
@@ -15,7 +20,7 @@ interface TileUploadData {
     filePath: FilePath;
 }
 
-class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
+class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     data: FilesDropData;
 
     #event: DragEvent;
@@ -28,7 +33,7 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
     canHandleDrop(): boolean {
         const url = this.#getDropUrl();
-        const urlType = url ? this.#determineUrlType(url) : undefined;
+        const urlType = url ? determineUrlType(url) : undefined;
 
         // Early exit conditions
         if (
@@ -49,12 +54,8 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
     }
 
     retrieveData(): FilesDropData {
-        const files = this.#event.dataTransfer?.files || new FileList();
-
         return {
-            files: Array.from(files).filter((file) => {
-                return file.type.includes("image") || file.type.includes("video");
-            }),
+            files: getFilesFromEvent(this.#event, isImageOrVideoFile),
             url: this.#event.dataTransfer?.getData("text"),
         };
     }
@@ -76,12 +77,12 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
 
     async #getUploadData(): Promise<TileUploadData[]> {
         const url = this.#getDropUrl();
-        const urlType = url ? this.#determineUrlType(url) : undefined;
+        const urlType = url ? determineUrlType(url) : undefined;
 
         if (url && urlType) {
             return [
                 {
-                    fileName: this.#getFileNameFromUrl(url),
+                    fileName: getFileNameFromUrl(url, "Dropped Media"),
                     filePath: url as FilePath,
                 },
             ];
@@ -94,44 +95,15 @@ class TilesOnCanvasHandler implements CanvasDroppableHandler<FilesDropData> {
         const uploadedData: TileUploadData[] = [];
 
         for (const file of this.data.files) {
-            // NOTE: For some reason, it's returning a boolean in the TS type which isn't accurate
-            const response = (await FilePicker.uploadPersistent(MODULE_ID, "tiles", file)) as any;
+            const filePath = await uploadToPersistent("tiles", file);
 
             uploadedData.push({
                 fileName: file.name,
-                filePath: response.path as FilePath,
+                filePath: filePath as FilePath,
             });
         }
 
         return uploadedData;
-    }
-
-    #getFileNameFromUrl(url: string): string {
-        try {
-            const parsed = new URL(url);
-            const pathName = parsed.pathname ?? "";
-            const last = pathName.split("/").filter(Boolean).at(-1);
-            return last ? decodeURIComponent(last) : "Dropped Media";
-        } catch {
-            // Not a valid absolute URL; fall back to a simple best-effort name.
-            const last = url.split(/[\\/]/).filter(Boolean).at(-1);
-            return last ? last : "Dropped Media";
-        }
-    }
-
-    #determineUrlType(url: string): "image" | "video" | undefined {
-        const lower = url.toLowerCase();
-
-        // Basic extension-based detection; this mirrors the types we accept for files.
-        if (/\.(apng|avif|bmp|gif|jpe?g|png|svg|tiff?|webp)$/.test(lower)) {
-            return "image";
-        }
-
-        if (/\.(m4v|mp4|ogv|webm)$/.test(lower)) {
-            return "video";
-        }
-
-        return undefined;
     }
 
     async #createTiles(uploadedData: TileUploadData[]): Promise<void> {
