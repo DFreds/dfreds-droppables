@@ -27,7 +27,7 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "@dfreds/foundry-types": "^14.365.1",
+        "@dfreds/foundry-types": "^14.365.2",
         "@eslint/js": "^10.0.1",
         "@eslint/json": "^1.2.0",
         "@pixi/basis": "7.4.3",
