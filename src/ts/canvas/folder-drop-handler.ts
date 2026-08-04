@@ -141,7 +141,7 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
         yPosition,
         elevation,
         isHidden,
-    }: DropActorFolderInput): Promise<boolean> {
+    }: DropActorFolderInput): Promise<boolean | null> {
         const dropStyles = [
             {
                 value: "stack",
@@ -345,7 +345,7 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
         // });
     }
 
-    async #handleJournalFolder(folder: Folder, event: DragEvent): Promise<boolean> {
+    async #handleJournalFolder(folder: Folder, event: DragEvent): Promise<boolean | null> {
         const entries = folder?.contents as JournalEntry[];
         const topLeft = translateToTopLeftGrid(event);
 
