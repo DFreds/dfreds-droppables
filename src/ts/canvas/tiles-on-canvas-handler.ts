@@ -118,7 +118,6 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
                 texture: { src },
                 width: texture?.baseTexture.width,
                 height: texture?.baseTexture.height,
-                // @ts-expect-error elevation is defined on Tile source in foundry types
                 elevation: overhead ? 20 : 0,
                 hidden: this.#event.altKey,
                 x: topLeft.x,
