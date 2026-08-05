@@ -1,7 +1,6 @@
 
 import * as Vite from "vite";
 import checker from "vite-plugin-checker";
-import esbuild from "esbuild";
 import fs from "fs";
 import path from "path";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -25,7 +24,6 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
 
     if (buildMode === "production") {
         plugins.push(
-            minifyPlugin(),
             deleteLockFilePlugin(),
             ...viteStaticCopy({
                 targets: [{ src: "README.md", dest: "." }],
@@ -33,7 +31,6 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
         );
     } else if (buildMode === "stage") {
         plugins.push(
-            minifyPlugin(),
             ...viteStaticCopy({
                 targets: [{ src: "README.md", dest: "." }],
             }),
@@ -75,6 +72,15 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
             }
             : {};
 
+    const minify =
+        buildMode === "production" || buildMode === "stage"
+            ? {
+                compress: { keepNames: { class: true, function: true } },
+                mangle: false,
+                codegen: { removeWhitespace: true },
+            }
+            : false;
+
     return {
         base:
             command === "build" ? "./" : `/modules/${MODULE_ID}/`,
@@ -106,6 +112,7 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
                     chunkFileNames: "[name].mjs",
                     entryFileNames: `${MODULE_ID}.mjs`,
                     codeSplitting,
+                    minify,
                 },
                 watch: { buildDelay: 100 },
             },
@@ -142,24 +149,6 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
     };
 });
 
-function minifyPlugin(): Vite.Plugin {
-    return {
-        name: "minify",
-        renderChunk: {
-            order: "post",
-            async handler(code, chunk) {
-                return chunk.fileName.endsWith(".mjs")
-                    ? esbuild.transform(code, {
-                        keepNames: true,
-                        minifyIdentifiers: false,
-                        minifySyntax: true,
-                        minifyWhitespace: true,
-                    })
-                    : code;
-            },
-        },
-    };
-}
 
 function deleteLockFilePlugin(): Vite.Plugin {
     return {
