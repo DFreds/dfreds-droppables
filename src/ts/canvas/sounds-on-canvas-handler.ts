@@ -4,7 +4,7 @@ import { Settings } from "../settings.ts";
 import { DroppableHandler } from "../shared/droppable-manager.ts";
 import { getFilesFromEvent, isAudioFile, uploadToPersistent } from "../shared/files.ts";
 import { FilesDropData } from "../types.ts";
-import { translateToTopLeftGrid } from "./util.ts";
+import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
 class SoundsOnCanvasHandler implements DroppableHandler<FilesDropData> {
     data: FilesDropData;
@@ -62,6 +62,8 @@ class SoundsOnCanvasHandler implements DroppableHandler<FilesDropData> {
                 path: path as AudioFilePath,
                 x: topLeft.x,
                 y: topLeft.y,
+                elevation: getActiveLevelElevation(),
+                levels: getActiveLevels(),
                 radius: 10,
                 easing: true,
                 repeat: true,

@@ -8,4 +8,29 @@ function translateToTopLeftGrid(event: DragEvent): Point {
     return canvas.grid.getTopLeftPoint({ x: tx, y: ty });
 }
 
-export { translateToTopLeftGrid };
+/**
+ * The floor elevation of the level currently being viewed. Foundry uses this as the default
+ * elevation for anything created on that level. A scene with no levels configured reports 0.
+ */
+function getActiveLevelElevation(): number {
+    return canvas.level?.elevation.base ?? 0;
+}
+
+/**
+ * The id of the level currently being viewed, for a Token's `level` field. Undefined leaves the
+ * field at its default.
+ */
+function getActiveLevelId(): string | undefined {
+    return canvas.level?.id ?? undefined;
+}
+
+/**
+ * The `levels` set for a placeable other than a Token, restricting it to the level currently being
+ * viewed. An empty array means the placeable appears on every level.
+ */
+function getActiveLevels(): string[] {
+    const levelId = canvas.level?.id;
+    return levelId ? [levelId] : [];
+}
+
+export { translateToTopLeftGrid, getActiveLevelElevation, getActiveLevelId, getActiveLevels };

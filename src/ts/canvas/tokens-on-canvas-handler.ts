@@ -14,7 +14,7 @@ import {
     uploadToPersistent,
 } from "../shared/files.ts";
 import { FilesDropData } from "../types.ts";
-import { translateToTopLeftGrid } from "./util.ts";
+import { getActiveLevelElevation, getActiveLevelId, translateToTopLeftGrid } from "./util.ts";
 
 interface TokenDropData {
     fileName: string;
@@ -141,17 +141,22 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
         const tokenSources: DeepPartial<TokenSource>[] = [];
         for (const actor of createdActors) {
             const topLeft = translateToTopLeftGrid(this.#event);
-            const tokenSource: DeepPartial<TokenSource> = {
+            const prototypeSource: DeepPartial<TokenSource> = {
                 texture: { src: actor.img as ImageFilePath },
                 hidden: this.#event.altKey,
-                x: topLeft.x,
-                y: topLeft.y,
                 actorId: actor.id,
                 actorLink: false,
             };
-            tokenSources.push(tokenSource);
 
-            await actor.update({ prototypeToken: tokenSource });
+            tokenSources.push({
+                ...prototypeSource,
+                x: topLeft.x,
+                y: topLeft.y,
+                elevation: getActiveLevelElevation(),
+                level: getActiveLevelId(),
+            });
+
+            await actor.update({ prototypeToken: prototypeSource });
         }
 
         return canvas.scene?.createEmbeddedDocuments("Token", tokenSources, {

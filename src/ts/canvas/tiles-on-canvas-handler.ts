@@ -11,7 +11,7 @@ import {
     uploadToPersistent,
 } from "../shared/files.ts";
 import { FilesDropData } from "../types.ts";
-import { translateToTopLeftGrid } from "./util.ts";
+import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
 const { loadTexture } = foundry.canvas;
 
@@ -107,7 +107,6 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     }
 
     async #createTiles(uploadedData: TileUploadData[]): Promise<void> {
-        const overhead = ui.controls.controls.tiles?.tools?.foreground?.active ?? false;
         const tileSources: DeepPartial<TileSource>[] = [];
         const topLeft = translateToTopLeftGrid(this.#event);
 
@@ -118,7 +117,8 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
                 texture: { src },
                 width: texture?.baseTexture.width,
                 height: texture?.baseTexture.height,
-                elevation: overhead ? 20 : 0,
+                elevation: getActiveLevelElevation(),
+                levels: getActiveLevels(),
                 hidden: this.#event.altKey,
                 x: topLeft.x,
                 y: topLeft.y,

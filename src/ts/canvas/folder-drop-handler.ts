@@ -1,7 +1,7 @@
 import { log } from "../logger.ts";
 import { Settings } from "../settings.ts";
 import { DroppableHandler } from "../shared/droppable-manager.ts";
-import { translateToTopLeftGrid } from "./util.ts";
+import { getActiveLevelElevation, getActiveLevelId, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -83,7 +83,7 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
 
         const xPosition: number = data.x ?? topLeft.x;
         const yPosition: number = data.y ?? topLeft.y;
-        const elevation: number = data.elevation ?? 0;
+        const elevation: number = data.elevation ?? getActiveLevelElevation();
 
         if (!actors?.length) return;
 
@@ -161,10 +161,13 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
             },
         ];
 
+        const levelElevation = getActiveLevelElevation();
+        const elevationAboveLevel = (elevation ?? levelElevation) - levelElevation;
+
         const content = await renderTemplate("modules/dfreds-droppables/templates/drop-dialog.hbs", {
             dropStyles,
             savedDropStyle: this.#settings.lastUsedDropStyle,
-            startingElevation: elevation ? Math.round(elevation) : null,
+            startingElevation: elevationAboveLevel ? Math.round(elevationAboveLevel) : null,
         });
 
         return DialogV2.confirm({
@@ -182,7 +185,8 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
                 callback: async (_event, _button, dialog) => {
                     const $html = $(dialog.element);
                     const dropStyle = $html.find('select[name="drop-style"]').val();
-                    const dropElevation = parseFloat($html.find('input[name="elevation"]').val() as string);
+                    const dropElevation =
+                        parseFloat($html.find('input[name="elevation"]').val() as string) + levelElevation;
 
                     this.#settings.lastUsedDropStyle = dropStyle as string;
 
@@ -327,7 +331,8 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
             x: xPosition,
             y: yPosition,
             hidden: isHidden,
-            elevation: Number.isNaN(elevation) ? 0 : elevation,
+            elevation: Number.isFinite(elevation) ? elevation : getActiveLevelElevation(),
+            level: getActiveLevelId(),
         });
 
         // await TokenDocument.createDocuments(tokenDocument, {
@@ -384,6 +389,8 @@ class FolderDropHandler implements DroppableHandler<FolderDropData> {
                 entryId: entry.id,
                 x: xPosition,
                 y: yPosition,
+                elevation: getActiveLevelElevation(),
+                levels: getActiveLevels(),
             },
             { parent: canvas.scene },
         );

@@ -1,6 +1,6 @@
 import { Settings } from "../settings.ts";
 import { DroppableHandler } from "../shared/droppable-manager.ts";
-import { translateToTopLeftGrid } from "./util.ts";
+import { getActiveLevelElevation, getActiveLevelId, translateToTopLeftGrid } from "./util.ts";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -64,7 +64,7 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
         const topLeft = translateToTopLeftGrid(this.#event);
         const xPosition: number = this.data.x ?? topLeft.x;
         const yPosition: number = this.data.y ?? topLeft.y;
-        const elevation: number = this.data.elevation ?? 0;
+        const elevation: number = this.data.elevation ?? getActiveLevelElevation();
         const isHidden = this.#event.altKey;
 
         // Show dialog only for unlinked actors. For all others, drop a single token immediately.
@@ -95,10 +95,13 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
             },
         ];
 
+        const levelElevation = getActiveLevelElevation();
+        const elevationAboveLevel = elevation - levelElevation;
+
         const content = await renderTemplate("modules/dfreds-droppables/templates/drop-dialog.hbs", {
             dropStyles,
             savedDropStyle: this.#settings.lastUsedDropStyle,
-            startingElevation: elevation ? Math.round(elevation) : null,
+            startingElevation: elevationAboveLevel ? Math.round(elevationAboveLevel) : null,
             allowCount: true,
         });
 
@@ -115,7 +118,8 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
                 callback: async (_event, _button, dialog) => {
                     const $html = $(dialog.element);
                     const dropStyle = $html.find('select[name="drop-style"]').val();
-                    const dropElevation = parseFloat($html.find('input[name="elevation"]').val() as string);
+                    const dropElevation =
+                        parseFloat($html.find('input[name="elevation"]').val() as string) + levelElevation;
                     const countRaw = parseInt(($html.find('input[name="count"]').val() as string) ?? "1", 10);
                     const count = Math.max(1, Number.isNaN(countRaw) ? 1 : countRaw);
 
@@ -259,7 +263,8 @@ class SingleActorDropHandler implements DroppableHandler<ActorDropData> {
             x: xPosition,
             y: yPosition,
             hidden: isHidden,
-            elevation: Number.isNaN(elevation) ? 0 : elevation,
+            elevation: Number.isFinite(elevation) ? elevation : getActiveLevelElevation(),
+            level: getActiveLevelId(),
         });
 
         const token = new CONFIG.Token.documentClass(tokenDocument);

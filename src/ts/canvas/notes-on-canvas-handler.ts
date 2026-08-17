@@ -12,7 +12,7 @@ import {
     uploadToPersistent,
 } from "../shared/files.ts";
 import { FilesDropData } from "../types.ts";
-import { translateToTopLeftGrid } from "./util.ts";
+import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
 interface NoteUploadData {
     filePath?: string;
@@ -185,6 +185,8 @@ class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
             entryId: journal?.id,
             x: topLeft.x,
             y: topLeft.y,
+            elevation: getActiveLevelElevation(),
+            levels: getActiveLevels(),
         };
 
         await canvas.scene?.createEmbeddedDocuments("Note", [noteSource]);
