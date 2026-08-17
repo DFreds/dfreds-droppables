@@ -24,9 +24,8 @@
     "engines": {
         "node": ">=24.14.1"
     },
-    "dependencies": {},
     "devDependencies": {
-        "@dfreds/foundry-types": "^14.365.2",
+        "@dfreds/foundry-types": "^14.366.1",
         "@eslint/js": "^10.0.1",
         "@eslint/json": "^1.2.0",
         "@pixi/basis": "7.4.3",
