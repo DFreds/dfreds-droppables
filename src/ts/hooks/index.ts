@@ -1,3 +1,4 @@
+import { HotReload } from "./hot-reload.ts";
 import { Init } from "./init.ts";
 import { Setup } from "./setup.ts";
 import { ThreeDCanvasConfig } from "./3DCanvasConfig.ts";
@@ -10,7 +11,7 @@ interface Listener {
 
 const HooksDroppables = {
     listen(): void {
-        const listeners: Listener[] = [Init, Setup, ThreeDCanvasConfig, CanvasInit, RenderDirectory];
+        const listeners: Listener[] = [HotReload, Init, Setup, ThreeDCanvasConfig, CanvasInit, RenderDirectory];
 
         for (const listener of listeners) {
             listener.listen();

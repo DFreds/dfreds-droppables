@@ -17,27 +17,17 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
     const outDir = "dist";
 
     const plugins = [
-        checker({ typescript: true })
+        checker({ typescript: true }),
+        touchVendorMjsPlugin(outDir),
     ];
 
     console.log(`Build mode: ${buildMode}`);
 
-    if (buildMode === "production") {
-        plugins.push(
-            deleteLockFilePlugin(),
-            ...viteStaticCopy({
-                targets: [{ src: "README.md", dest: "." }],
-            }),
-        );
-    } else if (buildMode === "stage") {
-        plugins.push(
-            ...viteStaticCopy({
-                targets: [{ src: "README.md", dest: "." }],
-            }),
-        );
+    if (buildMode === "production" || buildMode === "stage") {
+        plugins.push(...viteStaticCopy({ targets: [{ src: "README.md", dest: "." }] }));
+        if (buildMode === "production") plugins.push(deleteLockFilePlugin());
     } else {
         plugins.push(
-            touchVendorMjsPlugin(outDir),
             handleHotUpdateForEnLang(outDir),
             handleHotUpdateForHandlebars(outDir),
         );
@@ -119,17 +109,6 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
             target: "es2024",
         },
 
-        // About server options:
-        // - Set `open` to boolean `false` to not open a browser window automatically. This is
-        // useful if you set up a debugger instance in your IDE and launch it with the URL:
-        // 'http://localhost:30001/game'.
-        //
-        // - The top proxy entry redirects requests under the module path for `style.css` and
-        // following standard static directories: `assets`, `lang`, and `packs` and will pull those
-        // resources from the main Foundry / 30000 server.
-        // This is necessary to reference the dev resources as the root is `/src` and there is no
-        // public / static resources served with this particular Vite configuration. Modify the
-        // proxy rule as necessary for your static resources / project.
         server: {
             port: 30001,
             open: false,
@@ -153,9 +132,6 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
 function deleteLockFilePlugin(): Vite.Plugin {
     return {
         name: "delete-lock-file-plugin",
-        resolveId(source) {
-            return source === "virtual-module" ? source : null;
-        },
         writeBundle(outputOptions) {
             const outDir = outputOptions.dir ?? "";
             const lockFile = path.resolve(
@@ -168,13 +144,13 @@ function deleteLockFilePlugin(): Vite.Plugin {
 }
 
 function touchVendorMjsPlugin(outDir: string): Vite.Plugin {
-    // Foundry expects all esm files listed in module.json to exist: create empty vendor module when in dev mode
+    // Foundry expects all esm files listed in module.json to exist: create an empty vendor module when no vendor chunk is built
     return {
         name: "touch-vendor-mjs",
         apply: "build",
         writeBundle: {
             async handler() {
-                fs.closeSync(fs.openSync(path.resolve(outDir, "vendor.mjs"), "w"));
+                fs.closeSync(fs.openSync(path.resolve(outDir, "vendor.mjs"), "a"));
             },
         },
     };
@@ -185,8 +161,8 @@ function handleHotUpdateForEnLang(outDir: string): Vite.Plugin {
         name: "hmr-handler-en-lang",
         apply: "serve",
         handleHotUpdate(context) {
-            if (context.file.startsWith(outDir)) return;
-            if (!context.file.endsWith("en.json")) return;
+            if (context.file.startsWith(path.resolve(outDir))) return;
+            if (!context.file.endsWith("/lang/en.json")) return;
 
             const basePath = context.file.slice(context.file.indexOf("lang/"));
             console.debug(`Updating lang file at ${basePath}`);
@@ -206,7 +182,7 @@ function handleHotUpdateForHandlebars(outDir: string): Vite.Plugin {
         name: "hmr-handler-handlebars",
         apply: "serve",
         handleHotUpdate(context) {
-            if (context.file.startsWith(outDir)) return;
+            if (context.file.startsWith(path.resolve(outDir))) return;
             if (!context.file.endsWith(".hbs")) return;
 
             const basePath = context.file.slice(context.file.indexOf("templates/"));
