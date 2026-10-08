@@ -1,3 +1,4 @@
+import type { DropStyle } from "./canvas/actor-placement.ts";
 import { MODULE_ID } from "./constants.ts";
 
 class Settings {
@@ -69,8 +70,8 @@ class Settings {
      *
      * @returns a string representing the chosen drop style
      */
-    get dropStyle(): string {
-        return game.settings.get(MODULE_ID, this.#FOLDER_DROP_STYLE) as unknown as string;
+    get dropStyle(): DropStyle | "dialog" {
+        return game.settings.get(MODULE_ID, this.#FOLDER_DROP_STYLE) as unknown as DropStyle | "dialog";
     }
 
     /**
@@ -105,8 +106,8 @@ class Settings {
      *
      * @returns a string representing the last drop style
      */
-    get lastUsedDropStyle(): string {
-        return game.settings.get(MODULE_ID, this.#LAST_USED_FOLDER_DROP_STYLE) as unknown as string;
+    get lastUsedDropStyle(): DropStyle {
+        return game.settings.get(MODULE_ID, this.#LAST_USED_FOLDER_DROP_STYLE) as unknown as DropStyle;
     }
 
     /**
@@ -114,7 +115,7 @@ class Settings {
      *
      * @param value - a value representing the last used drop style
      */
-    set lastUsedDropStyle(value: string) {
+    set lastUsedDropStyle(value: DropStyle) {
         game.settings.set(MODULE_ID, this.#LAST_USED_FOLDER_DROP_STYLE, value);
     }
 }
