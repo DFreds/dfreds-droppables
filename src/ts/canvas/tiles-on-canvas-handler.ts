@@ -2,7 +2,7 @@ import { TileSource } from "@client/documents/_module.mjs";
 import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
 import { FilePath, ImageFilePath, VideoFilePath } from "@common/constants.mjs";
 import { Settings } from "../settings.ts";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import {
     determineUrlType,
     getFileNameFromUrl,
@@ -20,7 +20,7 @@ interface TileUploadData {
     filePath: FilePath;
 }
 
-class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
+class TilesOnCanvasHandler implements DroppableHandler {
     data: FilesDropData;
 
     #event: DragEvent;

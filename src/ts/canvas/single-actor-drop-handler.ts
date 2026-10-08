@@ -1,9 +1,9 @@
 import { Settings } from "../settings.ts";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { CanvasDropData, dropActors, getCanvasDropData, promptDropActors } from "./actor-placement.ts";
 import { getActiveLevelElevation, translateToTopLeftGrid } from "./util.ts";
 
-class SingleActorDropHandler implements DroppableHandler<CanvasDropData> {
+class SingleActorDropHandler implements DroppableHandler {
     data: CanvasDropData;
 
     #event: DragEvent;

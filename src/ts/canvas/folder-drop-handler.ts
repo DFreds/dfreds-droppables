@@ -1,6 +1,6 @@
 import { log } from "../logger.ts";
 import { Settings } from "../settings.ts";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { CanvasDropData, dropActors, getCanvasDropData, promptDropActors } from "./actor-placement.ts";
 import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
@@ -12,7 +12,7 @@ interface DropJournalFolderInput {
     yPosition: number;
 }
 
-class FolderDropHandler implements DroppableHandler<CanvasDropData> {
+class FolderDropHandler implements DroppableHandler {
     data: CanvasDropData;
 
     #event: DragEvent;

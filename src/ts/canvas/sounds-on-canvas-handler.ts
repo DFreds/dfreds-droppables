@@ -1,12 +1,12 @@
 import { AmbientSoundSource } from "@client/documents/_module.mjs";
 import { AudioFilePath } from "@common/constants.mjs";
 import { Settings } from "../settings.ts";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { getFilesFromEvent, isAudioFile, uploadToPersistent } from "../shared/files.ts";
 import { FilesDropData } from "../types.ts";
 import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
-class SoundsOnCanvasHandler implements DroppableHandler<FilesDropData> {
+class SoundsOnCanvasHandler implements DroppableHandler {
     data: FilesDropData;
 
     #event: DragEvent;

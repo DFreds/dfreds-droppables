@@ -2,7 +2,7 @@ import { JournalEntrySource, NoteSource } from "@client/documents/_module.mjs";
 import { USER_PERMISSIONS } from "@common/constants.mjs";
 import { CorePageType, JournalEntryPageSource } from "@common/documents/journal-entry-page.mjs";
 import { Settings } from "../settings.ts";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import {
     determineFileType,
     determineUrlType,
@@ -21,7 +21,7 @@ interface NoteUploadData {
     fileName: string;
 }
 
-class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
+class NotesOnCanvasHandler implements DroppableHandler {
     data: FilesDropData;
 
     #event: DragEvent;

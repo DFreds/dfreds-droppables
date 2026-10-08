@@ -1,5 +1,5 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { Settings } from "../settings.ts";
 import { UploadedFile, getFilesFromEvent, isImageFile, uploadToPersistent } from "../shared/files.ts";
 import { getTargetFolderId } from "./util.ts";
@@ -9,7 +9,7 @@ import { getTargetFolderId } from "./util.ts";
  * single type from them. Subclasses declare the document type, storage subdirectory, and how to turn
  * uploaded files into document creation sources.
  */
-abstract class BaseDirectoryHandler implements DroppableHandler<File[]> {
+abstract class BaseDirectoryHandler implements DroppableHandler {
     data: File[];
 
     protected event: DragEvent;

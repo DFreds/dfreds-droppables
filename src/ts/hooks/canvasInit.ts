@@ -1,4 +1,4 @@
-import { DroppableManager } from "../shared/droppable-manager.ts";
+import { dispatchDrop } from "../shared/drop-dispatch.ts";
 import { FolderDropHandler } from "../canvas/folder-drop-handler.ts";
 import { TokensOnCanvasHandler } from "../canvas/tokens-on-canvas-handler.ts";
 import { Listener } from "./index.ts";
@@ -18,16 +18,14 @@ const CanvasInit: Listener = {
             const defaultOnDrop = board.ondrop;
 
             board.ondrop = async (event: DragEvent) => {
-                const manager = new DroppableManager();
-
-                manager.registerHandler(new SingleActorDropHandler(event));
-                manager.registerHandler(new FolderDropHandler(event));
-                manager.registerHandler(new TokensOnCanvasHandler(event));
-                manager.registerHandler(new TilesOnCanvasHandler(event));
-                manager.registerHandler(new SoundsOnCanvasHandler(event));
-                manager.registerHandler(new NotesOnCanvasHandler(event));
-
-                const didDrop = await manager.handleDrop();
+                const didDrop = await dispatchDrop([
+                    new SingleActorDropHandler(event),
+                    new FolderDropHandler(event),
+                    new TokensOnCanvasHandler(event),
+                    new TilesOnCanvasHandler(event),
+                    new SoundsOnCanvasHandler(event),
+                    new NotesOnCanvasHandler(event),
+                ]);
                 if (!didDrop) {
                     defaultOnDrop?.call(board, event);
                 }

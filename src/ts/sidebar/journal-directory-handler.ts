@@ -1,6 +1,6 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
 import { CorePageType } from "@common/documents/journal-entry-page.mjs";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { Settings } from "../settings.ts";
 import {
     determineFileType,
@@ -26,7 +26,7 @@ interface JournalPageData {
  * page of the matching type; text files are read inline into a text page. Mirrors the file handling
  * of the canvas notes handler, but creates directory entries instead of canvas notes.
  */
-class JournalDirectoryHandler implements DroppableHandler<File[]> {
+class JournalDirectoryHandler implements DroppableHandler {
     data: File[];
 
     #event: DragEvent;

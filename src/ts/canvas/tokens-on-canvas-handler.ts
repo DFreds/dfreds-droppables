@@ -3,7 +3,7 @@ import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
 import { ImageFilePath, USER_PERMISSIONS } from "@common/constants.mjs";
 import { Settings } from "../settings.ts";
 import { promptForDocumentTypes } from "../shared/document-type-prompt.ts";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import {
     UploadedFile,
     determineUrlType,
@@ -22,7 +22,7 @@ interface TokenDropData {
     type: string;
 }
 
-class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
+class TokensOnCanvasHandler implements DroppableHandler {
     data: FilesDropData;
 
     #event: DragEvent;

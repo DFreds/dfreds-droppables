@@ -1,5 +1,5 @@
 import { Listener } from "./index.ts";
-import { DroppableManager } from "../shared/droppable-manager.ts";
+import { dispatchDrop } from "../shared/drop-dispatch.ts";
 import { JsonImportHandler } from "../sidebar/json-import-handler.ts";
 import { ActorDirectoryHandler } from "../sidebar/actor-directory-handler.ts";
 import { ItemDirectoryHandler } from "../sidebar/item-directory-handler.ts";
@@ -22,20 +22,18 @@ const RenderDirectory: Listener = {
             element.ondragover = (event: DragEvent) => event.preventDefault();
 
             element.ondrop = async (event: DragEvent) => {
-                const manager = new DroppableManager();
-
-                // JSON import is registered first so it takes precedence for any directory.
-                manager.registerHandler(new JsonImportHandler({ event, directory }));
-                manager.registerHandler(new ActorDirectoryHandler({ event, directory }));
-                manager.registerHandler(new ItemDirectoryHandler({ event, directory }));
-                manager.registerHandler(new JournalDirectoryHandler({ event, directory }));
-                manager.registerHandler(new SceneDirectoryHandler({ event, directory }));
-                manager.registerHandler(new RollTableDirectoryHandler({ event, directory }));
-                manager.registerHandler(new CardsDirectoryHandler({ event, directory }));
-                manager.registerHandler(new MacroDirectoryHandler({ event, directory }));
-                manager.registerHandler(new PlaylistDirectoryHandler({ event, directory }));
-
-                await manager.handleDrop();
+                await dispatchDrop([
+                    // JSON import is first so it takes precedence for any directory.
+                    new JsonImportHandler({ event, directory }),
+                    new ActorDirectoryHandler({ event, directory }),
+                    new ItemDirectoryHandler({ event, directory }),
+                    new JournalDirectoryHandler({ event, directory }),
+                    new SceneDirectoryHandler({ event, directory }),
+                    new RollTableDirectoryHandler({ event, directory }),
+                    new CardsDirectoryHandler({ event, directory }),
+                    new MacroDirectoryHandler({ event, directory }),
+                    new PlaylistDirectoryHandler({ event, directory }),
+                ]);
             };
         });
     },

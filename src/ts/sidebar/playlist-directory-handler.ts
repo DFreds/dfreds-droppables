@@ -1,5 +1,5 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
-import { DroppableHandler } from "../shared/droppable-manager.ts";
+import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { Settings } from "../settings.ts";
 import { fileNameToDocumentName, getFilesFromEvent, isAudioFile, uploadToPersistent } from "../shared/files.ts";
 import { getTargetFolderId } from "./util.ts";
@@ -7,7 +7,7 @@ import { getTargetFolderId } from "./util.ts";
 /**
  * Creates a Playlist from dropped audio files, adding each uploaded file as a sound in the playlist.
  */
-class PlaylistDirectoryHandler implements DroppableHandler<File[]> {
+class PlaylistDirectoryHandler implements DroppableHandler {
     data: File[];
 
     #event: DragEvent;
