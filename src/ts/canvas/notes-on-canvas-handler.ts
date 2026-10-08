@@ -34,7 +34,7 @@ class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
 
     canHandleDrop(): boolean {
         const isGM = game.user.isGM;
-        const url = this.#getDropUrl();
+        const url = this.data.url;
         const urlType = url ? determineUrlType(url) : undefined;
 
         // Check basic requirements
@@ -82,13 +82,8 @@ class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     retrieveData(): FilesDropData {
         return {
             files: getFilesFromEvent(this.#event, isJournalFile),
-            url: this.#event.dataTransfer?.getData("text"),
+            url: this.#event.dataTransfer?.getData("text").trim() || undefined,
         };
-    }
-
-    #getDropUrl(): string | undefined {
-        const url = this.data.url?.trim();
-        return url ? url : undefined;
     }
 
     async handleDrop(): Promise<boolean> {
@@ -102,7 +97,7 @@ class NotesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     }
 
     async #getUploadData(): Promise<NoteUploadData[]> {
-        const url = this.#getDropUrl();
+        const url = this.data.url;
         const urlType = url ? determineUrlType(url) : undefined;
 
         if (url && urlType) {

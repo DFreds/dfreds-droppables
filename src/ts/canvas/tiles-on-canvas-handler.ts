@@ -32,7 +32,7 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     }
 
     canHandleDrop(): boolean {
-        const url = this.#getDropUrl();
+        const url = this.data.url;
         const urlType = url ? determineUrlType(url) : undefined;
 
         // Early exit conditions
@@ -56,7 +56,7 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
     retrieveData(): FilesDropData {
         return {
             files: getFilesFromEvent(this.#event, isImageOrVideoFile),
-            url: this.#event.dataTransfer?.getData("text"),
+            url: this.#event.dataTransfer?.getData("text").trim() || undefined,
         };
     }
 
@@ -70,13 +70,8 @@ class TilesOnCanvasHandler implements DroppableHandler<FilesDropData> {
         return true;
     }
 
-    #getDropUrl(): string | undefined {
-        const url = this.data.url?.trim();
-        return url ? url : undefined;
-    }
-
     async #getUploadData(): Promise<TileUploadData[]> {
-        const url = this.#getDropUrl();
+        const url = this.data.url;
         const urlType = url ? determineUrlType(url) : undefined;
 
         if (url && urlType) {

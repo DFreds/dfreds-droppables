@@ -35,7 +35,7 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
 
     canHandleDrop(): boolean {
         const isGM = game.user.isGM;
-        const url = this.#getDropUrl();
+        const url = this.data.url;
         // Tokens only accept image URLs.
         const isImageUrl = url ? determineUrlType(url) === "image" : false;
 
@@ -72,7 +72,7 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
     retrieveData(): FilesDropData {
         return {
             files: getFilesFromEvent(this.#event, isImageFile),
-            url: this.#event.dataTransfer?.getData("text"),
+            url: this.#event.dataTransfer?.getData("text").trim() || undefined,
         };
     }
 
@@ -93,13 +93,8 @@ class TokensOnCanvasHandler implements DroppableHandler<FilesDropData> {
         return true;
     }
 
-    #getDropUrl(): string | undefined {
-        const url = this.data.url?.trim();
-        return url ? url : undefined;
-    }
-
     async #getUploadData(): Promise<UploadedFile[]> {
-        const url = this.#getDropUrl();
+        const url = this.data.url;
 
         if (url && determineUrlType(url) === "image") {
             return [
