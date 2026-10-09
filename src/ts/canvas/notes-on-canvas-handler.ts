@@ -11,8 +11,7 @@ import {
     isJournalFile,
     uploadToPersistent,
 } from "../shared/files.ts";
-import { FilesDropData } from "../types.ts";
-import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
+import { FilesDropData, getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
 interface NoteUploadData {
     filePath?: string;

@@ -13,8 +13,7 @@ import {
     isImageFile,
     uploadToPersistent,
 } from "../shared/files.ts";
-import { FilesDropData } from "../types.ts";
-import { getActiveLevelElevation, getActiveLevelId, translateToTopLeftGrid } from "./util.ts";
+import { FilesDropData, getActiveLevelElevation, getActiveLevelId, translateToTopLeftGrid } from "./util.ts";
 
 interface TokenDropData {
     fileName: string;

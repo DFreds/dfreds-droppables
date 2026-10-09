@@ -3,8 +3,7 @@ import { AudioFilePath } from "@common/constants.mjs";
 import { Settings } from "../settings.ts";
 import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { getFilesFromEvent, isAudioFile, uploadToPersistent } from "../shared/files.ts";
-import { FilesDropData } from "../types.ts";
-import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
+import { FilesDropData, getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
 class SoundsOnCanvasHandler implements DroppableHandler {
     data: FilesDropData;

@@ -10,8 +10,7 @@ import {
     isImageOrVideoFile,
     uploadToPersistent,
 } from "../shared/files.ts";
-import { FilesDropData } from "../types.ts";
-import { getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
+import { FilesDropData, getActiveLevelElevation, getActiveLevels, translateToTopLeftGrid } from "./util.ts";
 
 const { loadTexture } = foundry.canvas;
 

@@ -1,5 +1,10 @@
 import { Point } from "@common/_types.mjs";
 
+interface FilesDropData {
+    files: File[];
+    url?: string;
+}
+
 function translateToTopLeftGrid(event: DragEvent): Point {
     const transform = canvas.tokens.worldTransform;
     const tx = (event.clientX - transform.tx) / canvas.stage.scale.x;
@@ -34,3 +39,4 @@ function getActiveLevels(): string[] {
 }
 
 export { translateToTopLeftGrid, getActiveLevelElevation, getActiveLevelId, getActiveLevels };
+export type { FilesDropData };
