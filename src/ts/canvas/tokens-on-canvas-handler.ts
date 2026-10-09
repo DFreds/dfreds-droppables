@@ -14,12 +14,6 @@ import {
 } from "../shared/files.ts";
 import { FilesDropData, getActiveLevelElevation, getActiveLevelId, translateToTopLeftGrid } from "./util.ts";
 
-interface TokenDropData {
-    fileName: string;
-    filePath: string;
-    type: string;
-}
-
 class TokensOnCanvasHandler implements DroppableHandler {
     data: FilesDropData;
 
@@ -115,38 +109,28 @@ class TokensOnCanvasHandler implements DroppableHandler {
         return uploadedData;
     }
 
-    async #createActorsAndTokens(dropData: TokenDropData[]) {
-        const actorSources = [];
-        for (const tokenDropData of dropData) {
-            const actorSource = {
-                name: fileNameToDocumentName(tokenDropData.fileName),
-                type: tokenDropData.type,
-                img: tokenDropData.filePath as ImageFilePath,
-            };
-            actorSources.push(actorSource);
-        }
+    async #createActorsAndTokens(dropData: (UploadedFile & { type: string })[]) {
+        const hidden = this.#event.altKey;
+        const actorSources = dropData.map((data) => ({
+            name: fileNameToDocumentName(data.fileName),
+            type: data.type,
+            img: data.filePath as ImageFilePath,
+            prototypeToken: { texture: { src: data.filePath as ImageFilePath }, hidden, actorLink: false },
+        }));
 
-        const createdActors = (await Actor.createDocuments(actorSources)) as Actor[];
-        const tokenSources: DeepPartial<TokenSource>[] = [];
-        for (const actor of createdActors) {
-            const topLeft = translateToTopLeftGrid(this.#event);
-            const prototypeSource: DeepPartial<TokenSource> = {
-                texture: { src: actor.img as ImageFilePath },
-                hidden: this.#event.altKey,
-                actorId: actor.id,
-                actorLink: false,
-            };
+        const actors = (await Actor.createDocuments(actorSources)) as Actor[];
 
-            tokenSources.push({
-                ...prototypeSource,
-                x: topLeft.x,
-                y: topLeft.y,
-                elevation: getActiveLevelElevation(),
-                level: getActiveLevelId(),
-            });
-
-            await actor.update({ prototypeToken: prototypeSource });
-        }
+        const topLeft = translateToTopLeftGrid(this.#event);
+        const tokenSources: DeepPartial<TokenSource>[] = actors.map((actor) => ({
+            texture: { src: actor.img as ImageFilePath },
+            hidden,
+            actorId: actor.id,
+            actorLink: false,
+            x: topLeft.x,
+            y: topLeft.y,
+            elevation: getActiveLevelElevation(),
+            level: getActiveLevelId(),
+        }));
 
         return canvas.scene?.createEmbeddedDocuments("Token", tokenSources);
     }
