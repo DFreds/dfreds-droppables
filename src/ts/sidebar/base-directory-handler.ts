@@ -66,7 +66,6 @@ abstract class BaseDirectoryHandler implements DroppableHandler {
     }
 
     async handleDrop(): Promise<boolean> {
-        if (!this.canHandleDrop()) return false;
         this.event.preventDefault();
 
         const uploaded = await this.uploadAll();

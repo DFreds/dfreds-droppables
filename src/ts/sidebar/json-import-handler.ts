@@ -42,7 +42,6 @@ class JsonImportHandler implements DroppableHandler {
     }
 
     async handleDrop(): Promise<boolean> {
-        if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
 
         const documentClass = this.#directory.documentClass as any;

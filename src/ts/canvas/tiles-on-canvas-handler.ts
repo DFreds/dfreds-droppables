@@ -60,7 +60,6 @@ class TilesOnCanvasHandler implements DroppableHandler {
     }
 
     async handleDrop(): Promise<boolean> {
-        if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
 
         const uploadedData = await this.#getUploadData();

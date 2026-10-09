@@ -26,7 +26,6 @@ class SingleActorDropHandler implements DroppableHandler {
     }
 
     async handleDrop(): Promise<boolean> {
-        if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
 
         if (!this.data.uuid) return false;

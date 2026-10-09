@@ -64,7 +64,6 @@ class JournalDirectoryHandler implements DroppableHandler {
     }
 
     async handleDrop(): Promise<boolean> {
-        if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
 
         const folder = getTargetFolderId(this.#event);
