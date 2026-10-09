@@ -2,9 +2,7 @@ import { CorePageType } from "@common/documents/journal-entry-page.mjs";
 import { MODULE_ID } from "../constants.ts";
 
 const { FilePicker } = foundry.applications.apps;
-
-const IMAGE_EXTENSIONS = /\.(apng|avif|bmp|gif|jpe?g|png|svg|tiff?|webp)$/;
-const VIDEO_EXTENSIONS = /\.(m4v|mp4|ogv|webm)$/;
+const { hasFileExtension } = foundry.data.validators;
 
 /**
  * Data describing a single uploaded file that is ready to be turned into a document.
@@ -96,13 +94,11 @@ function getFilesFromEvent(event: DragEvent, predicate: (file: File) => boolean)
  * @returns The type of the URL ("image", "video", or undefined) based on its file extension
  */
 function determineUrlType(url: string): "image" | "video" | undefined {
-    const lower = url.toLowerCase();
-
-    if (IMAGE_EXTENSIONS.test(lower)) {
+    if (hasFileExtension(url, Object.keys(CONST.IMAGE_FILE_EXTENSIONS))) {
         return "image";
     }
 
-    if (VIDEO_EXTENSIONS.test(lower)) {
+    if (hasFileExtension(url, Object.keys(CONST.VIDEO_FILE_EXTENSIONS))) {
         return "video";
     }
 
