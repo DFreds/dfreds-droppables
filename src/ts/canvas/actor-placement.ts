@@ -190,8 +190,7 @@ async function dropActor({
         level: getActiveLevelId(),
     });
 
-    const token = new CONFIG.Token.documentClass(tokenDocument);
-    return TokenDocument.create(token.toObject(), { parent: canvas.scene });
+    return TokenDocument.create(tokenDocument.toObject(), { parent: canvas.scene });
 }
 
 export { getCanvasDropData, dropActors, promptDropActors };
