@@ -1,5 +1,5 @@
 import { TokenSource } from "@client/documents/_module.mjs";
-import { ImageFilePath, USER_PERMISSIONS } from "@common/constants.mjs";
+import { ImageFilePath } from "@common/constants.mjs";
 import { Settings } from "../settings.ts";
 import { promptForDocumentTypes } from "../shared/document-type-prompt.ts";
 import { DroppableHandler } from "../shared/drop-dispatch.ts";
@@ -32,7 +32,6 @@ class TokensOnCanvasHandler implements DroppableHandler {
     }
 
     canHandleDrop(): boolean {
-        const isGM = game.user.isGM;
         const url = this.data.url;
         // Tokens only accept image URLs.
         const isImageUrl = url ? determineUrlType(url) === "image" : false;
@@ -47,20 +46,18 @@ class TokensOnCanvasHandler implements DroppableHandler {
         }
 
         // Permission checks for non-GM users
-        if (!isGM) {
-            const permissions = [
-                ...(!isImageUrl && this.data.files.length
-                    ? [{ permission: "FILES_UPLOAD", message: "Droppables.NoUploadFiles" }]
-                    : []),
-                { permission: "TOKEN_CREATE", message: "Droppables.NoCreateTokens" },
-                { permission: "ACTOR_CREATE", message: "Droppables.NoCreateActors" },
-            ];
-
-            for (const { permission, message } of permissions) {
-                if (!game.user.hasPermission(permission as keyof typeof USER_PERMISSIONS)) {
-                    ui.notifications.warn(game.i18n.localize(message));
-                    return false;
-                }
+        if (!game.user.isGM) {
+            if (!isImageUrl && !game.user.hasPermission("FILES_UPLOAD")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoUploadFiles"));
+                return false;
+            }
+            if (!game.user.hasPermission("TOKEN_CREATE")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoCreateTokens"));
+                return false;
+            }
+            if (!game.user.hasPermission("ACTOR_CREATE")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoCreateActors"));
+                return false;
             }
         }
 

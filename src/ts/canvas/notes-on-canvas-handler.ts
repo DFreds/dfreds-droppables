@@ -1,5 +1,4 @@
 import { JournalEntrySource, NoteSource } from "@client/documents/_module.mjs";
-import { USER_PERMISSIONS } from "@common/constants.mjs";
 import { CorePageType, JournalEntryPageSource } from "@common/documents/journal-entry-page.mjs";
 import { Settings } from "../settings.ts";
 import { DroppableHandler } from "../shared/drop-dispatch.ts";
@@ -32,7 +31,6 @@ class NotesOnCanvasHandler implements DroppableHandler {
     }
 
     canHandleDrop(): boolean {
-        const isGM = game.user.isGM;
         const url = this.data.url;
         const urlType = url ? determineUrlType(url) : undefined;
 
@@ -46,32 +44,18 @@ class NotesOnCanvasHandler implements DroppableHandler {
         }
 
         // Check permissions for non-GM users
-        if (!isGM) {
-            const permissions = [
-                // Only require file upload permission when we actually need to upload files.
-                ...(!urlType && this.data.files.length
-                    ? [
-                          {
-                              permission: "FILES_UPLOAD",
-                              message: "Droppables.NoUploadFiles",
-                          },
-                      ]
-                    : []),
-                {
-                    permission: "JOURNAL_CREATE",
-                    message: "Droppables.NoCreateJournals",
-                },
-                {
-                    permission: "NOTE_CREATE",
-                    message: "Droppables.NoCreateNotes",
-                },
-            ];
-
-            for (const { permission, message } of permissions) {
-                if (!game.user.hasPermission(permission as keyof typeof USER_PERMISSIONS)) {
-                    ui.notifications.warn(game.i18n.localize(message));
-                    return false;
-                }
+        if (!game.user.isGM) {
+            if (!urlType && !game.user.hasPermission("FILES_UPLOAD")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoUploadFiles"));
+                return false;
+            }
+            if (!game.user.hasPermission("JOURNAL_CREATE")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoCreateJournals"));
+                return false;
+            }
+            if (!game.user.hasPermission("NOTE_CREATE")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoCreateNotes"));
+                return false;
             }
         }
 
