@@ -1,5 +1,4 @@
 import { TileSource } from "@client/documents/_module.mjs";
-import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
 import { FilePath, ImageFilePath, VideoFilePath } from "@common/constants.mjs";
 import { Settings } from "../settings.ts";
 import { DroppableHandler } from "../shared/drop-dispatch.ts";
@@ -125,10 +124,7 @@ class TilesOnCanvasHandler implements DroppableHandler {
             refreshOcclusion: true,
         });
 
-        await canvas.scene?.createEmbeddedDocuments("Tile", tileSources, {
-            broadcast: true,
-            data: [],
-        } as unknown as DatabaseCreateOperation<Scene>);
+        await canvas.scene?.createEmbeddedDocuments("Tile", tileSources);
     }
 }
 

@@ -1,5 +1,4 @@
 import { TokenSource } from "@client/documents/_module.mjs";
-import { DatabaseCreateOperation } from "@common/abstract/_module.mjs";
 import { ImageFilePath, USER_PERMISSIONS } from "@common/constants.mjs";
 import { Settings } from "../settings.ts";
 import { promptForDocumentTypes } from "../shared/document-type-prompt.ts";
@@ -152,10 +151,7 @@ class TokensOnCanvasHandler implements DroppableHandler {
             await actor.update({ prototypeToken: prototypeSource });
         }
 
-        return canvas.scene?.createEmbeddedDocuments("Token", tokenSources, {
-            broadcast: true,
-            data: [],
-        } as unknown as DatabaseCreateOperation<Scene>);
+        return canvas.scene?.createEmbeddedDocuments("Token", tokenSources);
     }
 }
 
