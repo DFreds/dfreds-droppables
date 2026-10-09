@@ -119,13 +119,7 @@ class NotesOnCanvasHandler implements DroppableHandler {
             const type = determineFileType(file);
 
             if (type === "text") {
-                const text = await new Promise<string | undefined>((resolve) => {
-                    const reader = new FileReader();
-                    reader.addEventListener("load", async () => {
-                        resolve(reader.result?.toString());
-                    });
-                    reader.readAsText(file);
-                });
+                const text = await file.text();
 
                 uploadedData.push({
                     text,
