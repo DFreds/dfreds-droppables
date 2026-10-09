@@ -35,7 +35,7 @@ class FolderDropHandler implements DroppableHandler {
         if (!this.canHandleDrop()) return false;
         this.#event.preventDefault();
 
-        const folder = await this.#getFolder();
+        const folder: Folder | null = await fromUuid(this.data.uuid);
 
         if (folder?.type === "Actor") {
             await this.#handleActorFolder(this.data, folder, this.#event);
@@ -46,10 +46,6 @@ class FolderDropHandler implements DroppableHandler {
         } else {
             return false;
         }
-    }
-
-    async #getFolder(): Promise<Folder | null> {
-        return fromUuid(this.data.uuid);
     }
 
     async #handleActorFolder(data: CanvasDropData, folder: Folder, event: DragEvent) {
