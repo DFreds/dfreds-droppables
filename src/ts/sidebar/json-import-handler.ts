@@ -1,4 +1,5 @@
 import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
+import { error } from "../logger.ts";
 import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { Settings } from "../settings.ts";
 import { getFilesFromEvent, isJsonFile } from "../shared/files.ts";
@@ -52,8 +53,8 @@ class JsonImportHandler implements DroppableHandler {
                 const json = await readTextFromFile(file);
                 const imported = await documentClass.fromImport(JSON.parse(json));
                 await documentClass.create({ ...imported.toObject(), folder }, { keepId: false });
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
+                error(`Failed to import ${file.name}: ${err}`);
                 ui.notifications.error(game.i18n.localize("Droppables.ImportFailed", { fileName: file.name }));
             }
         }
