@@ -1,75 +1,27 @@
-import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
-import { DroppableHandler } from "../shared/drop-dispatch.ts";
-import { Settings } from "../settings.ts";
-import { fileNameToDocumentName, getFilesFromEvent, isAudioFile, uploadToPersistent } from "../shared/files.ts";
-import { getTargetFolderId } from "./util.ts";
+import { BaseDirectoryHandler } from "./base-directory-handler.ts";
+import { UploadedFile, fileNameToDocumentName, isAudioFile } from "../shared/files.ts";
 
 /**
  * Creates a Playlist from dropped audio files, adding each uploaded file as a sound in the playlist.
  */
-class PlaylistDirectoryHandler implements DroppableHandler {
-    data: File[];
+class PlaylistDirectoryHandler extends BaseDirectoryHandler {
+    protected documentName = "Playlist";
+    protected subdir = "playlists";
 
-    #event: DragEvent;
-    #directory: DocumentDirectory<any>;
-    #settings = new Settings();
-
-    constructor({ event, directory }: { event: DragEvent; directory: DocumentDirectory<any> }) {
-        this.#event = event;
-        this.#directory = directory;
-        this.data = this.retrieveData();
+    protected override filePredicate(file: File): boolean {
+        return isAudioFile(file);
     }
 
-    canHandleDrop(): boolean {
-        if (!this.#settings.sidebarDragUpload || this.#directory.documentName !== "Playlist" || !this.data.length) {
-            return false;
-        }
-
-        if (!game.user.isGM && !game.user.hasPermission("FILES_UPLOAD")) {
-            ui.notifications.warn(game.i18n.localize("Droppables.NoUploadFiles"));
-            return false;
-        }
-
-        if (!(this.#directory.documentClass as any).canUserCreate(game.user)) {
-            ui.notifications.warn(game.i18n.localize("Droppables.NoCreateDocuments"));
-            return false;
-        }
-
-        return true;
-    }
-
-    retrieveData(): File[] {
-        return getFilesFromEvent(this.#event, isAudioFile);
-    }
-
-    async handleDrop(): Promise<boolean> {
-        if (!this.canHandleDrop()) return false;
-        this.#event.preventDefault();
-
-        const sounds = [];
-        for (const file of this.data) {
-            const path = await uploadToPersistent("playlists", file);
-            if (path) {
-                sounds.push({ name: fileNameToDocumentName(file.name), path });
-            }
-        }
-
-        if (!sounds.length) return true;
+    protected async buildSources(uploaded: UploadedFile[]): Promise<object[] | undefined> {
+        if (!uploaded.length) return [];
 
         const name =
             this.data.length === 1
                 ? fileNameToDocumentName(this.data[0].name)
                 : game.i18n.localize("Droppables.NewPlaylist");
+        const sounds = uploaded.map((data) => ({ name: fileNameToDocumentName(data.fileName), path: data.filePath }));
 
-        await (this.#directory.documentClass as any).createDocuments([
-            {
-                name,
-                folder: getTargetFolderId(this.#event),
-                sounds,
-            },
-        ]);
-
-        return true;
+        return [{ name, sounds }];
     }
 }
 
