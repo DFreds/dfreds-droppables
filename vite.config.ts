@@ -1,4 +1,3 @@
-
 import * as Vite from "vite";
 import checker from "vite-plugin-checker";
 import fs from "fs";
@@ -8,18 +7,10 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 const MODULE_ID = "dfreds-droppables";
 
 const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
-    const buildMode =
-        mode === "production"
-            ? "production"
-            : mode === "stage"
-                ? "stage"
-                : "development";
+    const buildMode = mode === "production" ? "production" : mode === "stage" ? "stage" : "development";
     const outDir = "dist";
 
-    const plugins = [
-        checker({ typescript: true }),
-        touchVendorMjsPlugin(outDir),
-    ];
+    const plugins = [checker({ typescript: true }), touchVendorMjsPlugin(outDir)];
 
     console.log(`Build mode: ${buildMode}`);
 
@@ -27,53 +18,42 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
         plugins.push(...viteStaticCopy({ targets: [{ src: "README.md", dest: "." }] }));
         if (buildMode === "production") plugins.push(deleteLockFilePlugin());
     } else {
-        plugins.push(
-            handleHotUpdateForEnLang(outDir),
-            handleHotUpdateForHandlebars(outDir),
-        );
+        plugins.push(handleHotUpdateForEnLang(outDir), handleHotUpdateForHandlebars(outDir));
     }
 
     // Create dummy files for vite dev server
     if (command === "serve") {
-        const message =
-            "This file is for a running vite dev server and is not copied to a build";
+        const message = "This file is for a running vite dev server and is not copied to a build";
         fs.writeFileSync("./index.html", `<h1>${message}</h1>\n`);
         if (!fs.existsSync("./styles")) fs.mkdirSync("./styles");
-        fs.writeFileSync(
-            `./styles/${MODULE_ID}.css`,
-            `/** ${message} */\n`,
-        );
-        fs.writeFileSync(
-            `./${MODULE_ID}.mjs`,
-            `/** ${message} */\n\nimport "./src/ts/module.ts";\n`,
-        );
+        fs.writeFileSync(`./styles/${MODULE_ID}.css`, `/** ${message} */\n`);
+        fs.writeFileSync(`./${MODULE_ID}.mjs`, `/** ${message} */\n\nimport "./src/ts/module.ts";\n`);
         fs.writeFileSync("./vendor.mjs", `/** ${message} */\n`);
     }
 
     const codeSplitting: Vite.Rolldown.CodeSplittingOptions =
         buildMode === "production" || buildMode === "stage"
             ? {
-                groups: [
-                    {
-                        name: "vendor",
-                        test: /node_modules/,
-                    },
-                ],
-            }
+                  groups: [
+                      {
+                          name: "vendor",
+                          test: /node_modules/,
+                      },
+                  ],
+              }
             : {};
 
     const minify =
         buildMode === "production" || buildMode === "stage"
             ? {
-                compress: { keepNames: { class: true, function: true } },
-                mangle: false,
-                codegen: { removeWhitespace: true },
-            }
+                  compress: { keepNames: { class: true, function: true } },
+                  mangle: false,
+                  codegen: { removeWhitespace: true },
+              }
             : false;
 
     return {
-        base:
-            command === "build" ? "./" : `/modules/${MODULE_ID}/`,
+        base: command === "build" ? "./" : `/modules/${MODULE_ID}/`,
         publicDir: "static",
         define: {
             BUILD_MODE: JSON.stringify(buildMode),
@@ -112,8 +92,7 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
             port: 30001,
             open: false,
             proxy: {
-                [`^(?!/modules/${MODULE_ID}/)`]:
-                    "http://localhost:30000/",
+                [`^(?!/modules/${MODULE_ID}/)`]: "http://localhost:30000/",
                 "/socket.io": {
                     target: "ws://localhost:30000",
                     ws: true,
@@ -127,16 +106,12 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
     };
 });
 
-
 function deleteLockFilePlugin(): Vite.Plugin {
     return {
         name: "delete-lock-file-plugin",
         writeBundle(outputOptions) {
             const outDir = outputOptions.dir ?? "";
-            const lockFile = path.resolve(
-                outDir,
-                `${MODULE_ID}.lock`,
-            );
+            const lockFile = path.resolve(outDir, `${MODULE_ID}.lock`);
             fs.rmSync(lockFile, { force: true });
         },
     };
