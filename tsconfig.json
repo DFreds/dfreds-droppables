@@ -37,7 +37,7 @@
             "@common/*": ["./node_modules/@dfreds/foundry-types/common/*"],
             "@client/*": ["./node_modules/@dfreds/foundry-types/client/*"]
         },
-        "types": ["jquery", "node", "vite/client"]
+        "types": ["node", "vite/client"]
     },
     "include": [
         "./src/**/*",

@@ -24,10 +24,9 @@
         "node": ">=24.14.1"
     },
     "devDependencies": {
-        "@dfreds/foundry-types": "^14.366.1",
+        "@dfreds/foundry-types": "^14.369.1",
         "@eslint/js": "^10.0.1",
         "@eslint/json": "^1.2.0",
-        "@types/jquery": "^3.5.34",
         "@types/node": "^24.19.2",
         "@types/prompts": "^2.4.9",
         "eslint": "^10.3.0",
