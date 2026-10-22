@@ -9,7 +9,7 @@ import { SingleActorDropHandler } from "../canvas/single-actor-drop-handler.ts";
 
 const CanvasInit: Listener = {
     listen(): void {
-        Hooks.on("canvasInit", (_canvas: any) => {
+        Hooks.once("canvasInit", (_canvas: any) => {
             const board = document.getElementById("board");
             if (!board) {
                 return;
