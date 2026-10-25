@@ -45,7 +45,6 @@
   - **Sound layer** - dropped audio files as ambient sounds
   - **Notes layer** - dropped images, PDFs, videos, or text files as a journal entry pinned to the canvas
 - Drop images directly from browsers to automatically set the images for tokens, tiles, or notes
-- Drag and drop documents directly from their sheet onto any supported area
 - Drop a file onto a sidebar directory to upload it and automatically create a document of that type with the file assigned:
   - **Actors** and **Items** - dropped images, prompting for the subtype
   - **Scenes** - dropped images as the scene background
