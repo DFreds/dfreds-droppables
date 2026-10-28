@@ -1,15 +1,11 @@
 <form id="drop-token-files-dialog" class="droppables-dialog-form">
-    <p>{{localize 'Droppables.ActorUploadExplanation'}}</p>
+    <p>{{localize "Droppables.ActorUploadExplanation"}}</p>
 
     {{#each uploadedData as |data|}}
         <div class="form-group">
             <label class="droppables-dialog-label">{{data.fileName}}</label>
             <div class="form-fields">
-                <select
-                    name="type"
-                    data-file-name="{{data.fileName}}"
-                    data-file-path="{{data.response.path}}"
-                >
+                <select name="type">
                     {{selectOptions data.types selected=data.selectedType}}
                 </select>
             </div>

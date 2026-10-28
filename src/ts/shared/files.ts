@@ -10,6 +10,7 @@ const { hasFileExtension } = foundry.data.validators;
 interface UploadedFile {
     fileName: string;
     filePath: string;
+    type?: string;
 }
 
 /* -------------------------------------------- */

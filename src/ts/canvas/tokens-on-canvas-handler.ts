@@ -68,48 +68,43 @@ class TokensOnCanvasHandler implements DroppableHandler {
     async handleDrop(): Promise<boolean> {
         this.#event.preventDefault();
 
-        const uploadedData = await this.#getUploadData();
-        const typed = await promptForDocumentTypes({
+        const url = this.data.url;
+        const imageUrl = url && determineUrlType(url) === "image" ? url : undefined;
+        const fileNames = imageUrl
+            ? [getFileNameFromUrl(imageUrl, "Dropped Image")]
+            : this.data.files.map((file) => file.name);
+
+        const types = await promptForDocumentTypes({
             documentName: "Actor",
-            uploadedData,
+            fileNames,
             title: "Droppables.TokenActorTypes",
         });
-        if (!typed) return true;
+        if (!types) return true;
 
-        await this.#createActorsAndTokens(typed);
+        const uploadedData = imageUrl
+            ? [{ fileName: fileNames[0], filePath: imageUrl, type: types[0] }]
+            : await this.#uploadData(types);
+        if (!uploadedData.length) return true;
+
+        await this.#createActorsAndTokens(uploadedData);
 
         return true;
     }
 
-    async #getUploadData(): Promise<UploadedFile[]> {
-        const url = this.data.url;
-
-        if (url && determineUrlType(url) === "image") {
-            return [
-                {
-                    fileName: getFileNameFromUrl(url, "Dropped Image"),
-                    filePath: url,
-                },
-            ];
-        }
-
-        return this.#uploadData();
-    }
-
-    async #uploadData(): Promise<UploadedFile[]> {
+    async #uploadData(types: string[]): Promise<UploadedFile[]> {
         const uploadedData: UploadedFile[] = [];
 
-        for (const file of this.data.files) {
+        for (const [index, file] of this.data.files.entries()) {
             const filePath = await uploadToPersistent("tokens", file);
             if (filePath) {
-                uploadedData.push({ fileName: file.name, filePath });
+                uploadedData.push({ fileName: file.name, filePath, type: types[index] });
             }
         }
 
         return uploadedData;
     }
 
-    async #createActorsAndTokens(dropData: (UploadedFile & { type: string })[]) {
+    async #createActorsAndTokens(dropData: UploadedFile[]) {
         const hidden = this.#event.altKey;
         const actorSources = dropData.map((data) => ({
             name: fileNameToDocumentName(data.fileName),

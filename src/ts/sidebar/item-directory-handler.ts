@@ -9,10 +9,12 @@ class ItemDirectoryHandler extends BaseDirectoryHandler {
     protected documentName = "Item";
     protected subdir = "items";
 
-    protected async buildSources(uploaded: UploadedFile[]): Promise<object[] | undefined> {
-        const typed = await promptForDocumentTypes({ documentName: "Item", uploadedData: uploaded });
+    protected override async promptForTypes(): Promise<string[] | undefined> {
+        return promptForDocumentTypes({ documentName: "Item", fileNames: this.data.map((file) => file.name) });
+    }
 
-        return typed?.map((data) => ({
+    protected async buildSources(uploaded: UploadedFile[]): Promise<object[] | undefined> {
+        return uploaded.map((data) => ({
             name: fileNameToDocumentName(data.fileName),
             type: data.type,
             img: data.filePath,

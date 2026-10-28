@@ -34,8 +34,15 @@ abstract class BaseDirectoryHandler implements DroppableHandler {
     }
 
     /**
-     * Builds document creation sources from the uploaded files. May prompt the user (e.g. for a
-     * subtype). Returning undefined aborts creation (e.g. the user dismissed a dialog).
+     * Prompts for a subtype for each accepted file before anything is uploaded. Returning undefined
+     * aborts the drop (e.g. the user dismissed a dialog). Defaults to no subtypes.
+     */
+    protected async promptForTypes(): Promise<string[] | undefined> {
+        return [];
+    }
+
+    /**
+     * Builds document creation sources from the uploaded files. Returning undefined aborts creation.
      */
     protected abstract buildSources(uploaded: UploadedFile[]): Promise<object[] | undefined>;
 
@@ -68,7 +75,12 @@ abstract class BaseDirectoryHandler implements DroppableHandler {
     async handleDrop(): Promise<boolean> {
         this.event.preventDefault();
 
-        const uploaded = await this.uploadAll();
+        const types = await this.promptForTypes();
+        if (!types) return true;
+
+        const uploaded = await this.uploadAll(types);
+        if (!uploaded.length) return true;
+
         const sources = await this.buildSources(uploaded);
         if (!sources?.length) return true;
 
@@ -83,15 +95,16 @@ abstract class BaseDirectoryHandler implements DroppableHandler {
     /**
      * Uploads every accepted file to this handler's storage subdirectory.
      *
-     * @returns The successfully uploaded files paired with their storage paths.
+     * @param types - The chosen subtype for each accepted file, in the same order.
+     * @returns The successfully uploaded files paired with their storage paths and subtypes.
      */
-    protected async uploadAll(): Promise<UploadedFile[]> {
+    protected async uploadAll(types: string[]): Promise<UploadedFile[]> {
         const uploaded: UploadedFile[] = [];
 
-        for (const file of this.data) {
+        for (const [index, file] of this.data.entries()) {
             const filePath = await uploadToPersistent(this.subdir, file);
             if (filePath) {
-                uploaded.push({ fileName: file.name, filePath });
+                uploaded.push({ fileName: file.name, filePath, type: types[index] });
             }
         }
 
