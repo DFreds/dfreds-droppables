@@ -46,6 +46,9 @@
         "SettingEnableUnlinkedActorDropHandler": "Enable Unlinked Actor Drop Handler",
         "SettingEnableUnlinkedActorDropHandlerHint": "If enabled, a dialog will be shown when dropping an unlinked actor onto the canvas to ask how many to drop. Note: This setting will be ignored if the Shift key is held down when dropping the actor.",
 
-        "CountForSingleToken": "How many tokens?"
+        "CountForSingleToken": "How many tokens?",
+
+        "DroppedImage": "Dropped Image",
+        "DroppedMedia": "Dropped Media"
     }
 }

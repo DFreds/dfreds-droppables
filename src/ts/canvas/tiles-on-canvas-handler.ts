@@ -74,7 +74,7 @@ class TilesOnCanvasHandler implements DroppableHandler {
         if (url && urlType) {
             return [
                 {
-                    fileName: getFileNameFromUrl(url, "Dropped Media"),
+                    fileName: getFileNameFromUrl(url, game.i18n.localize("Droppables.DroppedMedia")),
                     filePath: url as FilePath,
                 },
             ];

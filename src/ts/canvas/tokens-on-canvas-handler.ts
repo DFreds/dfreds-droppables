@@ -71,7 +71,7 @@ class TokensOnCanvasHandler implements DroppableHandler {
         const url = this.data.url;
         const imageUrl = url && determineUrlType(url) === "image" ? url : undefined;
         const fileNames = imageUrl
-            ? [getFileNameFromUrl(imageUrl, "Dropped Image")]
+            ? [getFileNameFromUrl(imageUrl, game.i18n.localize("Droppables.DroppedImage"))]
             : this.data.files.map((file) => file.name);
 
         const types = await promptForDocumentTypes({

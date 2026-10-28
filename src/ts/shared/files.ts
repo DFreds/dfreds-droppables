@@ -132,7 +132,7 @@ function determineFileType(file: File): CorePageType {
  * @param url - The URL to extract the file name from
  * @param fallback - The fallback name to use if the URL does not contain a valid file name
  */
-function getFileNameFromUrl(url: string, fallback = "Dropped File"): string {
+function getFileNameFromUrl(url: string, fallback: string): string {
     try {
         const parsed = new URL(url);
         const pathName = parsed.pathname ?? "";

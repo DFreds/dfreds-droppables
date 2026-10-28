@@ -87,7 +87,7 @@ class NotesOnCanvasHandler implements DroppableHandler {
                 {
                     filePath: url,
                     type: urlType,
-                    fileName: getFileNameFromUrl(url, "Dropped Media"),
+                    fileName: getFileNameFromUrl(url, game.i18n.localize("Droppables.DroppedMedia")),
                 },
             ];
         }
