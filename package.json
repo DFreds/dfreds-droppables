@@ -1,7 +1,7 @@
 {
     "name": "dfreds-droppables",
     "version": "1.0.0",
-    "description": "A FoundryVTT module that adds support for dropping things onto the canvas.",
+    "description": "A FoundryVTT module which allows you to drag and drop an entire folder of tokens or journal entries onto the canvas, upload files for tokens, tiles, sounds, or notes, and drop files directly onto sidebar directories to instantly create the matching documents.",
     "private": true,
     "type": "module",
     "scripts": {
