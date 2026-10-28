@@ -55,6 +55,8 @@ class SoundsOnCanvasHandler implements DroppableHandler {
 
         for (const file of this.data.files) {
             const path = await uploadToPersistent("sounds", file);
+            if (!path) continue;
+
             const topLeft = translateToTopLeftGrid(this.#event);
             const ambientSoundSource: DeepPartial<AmbientSoundSource> = {
                 path: path as AudioFilePath,

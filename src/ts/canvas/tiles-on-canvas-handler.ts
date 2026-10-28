@@ -88,6 +88,7 @@ class TilesOnCanvasHandler implements DroppableHandler {
 
         for (const file of this.data.files) {
             const filePath = await uploadToPersistent("tiles", file);
+            if (!filePath) continue;
 
             uploadedData.push({
                 fileName: file.name,

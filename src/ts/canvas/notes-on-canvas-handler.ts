@@ -73,6 +73,8 @@ class NotesOnCanvasHandler implements DroppableHandler {
         this.#event.preventDefault();
 
         const uploadedData = await this.#getUploadData();
+        if (!uploadedData.length) return true;
+
         await this.#createJournalAndNotes(uploadedData);
 
         return true;
@@ -111,6 +113,7 @@ class NotesOnCanvasHandler implements DroppableHandler {
                 });
             } else {
                 const filePath = await uploadToPersistent("notes", file);
+                if (!filePath) continue;
 
                 uploadedData.push({
                     filePath,

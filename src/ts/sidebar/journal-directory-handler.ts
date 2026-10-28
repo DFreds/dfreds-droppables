@@ -71,6 +71,8 @@ class JournalDirectoryHandler implements DroppableHandler {
 
         for (const file of this.data) {
             const page = await this.#buildPage(file);
+            if (!page) continue;
+
             entrySources.push({
                 name: fileNameToDocumentName(file.name),
                 folder,
@@ -90,7 +92,7 @@ class JournalDirectoryHandler implements DroppableHandler {
         return true;
     }
 
-    async #buildPage(file: File): Promise<JournalPageData> {
+    async #buildPage(file: File): Promise<JournalPageData | undefined> {
         const type = determineFileType(file);
 
         if (type === "text") {
@@ -99,6 +101,8 @@ class JournalDirectoryHandler implements DroppableHandler {
         }
 
         const filePath = await uploadToPersistent("journals", file);
+        if (!filePath) return;
+
         return { fileName: file.name, type, filePath };
     }
 }
