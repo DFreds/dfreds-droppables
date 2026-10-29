@@ -10,7 +10,6 @@
     },
     "esmodules": ["dfreds-droppables.mjs"],
     "scripts": [],
-    "styles": ["styles/dfreds-droppables.css"],
     "packs": [],
     "packFolders": [],
     "persistentStorage": true,
