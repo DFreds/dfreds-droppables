@@ -38,9 +38,17 @@ class FolderDropHandler implements DroppableHandler {
         const folder: Folder | null = await fromUuid(this.data.uuid);
 
         if (folder?.type === "Actor") {
+            if (!game.user.isGM && !game.user.hasPermission("TOKEN_CREATE")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoCreateTokens"));
+                return true;
+            }
             await this.#handleActorFolder(this.data, folder, this.#event);
             return true;
         } else if (folder?.type === "JournalEntry") {
+            if (!game.user.isGM && !game.user.hasPermission("NOTE_CREATE")) {
+                ui.notifications.warn(game.i18n.localize("Droppables.NoCreateNotes"));
+                return true;
+            }
             await this.#handleJournalFolder(folder, this.#event);
             return true;
         } else {
