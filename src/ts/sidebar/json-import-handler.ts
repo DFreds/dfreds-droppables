@@ -3,7 +3,7 @@ import { error } from "../logger.ts";
 import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { Settings } from "../settings.ts";
 import { getFilesFromEvent, isJsonFile } from "../shared/files.ts";
-import { getTargetFolderId } from "./util.ts";
+import { getPackId, getTargetFolderId } from "./util.ts";
 
 const { readTextFromFile } = foundry.utils;
 
@@ -30,7 +30,7 @@ class JsonImportHandler implements DroppableHandler {
             return false;
         }
 
-        if (!(this.#directory.documentClass as any).canUserCreate(game.user)) {
+        if (!(this.#directory as any)._canCreateEntry()) {
             ui.notifications.warn(game.i18n.localize("Droppables.NoCreateDocuments"));
             return false;
         }
@@ -52,7 +52,10 @@ class JsonImportHandler implements DroppableHandler {
             try {
                 const json = await readTextFromFile(file);
                 const imported = await documentClass.fromImport(JSON.parse(json));
-                await documentClass.create({ ...imported.toObject(), folder }, { keepId: false });
+                await documentClass.create(
+                    { ...imported.toObject(), folder },
+                    { keepId: false, pack: getPackId(this.#directory) },
+                );
             } catch (err) {
                 error(`Failed to import ${file.name}: ${err}`);
                 ui.notifications.error(game.i18n.localize("Droppables.ImportFailed", { fileName: file.name }));

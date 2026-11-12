@@ -1,3 +1,5 @@
+import DocumentDirectory from "@client/applications/sidebar/document-directory.mjs";
+
 /**
  * Finds the ID of the directory folder that a drop landed on or within, if any, so that newly
  *
@@ -10,4 +12,9 @@ function getTargetFolderId(event: DragEvent): string | undefined {
     return folder?.dataset.folderId || undefined;
 }
 
-export { getTargetFolderId };
+function getPackId(directory: DocumentDirectory<any>): string | undefined {
+    const collection = directory.collection;
+    return collection instanceof foundry.documents.collections.CompendiumCollection ? collection.collection : undefined;
+}
+
+export { getPackId, getTargetFolderId };

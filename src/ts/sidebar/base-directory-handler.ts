@@ -2,7 +2,7 @@ import DocumentDirectory from "@client/applications/sidebar/document-directory.m
 import { DroppableHandler } from "../shared/drop-dispatch.ts";
 import { Settings } from "../settings.ts";
 import { UploadedFile, getFilesFromEvent, isImageFile, uploadToPersistent } from "../shared/files.ts";
-import { getTargetFolderId } from "./util.ts";
+import { getPackId, getTargetFolderId } from "./util.ts";
 
 /**
  * Shared logic for sidebar handlers that upload one or more media files and create a document of a
@@ -60,7 +60,7 @@ abstract class BaseDirectoryHandler implements DroppableHandler {
             return false;
         }
 
-        if (!(this.directory.documentClass as any).canUserCreate(game.user)) {
+        if (!(this.directory as any)._canCreateEntry()) {
             ui.notifications.warn(game.i18n.localize("Droppables.NoCreateDocuments"));
             return false;
         }
@@ -87,7 +87,9 @@ abstract class BaseDirectoryHandler implements DroppableHandler {
         const folder = getTargetFolderId(this.event);
         const withFolder = sources.map((source) => ({ ...source, folder }));
 
-        await (this.directory.documentClass as any).createDocuments(withFolder);
+        await (this.directory.documentClass as any).createDocuments(withFolder, {
+            pack: getPackId(this.directory),
+        });
 
         return true;
     }
