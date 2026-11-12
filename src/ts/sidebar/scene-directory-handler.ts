@@ -9,9 +9,18 @@ class SceneDirectoryHandler extends BaseDirectoryHandler {
     protected subdir = "scenes";
 
     protected async buildSources(uploaded: UploadedFile[]): Promise<object[] | undefined> {
+        // @ts-expect-error SceneMetadata.defaultLevelId is not typed
+        const levelId: string = foundry.documents.Scene.metadata.defaultLevelId;
         return uploaded.map((data) => ({
             name: fileNameToDocumentName(data.fileName),
-            background: { src: data.filePath },
+            levels: [
+                {
+                    _id: levelId,
+                    name: game.i18n.localize(foundry.documents.Level.metadata.label),
+                    background: { src: data.filePath },
+                },
+            ],
+            initialLevel: levelId,
         }));
     }
 }
