@@ -57,8 +57,8 @@ class FolderDropHandler implements DroppableHandler {
     }
 
     async #handleActorFolder(data: CanvasDropData, folder: Folder, event: DragEvent) {
-        const actors = folder?.contents as Actor[];
-        if (!actors?.length) return;
+        const actors = folder.pack ? await this.#importPackActors(folder) : (folder.contents as Actor[]);
+        if (!actors.length) return;
 
         const topLeft = translateToTopLeftGrid(event);
         const input = {
@@ -77,6 +77,15 @@ class FolderDropHandler implements DroppableHandler {
         } else {
             await dropActors(dropStyle, input);
         }
+    }
+
+    async #importPackActors(folder: Folder): Promise<Actor[]> {
+        const pack = folder.pack ? game.packs.get(folder.pack) : undefined;
+        if (!pack) return [];
+
+        const packActors = (await pack.getDocuments({ folder: folder.id })) as Actor<null>[];
+        const sources = packActors.map((actor) => game.actors.fromCompendium(actor));
+        return (await Actor.implementation.createDocuments(sources, { fromCompendium: true } as any)) as Actor[];
     }
 
     async #handleJournalFolder(folder: Folder, event: DragEvent): Promise<boolean | null> {
