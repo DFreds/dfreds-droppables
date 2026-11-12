@@ -53,7 +53,7 @@ class JsonImportHandler implements DroppableHandler {
                 const json = await readTextFromFile(file);
                 const imported = await documentClass.fromImport(JSON.parse(json));
                 await documentClass.create(
-                    { ...imported.toObject(), folder },
+                    { ...imported.collection.fromCompendium(imported), folder },
                     { keepId: false, pack: getPackId(this.#directory) },
                 );
             } catch (err) {
