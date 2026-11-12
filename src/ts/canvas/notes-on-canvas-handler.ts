@@ -45,7 +45,8 @@ class NotesOnCanvasHandler implements DroppableHandler {
 
         // Check permissions for non-GM users
         if (!game.user.isGM) {
-            if (!urlType && !game.user.hasPermission("FILES_UPLOAD")) {
+            const needsUpload = this.data.files.some((file) => determineFileType(file) !== "text");
+            if (needsUpload && !game.user.hasPermission("FILES_UPLOAD")) {
                 ui.notifications.warn(game.i18n.localize("Droppables.NoUploadFiles"));
                 return false;
             }
