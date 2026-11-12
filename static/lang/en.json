@@ -26,6 +26,7 @@
         "JournalSceneName": "Note in Scene: {name} - {dateTime}",
 
         "ActorUploadExplanation": "Select the actor type for each file.",
+        "ItemUploadExplanation": "Select the item type for each file.",
         "TokenActorTypes": "Token Actor Types",
         "Confirm": "Confirm",
 

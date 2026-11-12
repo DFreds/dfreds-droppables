@@ -31,6 +31,7 @@ async function promptForDocumentTypes({
     }, {});
 
     const content = await renderTemplate(`modules/${MODULE_ID}/templates/drop-token-files-dialog.hbs`, {
+        explanation: `Droppables.${documentName}UploadExplanation`,
         uploadedData: fileNames.map((fileName) => ({
             fileName,
             types: typeLocalizations,
