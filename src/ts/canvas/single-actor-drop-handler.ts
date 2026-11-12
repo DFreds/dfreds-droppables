@@ -30,6 +30,11 @@ class SingleActorDropHandler implements DroppableHandler {
 
         if (!this.data.uuid) return false;
 
+        if (!game.user.isGM && !game.user.hasPermission("TOKEN_CREATE")) {
+            ui.notifications.warn(game.i18n.localize("Droppables.NoCreateTokens"));
+            return true;
+        }
+
         const actor = (await fromUuid(this.data.uuid)) as Actor | null;
         if (!actor) return false;
 
